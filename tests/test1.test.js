@@ -6,8 +6,22 @@ let page;
 
 ////////////////////////////////////////////////////////// BEFORE/AFTER SETUP //////////////////////////////////////////////////////////
 test.beforeAll(async () => {
-    // Launch browser
-    browser = await chromium.launch({ headless: false });  
+    // Launch browser 
+    browser = await chromium.launch({ headless: false });  // ❌❌❌❌❌❌❌ DO NOT do this, this a terrible practice ❌❌❌❌❌❌❌
+
+    /*
+    This is why this pattern is ❌ wrong
+        - Problems with manual chromium.launch():
+        - Breaks Playwright’s project model
+        - Confusing browser reporting
+        - No real cross-browser validation
+        - Not parallel-safe
+        - Not CI-friendly
+        - Interview red flag 🚩
+
+    This is not actually gonna run in Chromium (ONLY) if the playwright config has projects defined
+    Only when playwright.config DOES NOT declare any projects/browsers, this file will run in Chromium
+    */
 });
 
 test.beforeEach(async () => {
