@@ -1,54 +1,51 @@
 import { test, chromium } from '@playwright/test';
 
+let browser;
+let context;
+let page;
+
 // Basically we have 4 test annotation
 // ... beforeAll()
 // ... beforeEach()
 // ... afterEach()
 // ... afterAll()
 
-let context;
-let page;
-let browser;
+////////////////////////////////////////////////////////// BEFORE/AFTER SETUP //////////////////////////////////////////////////////////
 
-test.beforeAll(async ({browser}) => {
-    browser = await chromium.launch({ headless: false });
-    context = await browser.newContext(); // Create multiple contexts when dealing with different web portals
-    page = await context.newPage(); // Create multiple pages when dealing with different tabs    
+test.beforeAll(async () => {
+    // Launch browser
+    browser = await chromium.launch({ headless: false });  
 });
 
-test.beforeEach(async () => {
-    // Launch browser
-    //const browser = await chromium.launch({ headless: false });
-
-    // 👉 Create a BrowserContext (isolated session)
+test.beforeEach(async () => {    
+    // Create a BrowserContext (isolated session)
     context = await browser.newContext();
 
-    // 👉 Create a Page inside the context
-    page = await context.newPage();
-
-    // Navigate to Google
+    // Create a Page inside the context
+    page = await context.newPage();    
     await page.waitForTimeout(3_000); // 5 seconds to allow me move windows from not shown screen to shared screen
 });
 
-test('My very first test', async ({ page }) => {
-    await page.goto('https://www.google.com');
+/*test.afterEach(async () => {    
+    await context.close();
+});
 
-    // Accept cookies if the dialog appears (EU / some regions)
-    const acceptButton = page.locator('button:has-text("Accept all")');
-    if (await acceptButton.isVisible()) {
-        await acceptButton.click();
-    }
+test.beforeAll(async () => {
+    await browser.close();
+});*/
 
-    // Perform search
-    await page.locator('textarea[name="q"]').fill('Playwright BrowserContext');
-    await page.keyboard.press('Enter');
+/////////////////////////////////////////////////////////// TESTS START HERE ///////////////////////////////////////////////////////////
 
-    // Wait for results
-    await page.waitForSelector('#search');
+test("My very first test", async () => {
+    // Navigate to Google
+    await page.goto("https://www.facebook.com");
 
-    console.log('Search completed');
+    // Enter something
+    await page.locator("[data-testid='open-registration-form-button']").click();
+    await page.locator("[name='firstname']").fill("Erick");
 
-    // Close everything
+    console.log('Test completed');  
+    
     await context.close();
     await browser.close();
 });
