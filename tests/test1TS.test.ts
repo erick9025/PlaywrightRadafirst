@@ -1,41 +1,16 @@
-import { test, chromium, Browser, BrowserContext, Page } from '@playwright/test';
-
-let browser: Browser;
-let context: BrowserContext;
-let page: Page;
-
-////////////////////////////////////////////////////////// BEFORE/AFTER SETUP //////////////////////////////////////////////////////////
-test.beforeAll(async () => {
-    // Launch browser
-    browser = await chromium.launch({ headless: false });  
-});
-
-test.beforeEach(async () => {
-    // Create a BrowserContext (isolated session)
-    context = await browser.newContext();
-
-    // Create a Page inside the context
-    page = await context.newPage();    
-    //await page.waitForTimeout(3_000); // 5 seconds to allow me move windows from not shown screen to shared screen
-});
-
-test.afterEach(async () => {    
-    await context.close();
-});
-
-test.afterAll(async () => {
-    await browser.close();
-});
+import { test, expect } from '@playwright/test';
 
 /////////////////////////////////////////////////////////// TESTS START HERE ///////////////////////////////////////////////////////////
-test("My very first test with Facebook and TypeScript", async () => {
-    // Navigate to Facebook
-    await page.goto("https://www.facebook.com");
+test("My very first test with Facebook and TypeScript", async ({ page }) => {
+  // Navigate to Facebook
+  await page.goto("https://www.facebook.com");
 
-    // Go to form, then enter person name information
-    await page.locator("[data-testid='open-registration-form-button']").click();
-    await page.locator("[name='firstname']").fill("Erick");
-    await page.locator("[name='lastname']").fill("Jiménez");
+  // Open registration form
+  await page.locator("[data-testid='open-registration-form-button']").click();
 
-    console.log('Test completed using TypeScript by ERICK JIMENEZ');  
+  // Fill user information
+  await page.locator("[name='firstname']").fill("Erick");
+  await page.locator("[name='lastname']").fill("Jiménez");
+
+  console.log('Test completed using TypeScript by ERICK JIMENEZ');
 });
