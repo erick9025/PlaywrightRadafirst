@@ -1,0 +1,26 @@
+{
+  "name": "playwrightradafirst",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "regen": "npm run regen",
+    "erick": "echo Erick Jimenez",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/erick9025/PlaywrightRadafirst.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/erick9025/PlaywrightRadafirst/issues"
+  },
+  "homepage": "https://github.com/erick9025/PlaywrightRadafirst#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.58.2"
+  }
+}
