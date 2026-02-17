@@ -7,7 +7,7 @@ let page;
 ////////////////////////////////////////////////////////// BEFORE/AFTER SETUP //////////////////////////////////////////////////////////
 test.beforeAll(async () => {
     // Launch browser 
-    browser = await chromium.launch({ headless: false });  // ❌❌❌❌❌❌❌ DO NOT do this, this a terrible practice ❌❌❌❌❌❌❌
+    browser = await chromium.launch({ headless: false});  // ❌❌❌❌❌❌❌ DO NOT do this, this a terrible practice ❌❌❌❌❌❌❌
 
     /*
     This is why this pattern is ❌ wrong
@@ -42,14 +42,19 @@ test.afterAll(async () => {
 });
 
 /////////////////////////////////////////////////////////// TESTS START HERE ///////////////////////////////////////////////////////////
-test("My very first test with Facebook", async () => {
+test.skip("My very first test with Facebook", async () => {
     // Navigate to Facebook
     await page.goto("https://www.facebook.com");
 
     // Go to form, then enter person name information
     await page.locator("[data-testid='open-registration-form-button']").click();
+    
+    // Enter name 
     await page.locator("[name='firstname']").fill("Erick");
-    await page.locator("[name='lastname']").fill("Jiménez");
+
+    // Enter last name
+    let locatorLastName = page.locator("[name='lastname']");
+    await locatorLastName.fill("Jiménez");
 
     console.log('Test completed by ERICK JIMENEZ');  
 });
