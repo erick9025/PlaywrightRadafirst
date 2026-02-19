@@ -1,4 +1,4 @@
-import { test, Browser, BrowserContext, Page, Locator } from '@playwright/test';
+import { test, Browser, BrowserContext, Page, Locator, expect } from '@playwright/test';
 
 let browser: Browser;
 let context: BrowserContext;
@@ -32,29 +32,48 @@ test.afterAll(async () => {
 });
 
 /////////////////////////////////////////////////////////// TESTS START HERE ///////////////////////////////////////////////////////////
-test("My very first test with Facebook and TypeScript", async () => {
+test.skip("My very first test with Facebook and TypeScript", async () => {
     //await page.waitForTimeout(4500);
 
     // Navigate to Facebook
-    await page.goto("https://www.facebook.com");
+    await page.goto("https://www.facebook.com/");
 
     // Open registration form
-    await page.locator("[data-testid='open-registration-form-button']").click();
+    await page.locator("[data-testid='open-registration-form-button']").hover();
+
+    const button = page.locator("[data-testid='open-registration-form-button']");
+
+    await button.waitFor({ state: 'visible' });
+    await expect(button).toBeEnabled();
+    await button.click();
+
+    //await page.locator("[data-testid='open-registration-form-button']").waitFor({ state: 'visible' }); // Optional but recommended
+    //await page.locator("[data-testid='open-registration-form-button']").click();
 
     // Enter name
-    await page.locator("[name='firstname']").fill("Erick");
+    await page.locator("[name='firstname']").fill("Mauricio");
 
     // Enter last name
     const locatorLastName: Locator = page.locator("[name='lastname']");
-    await locatorLastName.fill("Jiménez");
+    await locatorLastName.fill("Aliendre");
 
-    // Select day from DDL (dropdown list)
-    await page.selectOption('#day', '25');
+    // Select birthday
+    await page.selectOption('#month', 'Jan');
+    await page.selectOption('#day', '5');
+    await page.selectOption('#year', '1997');
 
-    //await page.locator("#day").click(); // Expand DAY dropdown
-    //await page.locator("#day option[value='25']").click({ force: true }); // Once expanded select the specific day (1...31)
-    //await page.locator("//option[@value='25']").click({ force: true }); // Once expanded select the specific day (1...31)
+    // Select Gender
+    //await page.getByRole('radio', { name: 'Male', exact: true }).check();
+    //await page.locator("#sex[value='2']").click(); // works also but NOT recommended
+    await page.locator("#sex[value='2']").check(); // best practice
 
-    console.log('Test completed by ERICK JIMENEZ');
-    //await page.waitForTimeout(2500);
+    // Enter Mobile Number
+    await page.locator("[aria-label='Mobile number or email']").fill("1234567890"); // css
+    //await page.locator("//*[@aria-label='Mobile number or email']").fill("1234567890"); // xpath
+
+    // Enter Password
+    await page.locator("[aria-label='New password']").fill("MySecurePassword123");
+
+    console.log('Test completed by MAURICIO ALIENDRE');
+    // await page.waitForTimeout(2500);
 });
