@@ -3,7 +3,7 @@ import { defineConfig } from '@playwright/test';
 export default defineConfig({
   testDir: './tests',
   workers: 4,
-  timeout: 30_000, // Global timeout for all tests in milliseconds (default is 30 seconds)
+  timeout: 15_000, // Global timeout for all tests in milliseconds (default is 30 seconds)
   expect: {
     timeout: 1_000
   },
