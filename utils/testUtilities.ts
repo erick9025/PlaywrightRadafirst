@@ -1,4 +1,5 @@
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator, test } from '@playwright/test';
+import chalk from 'chalk';
 
 export class TestUtilities {
 
@@ -23,6 +24,7 @@ export class TestUtilities {
     }
 
     public static async pending(page: Page, headerText: string): Promise<number> {
+        throw new Error("Not implemented method yet");
         let columnNumber: number = 0;
 
         const headers: Locator = page.locator('//thead//th');
@@ -49,6 +51,15 @@ export class TestUtilities {
     public static logMessage(message: string) : void {
         console.log("[" + TestUtilities.formatTimestamp() + "]: " + message);
         // ToDo show them the other way with the other quote (Wednesday Feb 12)
+    }
+
+    public static logErrorToConsole(errorMessage: string): void {
+        const timestamp = TestUtilities.getCurrentFormattedTimestamp();
+        console.error(chalk.bgRed(timestamp + ": " + errorMessage));
+        test.info().annotations.push({
+            type: `ERROR ${timestamp}`,
+            description: `${errorMessage}`
+        });
     }
 
     public static formatTimestamp(): string {
@@ -131,5 +142,37 @@ export class TestUtilities {
             return true;
         else
             return false;
-    }    
+    }
+
+    public static async clickAndWaitSuccessfulApi(
+            page: Page,
+            elementLocator: string, 
+            elementDescription: string, 
+            apiEndpointOrPartialUrl: string,
+            expectedStatusCode: number = 200
+    ): Promise<void> {
+        const timeoutMsForClick: number = 5_000; // 5 seconds
+        const timeoutMsForApi: number = 1_500; // 1.5 seconds
+        const timeoutString: string = timeoutMsForApi > 1_000 ? "Seconds: " + (timeoutMsForApi / 1000).toString() : "Miliseconds:" + (timeoutMsForApi).toString();
+
+        TestUtilities.logMessage(`Will click '${elementDescription}' and wait (for a max of ${timeoutString}) for its triggered API call with partial URL '${apiEndpointOrPartialUrl}'`);
+
+        const startTime: number = Date.now(); // Record start time
+        
+        const [response] = await Promise.all([
+            //Parallel step 1
+            page.waitForResponse(
+            resp => resp.url().includes(apiEndpointOrPartialUrl) && resp.status() === expectedStatusCode, // ALWAYS Sucessful API = OK
+                { timeout: timeoutMsForApi }
+            ),
+            //Parallel step 2
+            page.locator(elementLocator).click({ force: true, timeout: timeoutMsForClick })
+        ]);
+
+        const endTime: number = Date.now(); // Record end time
+        const durationMs: number = endTime - startTime; // Calculate elapsed milliseconds
+        const durationString: string = durationMs > 1_000 ? (durationMs /1000).toString() + " seconds" : (durationMs).toString() + " ms";
+
+        TestUtilities.logMessage(`Clicked on element: ${elementDescription} and waited for its triggered parallel API call with endpoint: ${apiEndpointOrPartialUrl} that took ${durationString} to run`);        
+    }
 }
