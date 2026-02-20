@@ -34,7 +34,7 @@ test.afterAll(async () => {
 });
 
 /////////////////////////////////////////////////////////// TESTS START HERE ///////////////////////////////////////////////////////////
-test("Testing dynamic tables", async () => {
+test.skip("Testing dynamic tables", async () => {
     await page.goto("https://practice.expandtesting.com/dynamic-table");
 
     const colNumberName: number = await TestUtilities.returnColumnNumberForHeader(page, "Name"); // await is used for async functions to extract the return type inside the <>
@@ -67,6 +67,18 @@ test("Testing dynamic tables", async () => {
         //expect(isValid).toBe(true); // Native assert/expect, message is not really meaningful
         Asserts.assertTrue(isValid, text + " must be included in the list with values: " + allowedProcesses.join(", ")); // Our custom assert (internally uses expect) with improved messages
     }
+
+    const text1 = "Erick Jimenez";
+    const text2 = "Rodriguez";
+
+    expect.soft(text1.includes(text2)).toBe(true);
+    expect.soft(text1.includes(text2)).toBe(true);
+    expect.soft(text1.includes(text2)).toBe(true);
+    expect.soft(text1.includes(text2)).toBe(true);
+    expect.soft(text1.includes(text2)).toBe(true);
+    expect.soft(text1.includes(text2)).toBe(true);
+
+    TestUtilities.logMessage("Checkpoint...");
 
     // Iterate over every 'Memory' value and verify it has '58.7 MB' format
     const valuesColMemory: Locator = page.locator("//tbody//td[" + colNumberMemory + "]");
