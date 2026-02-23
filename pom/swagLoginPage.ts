@@ -47,7 +47,6 @@ export class SwagLoginPage extends BasePage {
             password = this.correctPassword;
         }
 
-        await this.verifyElementIsVisible(this.pageHeader, "Page Header [Header Centered]");
         const headerText: string = await this.returnTextFromElement(this.pageHeader, "Page Header [Header Centered]");
 
         Asserts.assertEquals(this.expectedPageHeader, headerText, "Header must be correct");
