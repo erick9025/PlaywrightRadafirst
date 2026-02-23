@@ -82,5 +82,5 @@ test.skip("My very first test with Facebook and TypeScript", async () => {
 test("Swag", async () => {
     const swagLoginPage: SwagLoginPage = new SwagLoginPage(page);
 
-    swagLoginPage.login();
+    await swagLoginPage.login();
 });
