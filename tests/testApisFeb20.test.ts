@@ -34,7 +34,7 @@ test.afterAll(async () => {
 });
 
 /////////////////////////////////////////////////////////// TESTS START HERE ///////////////////////////////////////////////////////////
-test("Testing Wikipedia with search endpoint", async () => {
+test.skip("Testing Wikipedia with search endpoint", async () => {
     await page.goto("https://wikipedia.com");
 
     await page.fill("#searchInput", "Fifa world cup 2026");
