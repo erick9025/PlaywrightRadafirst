@@ -1,4 +1,5 @@
-import { Page, Locator, test } from '@playwright/test';
+import { Page, Locator, test, expect } from '@playwright/test';
+import { Asserts } from './asserts';
 import chalk from 'chalk';
 
 export class TestUtilities {
@@ -48,10 +49,25 @@ export class TestUtilities {
         }).format(value);
     };
 
-    public static logMessage(message: string) : void {
-        console.log("[" + TestUtilities.formatTimestamp() + "]: " + message);
-        // ToDo show them the other way with the other quote (Wednesday Feb 12)
+    //******************************** ToDo consolidate into 1 below************************* */
+    public static logToConsole(message: string): void {
+        const timestamp : string = TestUtilities.formatTimestamp();
+        console.log(chalk.bgWhite(timestamp + ": " + message));
+        test.info().annotations.push({
+            type: `${timestamp}`,
+            description: `${message}`
+        });
     }
+
+    public static logMessage(message: string): void {
+        const timestamp : string = TestUtilities.formatTimestamp();
+        console.log(chalk.bgWhite(timestamp + ": " + message));
+        test.info().annotations.push({
+            type: `${timestamp}`,
+            description: `${message}`
+        });
+    }
+    //******************************** ToDo consolidate into 1 above************************* */
 
     public static logErrorToConsole(errorMessage: string): void {
         const timestamp = TestUtilities.getCurrentFormattedTimestamp();
@@ -155,7 +171,7 @@ export class TestUtilities {
         const timeoutMsForApi: number = 1_500; // 1.5 seconds
         const timeoutString: string = timeoutMsForApi > 1_000 ? "Seconds: " + (timeoutMsForApi / 1000).toString() : "Miliseconds:" + (timeoutMsForApi).toString();
 
-        TestUtilities.logMessage(`Will click '${elementDescription}' and wait (for a max of ${timeoutString}) for its triggered API call with partial URL '${apiEndpointOrPartialUrl}'`);
+        TestUtilities.logToConsole(`Will click '${elementDescription}' and wait (for a max of ${timeoutString}) for its triggered API call with partial URL '${apiEndpointOrPartialUrl}'`);
 
         const startTime: number = Date.now(); // Record start time
         
@@ -173,6 +189,173 @@ export class TestUtilities {
         const durationMs: number = endTime - startTime; // Calculate elapsed milliseconds
         const durationString: string = durationMs > 1_000 ? (durationMs /1000).toString() + " seconds" : (durationMs).toString() + " ms";
 
-        TestUtilities.logMessage(`Clicked on element: ${elementDescription} and waited for its triggered parallel API call with endpoint: ${apiEndpointOrPartialUrl} that took ${durationString} to run`);        
+        TestUtilities.logToConsole(`Clicked on element: ${elementDescription} and waited for its triggered parallel API call with endpoint: ${apiEndpointOrPartialUrl} that took ${durationString} to run`);        
+    }
+
+    public static logToConsoleImportant(message: string, printBlankLineAfter: boolean = true): void {
+        const charL: string = "⚡⚡⚡";
+        const charR: string = "⚡⚡⚡";
+        const timestamp: string = TestUtilities.getCurrentFormattedTimestamp();
+        console.log(chalk.bgWhite(timestamp + ": " + message));
+        test.info().annotations.push({ //BLANK LINE
+            type: ' '
+        });
+        test.info().annotations.push({
+            type: `${timestamp} ${charL}${message}${charR}`
+        });
+        if(printBlankLineAfter) {
+            test.info().annotations.push({ //BLANK LINE
+                type: ' '
+            });
+        }        
+    }
+
+    public static logToConsoleWarning(message: string, printBlankLineAfter: boolean = true): void {
+        const charL: string = "🚨🚨🚨";
+        const charR: string = "⚠️⚠️⚠️";
+        const timestamp: string = TestUtilities.getCurrentFormattedTimestamp();
+        console.log(chalk.bgWhite(timestamp + ": " + message));
+        test.info().annotations.push({ //BLANK LINE
+            type: ' '
+        });
+        test.info().annotations.push({
+            type: `${timestamp} ${charL}${message}${charR}`
+        });
+        if(printBlankLineAfter) {
+            test.info().annotations.push({ //BLANK LINE
+                type: ' '
+            });
+        }        
+    }
+
+    public static logToConsoleBold(message: string): void {
+        const timestamp: string = TestUtilities.getCurrentFormattedTimestamp();
+        console.log(chalk.bgWhite(timestamp + ": " + message));
+        test.info().annotations.push({
+            type: `${timestamp} ${message}`
+        });
+    }
+
+    public static logIssue(messageForMinorIssue: string): void {
+        const timestamp : string = TestUtilities.getCurrentFormattedTimestamp();
+        test.info().annotations.push({
+            type: `issues`,
+            description: `${timestamp}: ${messageForMinorIssue}`
+        });
+
+        test.info().attach('issues.txt', {
+            body: `${timestamp}: ${messageForMinorIssue}`,
+            contentType: 'text/plain',
+        });
+    }
+
+    public static logMethodStart(message: string): void {
+        const charL: string = "🔵🔵";
+        const charR: string = "🔵🔵";
+        const timestamp: string = TestUtilities.getCurrentFormattedTimestamp();
+        console.log(chalk.bgWhite(timestamp + ": " + message));
+        test.info().annotations.push({ //BLANK LINE
+            type: ' '
+        });
+        test.info().annotations.push({
+            type: `${timestamp} ${charL}${message}${charR}`
+        });        
+    }
+
+    public static logMethodEnd(message: string): void {
+        const charL: string = "🟠🟠";
+        const charR: string = "🟠🟠";
+        const timestamp: string = TestUtilities.getCurrentFormattedTimestamp();
+        console.log(chalk.bgWhite(timestamp + ": " + message));
+        test.info().annotations.push({
+            type: `${timestamp} ${charL}${message}${charR}`
+        }); 
+        test.info().annotations.push({ //BLANK LINE
+            type: ' '
+        });
+    }
+
+    public static logMainMethodStart(message: string): void {
+        const charL: string = "🟩🟩🟩";
+        const charR: string = "🟩🟩🟩";
+        const timestamp: string = TestUtilities.getCurrentFormattedTimestamp();
+        console.log(chalk.bgWhite(timestamp + ": " + message));
+        test.info().annotations.push({ //BLANK LINE
+            type: ' '
+        });
+        test.info().annotations.push({
+            type: `${timestamp} ${charL}${message}${charR}`
+        });        
+    }
+
+    public static logMainMethodEnd(message: string): void {
+        const charL: string = "🟥🟥🟥";
+        const charR: string = "🟥🟥🟥";
+        const timestamp: string = TestUtilities.getCurrentFormattedTimestamp();
+        console.log(chalk.bgWhite(timestamp + ": " + message));
+        test.info().annotations.push({
+            type: `${timestamp} ${charL}${message}${charR}`
+        }); 
+        test.info().annotations.push({ //BLANK LINE
+            type: ' '
+        });
+    }
+
+    /*public static logToConsoleWithColor(message: string, style: ChalkColorStyle): void {
+        const timestamp: string = TestUtilities.getCurrentFormattedTimestamp();
+        const styleFn = (chalk as any)[style];
+        const output = typeof styleFn === 'function'
+            ? styleFn(`${timestamp}: ${message}`)
+            : `${timestamp}: ${message}`;
+        console.log(output);
+    }*/
+
+    public static logToConsoleNoTimestamp(message: string): void {
+        console.log(chalk.bgWhite(message));
+        test.info().annotations.push({
+            type: ``,
+            description: `${message}`
+        });
+    }   
+
+    public static replaceKeyName(text : string, keyName : string, keyValue : string) : string {
+        let charLeft : string = "{{";
+        let charRight : string = "}}";
+        let key : string = charLeft + keyName + charRight;
+        let val1 : boolean = text.includes(charLeft);
+        let val2 : boolean = text.includes(charRight);
+        let val3 : boolean = text.includes(key);
+        let allesGut : boolean = val1 && val2 && val3;
+
+        expect(allesGut).toBe(true);
+
+        return text.replace(key, keyValue);
+    }
+
+    public static replaceKey(text : string, keyValue : string) : string {
+        let charLeft : string = "{{";
+        let charRight : string = "}}";
+        let key : string = "{{key}}";
+        let val1 : boolean = text.includes(charLeft);
+        let val2 : boolean = text.includes(charRight);
+        let val3 : boolean = text.includes(key);
+        let allesGut : boolean = val1 && val2 && val3;
+
+        expect(allesGut).toBe(true);
+
+        return text.replace(key, keyValue);
+    }
+
+    public static getNumericValue(str : string, shouldBeNumeric = true) : number {
+        const num = parseFloat(str);
+        let isNan = isNaN(num);
+
+        if(shouldBeNumeric) Asserts.assertFalse(isNan, "String should be a valid number: " + str);
+
+        if(isNan) {
+            Asserts.assertFail("isNan: " + str)
+        }
+
+        return num;
     }
 }

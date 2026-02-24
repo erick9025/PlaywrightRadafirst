@@ -10,9 +10,63 @@ export abstract class BasePage {
         this.page = page;
     }
 
-    // Logging is synchronous method (no need to add 'await' 'async' 'Promise')
-    protected logMessage(message: string): void {
+    //------------------------------------ LOGGING INTERACTIONS ------------------------------------
+    protected logToConsole(message: string) : void {
+        TestUtilities.logToConsole(message);
+    }
+
+    protected logMessage(message: string) : void {
         TestUtilities.logMessage(message);
+    }
+
+    //****************************** */
+
+    protected infoIssue(messageForMinorIssue: string) : void {
+        TestUtilities.logIssue(messageForMinorIssue);
+    }
+
+    protected infoImportant(message: string, printBlankLineAfter: boolean = true) : void {
+        TestUtilities.logToConsoleImportant(message, printBlankLineAfter);
+    }
+
+    protected infoWarning(message: string, printBlankLineAfter: boolean = true) : void {
+        TestUtilities.logToConsoleWarning(message, printBlankLineAfter);
+    }
+
+    protected infoBold(message: string) : void {
+        TestUtilities.logToConsoleBold(message);
+    }
+
+    /*protected infoColor(message: string, color: ChalkColorStyle) : void {
+        TestUtilities.logToConsoleWithColor(message, color);
+    }*/
+
+    protected newEmptyLine() : void {
+        TestUtilities.logToConsoleNoTimestamp(""); 
+    }
+
+    protected methodStart(methodName: string, additionalInfo: string = "") : void {
+        const hasInfo: boolean = !TestUtilities.isNullOrEmpty(additionalInfo);
+        console.log("");        
+        TestUtilities.logMethodStart(hasInfo ? "...Starting method [" + methodName + "] " + additionalInfo : "...Starting method [" + methodName + "]");
+    }
+
+    protected methodEnd(methodName: string, additionalInfo: string = "") : void {
+        const hasInfo: boolean = !TestUtilities.isNullOrEmpty(additionalInfo);
+        TestUtilities.logMethodEnd(hasInfo ? "...Ending method [" + methodName + "] " + additionalInfo : "...Ending method [" + methodName + "]");
+        console.log(""); 
+    }
+
+    protected mainMethodStart(mainMethodName : string, additionalInfo : string = "") : void {
+        const hasInfo: boolean = !TestUtilities.isNullOrEmpty(additionalInfo);
+        console.log("");        
+        TestUtilities.logMainMethodStart(hasInfo ? "...Starting method [" + mainMethodName + "] " + additionalInfo : "...Starting method [" + mainMethodName + "]");
+    }
+
+    protected mainMethodEnd(mainMethodName : string, additionalInfo : string = "") : void {
+        const hasInfo: boolean = !TestUtilities.isNullOrEmpty(additionalInfo);
+        TestUtilities.logMainMethodEnd(hasInfo ? "...Ending method [" + mainMethodName + "] " + additionalInfo : "...Ending method [" + mainMethodName + "]");
+        console.log("");
     }
 
     protected async goToURL(url: string): Promise<void> { 
@@ -180,5 +234,74 @@ export abstract class BasePage {
         text = await this.page.locator(elementLocator).first().innerText();
         if(printText) this.logMessage("Text from '" + elementDescription + "': " + text);
         return text.trim();        
+    }
+
+    protected async verifyElementIsNotFound(locator : string, elementDescription : string, timeoutMs : number = 10) : Promise<void>{  
+        const isDetached = await this.isDetachedState(locator, elementDescription, timeoutMs);
+        const isHidden = await this.isHiddenState(locator, elementDescription, timeoutMs);
+        const isVisible = await this.isVisibleState(locator, elementDescription, timeoutMs);
+        Asserts.assertTrue(isDetached || isHidden || !isVisible, "'" + elementDescription + "' Element should be not found");
+    }
+
+    protected async isDetachedState(locator : string, elementDescription : string, timeoutMs : number= 5000) : Promise<boolean>{  
+        let isDetached = false;
+
+        try {
+            await this.page.locator(locator).waitFor({ state: 'detached', timeout: timeoutMs });
+            isDetached = true;
+            TestUtilities.logToConsole("Element is detached: " + elementDescription);
+        } 
+        catch {
+            isDetached = false;
+            TestUtilities.logToConsole("Element is NOT detached: " + elementDescription);
+        }
+
+        return isDetached;
+    }
+
+    protected async isHiddenState(locator : string, elementDescription : string, timeoutMs : number= 5000) : Promise<boolean>{  
+        let isHidden = false;
+
+        try {
+            await this.page.locator(locator).waitFor({ state: 'hidden', timeout: timeoutMs });
+            isHidden = true;
+            TestUtilities.logToConsole("Element is hidden: " + elementDescription);
+        } 
+        catch {
+            isHidden = false;
+            TestUtilities.logToConsole("Element is NOT hidden: " + elementDescription);
+        }
+
+        return isHidden;
+    }
+
+    protected async isVisibleState(locator : string, elementDescription : string, timeoutMs : number= 5000) : Promise<boolean>{  
+        let isVisible = false;
+
+        try {
+            await this.page.locator(locator).waitFor({ state: 'visible', timeout: timeoutMs });
+            isVisible = true;
+            TestUtilities.logToConsole("Element is visible: " + elementDescription);
+        } 
+        catch {
+            isVisible = false;
+            TestUtilities.logToConsole("Element is NOT visible: " + elementDescription);
+        }
+
+        return isVisible;
+    }
+
+    protected async islistNotEmpty(locator : string) : Promise<boolean> {
+        let count : number = await this.getCountFromList(locator);
+
+        return count >= 1; //either true or false
+    }
+
+    protected async getCountFromList(locator : string) : Promise<number> {
+        let allElements = await this.page.locator(locator);
+        let count : number = await allElements.count();
+        await this.logMessage("List has " + count  + " elements");
+
+        return count;
     }
 }
