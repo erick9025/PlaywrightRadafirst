@@ -1,5 +1,6 @@
 import { test, Browser, BrowserContext, Page, Locator, expect } from '@playwright/test';
 import { SwagLoginPage } from '../pom/swagLoginPage';
+import { SwagProductsPage } from '../pom/swagProductsPage';
 
 let browser: Browser;
 let context: BrowserContext;
@@ -81,6 +82,14 @@ test.skip("My very first test with Facebook and TypeScript", async () => {
 
 test("Swag", async () => {
     const swagLoginPage: SwagLoginPage = new SwagLoginPage(page);
+    const swagProductsPage: SwagProductsPage = new SwagProductsPage(page);
 
     await swagLoginPage.login();
+    await swagProductsPage.addProductToCart("Sauce Labs Backpack");
+    await swagProductsPage.addProductToCart("Sauce Labs Backpack");
+    await swagProductsPage.addProductToCart("Sauce Labs Backpack");
+    await swagProductsPage.addProductToCart("Sauce Labs Backpack");
+    await swagProductsPage.addProductToCart("Sauce Labs Backpack");
+    await swagProductsPage.addProductToCart("Sauce Labs Fleece Jacket");
+    await swagProductsPage.printTotalAddedSoFar();
 });

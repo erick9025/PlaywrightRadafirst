@@ -36,6 +36,7 @@ export class SwagLoginPage extends BasePage {
     // ******************************************** METHODS (3) *****************************************************
     public async login(user: string = "", password: string = "") : Promise<void> {
 
+        this.mainMethodStart("login");
         await this.goToURL("https://www.saucedemo.com/");
 
         // If user not provided, take default, same for password
@@ -54,6 +55,7 @@ export class SwagLoginPage extends BasePage {
         await this.enterText(this.inputUser, "Username [Input]", user);
         await this.enterText(this.inputPassword, "Password [Input]", password);
         await this.click(this.buttonLogin, "Login [Button]");
+        this.mainMethodEnd("login");
     }
 
 

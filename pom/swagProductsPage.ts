@@ -1,6 +1,7 @@
 import { TestUtilities } from "../utils/testUtilities";
 import { BasePage } from "./parent/basePage";
 import { Page } from '@playwright/test';
+import { Asserts } from "../utils/asserts";
 
 /*
 On POM, the application will be splitted into multiples pages (one per screen/functionality/feature)
@@ -23,53 +24,109 @@ export class SwagProductsPage extends BasePage {
     }
 
     // ******************************************** PARAMETERS/ATTRIBUTES (1) *****************************************************
-    private totalPriceAllItemsAdded: number = 0; // Will be later placed on 'SwagProductsPage'
+    private itemsAlreadyAdded : string[] = [];
+    private howManyItemsAlreadyAdded : number = 0;
+    private expectedTotal : number = 0;
 
     // ******************************************** LOCATORS (2) *****************************************************
 
-    private readonly inputUser: string = "aaaa";
-    private readonly inputPassword: string = "aaaa";
-    private readonly locator3: string = "aaaa";
-    private readonly locator4: string = "aaaa";
-    private readonly locator5: string = "aaaa";
-    private readonly locator6: string = "aaaa";
-    private readonly locator7: string = "aaaa";
-    private readonly locator8: string = "aaaa";
+    //Define locators that should return LIST OF elements
+    private readonly ListAllAddToCardButtons = "[id*='add-to-cart-']";
+    private readonly AllButtonsAddToCart = "[id*='add-to-cart']";
+    private readonly ListAllProductsNames = "[data-test='inventory-item-name']";
+    private readonly ListAllProductsPrices = ".inventory_item_price";
+
+    //Define locators that should return SINGLE element  
+    private readonly TitleProducts : string = ".title";
+    private readonly ItemFromCatalogDescriptionXpath = "//*[@data-test='inventory-item-name' and contains(text(),'{{key}}')]";
+    private readonly ItemFromCatalogDescriptionCssPW = this.ListAllProductsNames + ":has-text('{{key}}')";
+    private readonly ButtonAddToCartItemFromCatalog = this.ItemFromCatalogDescriptionXpath + "/following::button[1]";
+    private readonly DdlProductsSort = ".product_sort_container";
+
+    //Try same approach with XPATH and CSS-SELECTOR (only works in PlayWright, not on Chrome or other browsers)
+    private readonly DummyItemFromCatalogDescriptionXpath = "//*[@data-test='inventory-item-name' and contains(text(),'Backpack')]";
+    private readonly DummyItemFromCatalogDescriptionCssPW = this.ListAllProductsNames + ":has-text('Backpack')";
     
 
     // ******************************************** METHODS (3) *****************************************************
-    public async login(user: string, password: string) : Promise<void> {
 
-        // If user not provided, take default, same for password
-        if(TestUtilities.isNullOrEmpty(user)) {
-            user = this.userStandard;
+    public async addProductToCart(wantedProduct : string): Promise<void> {
+        
+        this.mainMethodStart("addProductToCart", wantedProduct);
+
+        await this.verifyElementIsNotFound("fake.element", "Fake [Dummy Element]", 5); // POC not existing locators is not found
+
+        this.logMessage("Adding to the cart the product: " + wantedProduct);
+        const dynamicLocatorLabel : string = TestUtilities.replaceKey(this.ItemFromCatalogDescriptionCssPW, wantedProduct);
+        const dynamicLocatorButton : string = TestUtilities.replaceKey(this.ButtonAddToCartItemFromCatalog, wantedProduct);
+
+        await this.islistNotEmpty(this.ListAllAddToCardButtons).then((listIsNotEmpty : boolean) => {
+            Asserts.assertTrue(listIsNotEmpty, "List of buttons is not empty");
+        });
+                    
+        await this.verifyElementIsVisible(dynamicLocatorLabel, wantedProduct + " [Product from Catalog]");
+        await this.verifyElementIsVisible(dynamicLocatorButton, "Add to cart [Button from " + wantedProduct + "]");
+
+        let btnTextBefore = await this.returnTextFromElement(dynamicLocatorButton, "Add to cart [Button from " + wantedProduct + "]");
+
+        if(btnTextBefore === "Remove") {
+            this.logMessage("Item was already added: " + wantedProduct);
+            this.methodEnd("addProductToCart", "Was already added: " + wantedProduct);
+            return;
         }
 
-        if(TestUtilities.isNullOrEmpty(password)) {
-            password = this.correctPassword;
-        }
+        Asserts.assertEquals(btnTextBefore, "Add to cart", "Button text is correct before click");
 
+        await this.click(dynamicLocatorButton, "Add to cart [Button from " + wantedProduct + "]");
+        this.howManyItemsAlreadyAdded++;
+        this.itemsAlreadyAdded.push(wantedProduct);
 
+        const priceLocator : string = TestUtilities.replaceKeyName("//div[@class='inventory_item' and contains(.,'{{itemName}}')]//child::*[@class='inventory_item_price']", "itemName", wantedProduct);
+        const correspondingPriceStr : string = await this.returnTextFromElement(priceLocator, `'${wantedProduct}' price [Dynamic $ value]`);
+        const correspondingPrice : number = TestUtilities.getNumericValue(TestUtilities.getTextAfter(correspondingPriceStr, "$"));
+
+        this.infoBold(`'${wantedProduct}' price: $${correspondingPrice}`);
+        this.expectedTotal += correspondingPrice;
+
+        let btnTextAfter = await this.returnTextFromElement(dynamicLocatorButton, "Add to cart [Button from " + wantedProduct + "]");
+        Asserts.assertEquals(btnTextAfter, "Remove", "Button text is correct after click");
+    
+        this.mainMethodEnd("addProductToCart", wantedProduct);
     }
+
+    public async printTotalAddedSoFar(): Promise<void> {        
+        this.mainMethodStart("printTotalAddedSoFar");
+
+        this.infoImportant("Total $ so far: " + TestUtilities.formatCurrency(this.expectedTotal));
+
+        this.methodEnd("printTotalAddedSoFar");
+    }
+    // ToDo HOMEWORK fix below method (from repo 'PlaywrightProxymise' > SwagDashboardPage to 'PlaywrightRadafirst' > SwagProductsPage)
+
+    /*public async sortProducts(orderBy : ProductSortingOptions) : Promise<SwagDashboardPage> {
+        let valueAsStr : string = "";
+        this.methodStart("sortProducts", orderBy.toString());
+
+        //await this.page.waitForTimeout(800); //JUST FOR DEBUGGING PURPOSES
+        
+        const sortingMap: Record<ProductSortingOptions, string> = {
+            [ProductSortingOptions.NameAscending]: "az",
+            [ProductSortingOptions.NameDescending]: "za",
+            [ProductSortingOptions.PriceAscending]: "lohi",
+            [ProductSortingOptions.PriceDescending]: "hilo"
+          };
+          
+        valueAsStr = sortingMap[orderBy];
+
+        //Encapsulate into base page
+        await this.selectDropdownOptionByValue(this.SwagDashboardElements.DdlProductsSort, valueAsStr);
+
+        this.methodEnd("sortProducts", orderBy.toString());
+        return this;
+    }*/
 
 
     // ******************************************** CONSTANTS (4) *****************************************************
-    private readonly legalMessage: string = "© 2026 Sauce Labs. All Rights Reserved. Terms of Service | Privacy Policy";  // Will be later placed on 'SwagProductsPage'
-        
-    /*
-    Accepted usernames are:
-        standard_user
-        locked_out_user
-        problem_user
-        performance_glitch_user
-        error_user
-        visual_user
-    */
-    private readonly userStandard: string = "standard_user";
 
-    /*
-    Password for all users:
-        secret_sauce
-    */
-    private readonly correctPassword: string = "secret_sauce";
+
 }
