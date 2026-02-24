@@ -140,6 +140,14 @@ export abstract class BasePage {
         this.logMessage(`Clicked on element: ${elementDescription} and waited for its triggered parallel API call with endpoint: ${apiEndpointOrPartialUrl} that took ${durationString} to run`);        
     }
 
+    protected async selectDropdownOptionByValue(ddlLocator : string, valueStr : string, elementDescription : string = "") : Promise<void> {        
+        await this.verifyElementIsVisible(ddlLocator, "Dropdown " + ddlLocator);
+        await this.page.locator(ddlLocator).selectOption({ value: valueStr });
+        var selectedValue = await this.page.locator(ddlLocator).inputValue();
+        expect(selectedValue).toBe(valueStr);
+        this.logMessage("Selected by value: " + valueStr);
+    }
+
     protected async verifyElementIsVisible(elementLocator: string, elementDescription: string, timeoutMs: number = 5_000): Promise<void> {
         await this.waitForFirstElement(elementLocator, elementDescription, timeoutMs);
 

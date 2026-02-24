@@ -1,6 +1,7 @@
 import { test, Browser, BrowserContext, Page, Locator, expect } from '@playwright/test';
 import { SwagLoginPage } from '../pom/swagLoginPage';
 import { SwagProductsPage } from '../pom/swagProductsPage';
+import { ProductSortingOptions } from '../utils/productSortingOptions';
 
 let browser: Browser;
 let context: BrowserContext;
@@ -91,5 +92,6 @@ test("Swag", async () => {
     await swagProductsPage.addProductToCart("Sauce Labs Backpack");
     await swagProductsPage.addProductToCart("Sauce Labs Backpack");
     await swagProductsPage.addProductToCart("Sauce Labs Fleece Jacket");
+    await swagProductsPage.sortProducts(ProductSortingOptions.NameAscending);
     await swagProductsPage.printTotalAddedSoFar();
 });

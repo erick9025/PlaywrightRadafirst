@@ -2,6 +2,8 @@ import { TestUtilities } from "../utils/testUtilities";
 import { BasePage } from "./parent/basePage";
 import { Page } from '@playwright/test';
 import { Asserts } from "../utils/asserts";
+import { ProductSortingOptions } from "../utils/productSortingOptions";
+import { SwagDashboardElements } from "./elements/swagProductsElements";
 
 /*
 On POM, the application will be splitted into multiples pages (one per screen/functionality/feature)
@@ -18,16 +20,18 @@ Current responsibilites: 4
 
 export class SwagProductsPage extends BasePage {
 
+    private SwagDashboardElements : SwagDashboardElements;
+
     // ******************************************** CONSTRUCTOR (0) *****************************************************
     constructor(page: Page) {
         super(page);
+        this.SwagDashboardElements = new SwagDashboardElements();
     }
 
     // ******************************************** PARAMETERS/ATTRIBUTES (1) *****************************************************
     private itemsAlreadyAdded : string[] = [];
     private howManyItemsAlreadyAdded : number = 0;
     private expectedTotal : number = 0;
-
     // ******************************************** LOCATORS (2) *****************************************************
 
     //Define locators that should return LIST OF elements
@@ -101,9 +105,9 @@ export class SwagProductsPage extends BasePage {
 
         this.methodEnd("printTotalAddedSoFar");
     }
+    
     // ToDo HOMEWORK fix below method (from repo 'PlaywrightProxymise' > SwagDashboardPage to 'PlaywrightRadafirst' > SwagProductsPage)
-
-    /*public async sortProducts(orderBy : ProductSortingOptions) : Promise<SwagDashboardPage> {
+    public async sortProducts(orderBy : ProductSortingOptions) : Promise<SwagProductsPage> {
         let valueAsStr : string = "";
         this.methodStart("sortProducts", orderBy.toString());
 
@@ -123,7 +127,7 @@ export class SwagProductsPage extends BasePage {
 
         this.methodEnd("sortProducts", orderBy.toString());
         return this;
-    }*/
+    }
 
 
     // ******************************************** CONSTANTS (4) *****************************************************
