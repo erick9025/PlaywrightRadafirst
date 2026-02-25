@@ -70,4 +70,29 @@ test.describe('Tests for Swag pages', () => {
         await swagCartPage.goToCart();
         await swagCartPage.verifyCartTotalIsCorrect();
     });
+
+    /*
+    test("Swag Add products and go to cart", async () => {        
+        await swagProductsPage  .addProductToCart("Sauce Labs Backpack")
+                                .addProductToCart("Sauce Labs Fleece Jacket")
+                                .sortProducts(ProductSortingOptions.NameAscending)
+                                .printTotalAddedSoFar();
+        await swagCartPage      .goToCart()
+                                .verifyCartTotalIsCorrect();
+    });
+    */
+
+    test("Chaining calls SYNC", async () => {        
+        swagProductsPage    .step1()
+                            .step2()
+                            .step3()
+                            .step4();
+    });
+
+    test("Not Chaining calls SYNC", async () => {        
+        swagProductsPage.step1();
+        swagProductsPage.step2();
+        swagProductsPage.step3();
+        swagProductsPage.step4();
+    });
 });
