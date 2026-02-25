@@ -3,6 +3,7 @@ import { SwagLoginPage } from '../pom/swagLoginPage';
 import { SwagProductsPage } from '../pom/swagProductsPage';
 import { SwagCartPage } from '../pom/swagCartPage';
 import { ProductSortingOptions } from '../utils/productSortingOptions';
+import { ExecutionParameters } from '../utils/executionParameters';
 
 test.describe('Tests for Swag pages', () => {
 
@@ -41,6 +42,7 @@ test.describe('Tests for Swag pages', () => {
 
     test.afterEach(async () => {
         await context.close();
+        ExecutionParameters.expectedTotal = 0; // Reset
     });
 
     test.afterAll(async () => {
