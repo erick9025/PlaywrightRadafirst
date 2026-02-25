@@ -4,7 +4,7 @@ import { Asserts } from "../../utils/asserts";
 
 export abstract class BasePage {
 
-    protected page: Page;
+    protected page: Page;    
 
     constructor(page: Page) {
         this.page = page;
@@ -140,6 +140,14 @@ export abstract class BasePage {
         this.logMessage(`Clicked on element: ${elementDescription} and waited for its triggered parallel API call with endpoint: ${apiEndpointOrPartialUrl} that took ${durationString} to run`);        
     }
 
+    protected async selectDropdownOptionByValue(ddlLocator : string, valueStr : string, elementDescription : string = "") : Promise<void> {        
+        await this.verifyElementIsVisible(ddlLocator, "Dropdown " + ddlLocator);
+        await this.page.locator(ddlLocator).selectOption({ value: valueStr });
+        var selectedValue = await this.page.locator(ddlLocator).inputValue();
+        expect(selectedValue).toBe(valueStr);
+        this.logMessage("Selected by value: " + valueStr);
+    }
+
     protected async verifyElementIsVisible(elementLocator: string, elementDescription: string, timeoutMs: number = 5_000): Promise<void> {
         await this.waitForFirstElement(elementLocator, elementDescription, timeoutMs);
 
@@ -150,6 +158,16 @@ export abstract class BasePage {
         catch(error) {
             this.logMessage("verifyElementIsVisible Failed. Element is NOT visible: " + elementDescription);
         }
+    }
+
+    protected async verifyElementIsVisibleAndContainsText(elementLocator: string, elementDescription: string, expectedText: string, timeoutMs: number = 5_000, partialMatch: boolean = true): Promise<void>{
+        this.logMessage(`Verifying that element '${elementDescription}' contains text: '${expectedText}' | Partial match: ${partialMatch}`);
+        await this.verifyElementIsVisible(elementLocator, elementDescription, timeoutMs);
+        let visibleElementText: string = await this.returnTextFromElement(elementLocator, elementDescription);
+        
+        partialMatch 
+        ? Asserts.assertStringContains(visibleElementText, expectedText, "(PARTIAL MATCH) Above element contains text: " + expectedText) // This is a contains validation (could lead to errors), not that reliable
+        : Asserts.assertEquals(expectedText, visibleElementText, "(EXACT MATCH) Both texts should be the same"); // This is a most reliable validation
     }
 
     private async waitForFirstElement(elementLocator: string, elementDescription: string, timeoutMs: number): Promise<void> {
