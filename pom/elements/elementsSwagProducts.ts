@@ -1,5 +1,6 @@
-export class ElementsSwagProducts {
+import { ElementsSwag } from "./elementsSwag";
 
+export class ElementsSwagProducts implements ElementsSwag {
     //Define locators that should return LIST OF elements
     public readonly ListAllAddToCardButtons: string = "[id*='add-to-cart-']";
     public readonly AllButtonsAddToCart: string = "[id*='add-to-cart']";

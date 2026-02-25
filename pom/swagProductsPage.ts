@@ -4,6 +4,8 @@ import { ExecutionParameters } from "../utils/executionParameters";
 import { TestUtilities } from "../utils/testUtilities";
 import { Asserts } from "../utils/asserts";
 import { ProductSortingOptions } from "../utils/productSortingOptions";
+import { ElementsSwagProducts } from "./elements/elementsSwagProducts";
+import { ConstantsProductsPage } from "./constants/constantsProductsPage";
 
 /*
 On POM, the application will be splitted into multiples pages (one per screen/functionality/feature)
@@ -18,11 +20,27 @@ Original responsibilites: 5
 Current responsibilites: 2
 */
 
-export class SwagProductsPage extends SwagParentPage {
+export class SwagProductsPage extends SwagParentPage<ElementsSwagProducts, ConstantsProductsPage> {
 
     // ******************************************** CONSTRUCTOR (0) *****************************************************
     constructor(page: Page) {
         super(page);
+    }
+
+    protected createElements(): ElementsSwagProducts {
+        return new ElementsSwagProducts();
+    }
+
+    protected createConstants(): ConstantsProductsPage {
+        return new ConstantsProductsPage();
+    }
+
+    protected get ElementsSwagProducts(): ElementsSwagProducts {
+        return this.elements;
+    }
+
+    protected get ConstantsProductsPage(): ConstantsProductsPage {
+        return this.constants;
     }
 
     // ******************************************** PARAMETERS/ATTRIBUTES (1) *****************************************************

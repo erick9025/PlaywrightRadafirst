@@ -1,8 +1,8 @@
-import { TestUtilities } from "../utils/testUtilities";
-import { BasePage } from "./parent/basePage";
 import { Page } from '@playwright/test';
-import { Asserts } from "../utils/asserts";
 import { ExecutionParameters } from "../utils/executionParameters";
+import { SwagParentPage } from "./parent/swagParentPage";
+import { ElementsSwagCart } from "./elements/elementsSwagCart";
+import { ConstantsCartPage } from "./constants/constantsCartPage";
 
 /*
 On POM, the application will be splitted into multiples pages (one per screen/functionality/feature)
@@ -17,7 +17,7 @@ Original responsibilites: 5
 Current responsibilites: 4
 */
 
-export class SwagCartPage extends BasePage {
+export class SwagCartPage extends SwagParentPage<ElementsSwagCart, ConstantsCartPage> {
 
 
     // ******************************************** CONSTRUCTOR (0) *****************************************************
@@ -25,13 +25,25 @@ export class SwagCartPage extends BasePage {
         super(page);
     }
 
+    protected createElements(): ElementsSwagCart {
+        return new ElementsSwagCart();
+    }
+
+    protected createConstants(): ConstantsCartPage {
+        return new ConstantsCartPage();
+    }
+
+    protected get ElementsSwagCart(): ElementsSwagCart {
+        return this.elements;
+    }
+
+    protected get ConstantsCartPage(): ConstantsCartPage {
+        return this.constants;
+    }
+
     // ******************************************** PARAMETERS/ATTRIBUTES (1) *****************************************************
 
     // ******************************************** LOCATORS (2) *****************************************************
-
-    //Define locators that should return LIST OF elements
-    private readonly IconCart: string = "a.shopping_cart_link";
-    private readonly PageTitle: string = ".title";  
 
     // ******************************************** METHODS (3) *****************************************************
 
@@ -39,8 +51,8 @@ export class SwagCartPage extends BasePage {
         
         this.mainMethodStart("goToCart");
 
-        await this.click(this.IconCart, "Cart [Icon]");
-        await this.verifyElementIsVisibleAndContainsText(this.PageTitle, "Title [Dynamic Label]", "Your Cart", 3_000, false);
+        await this.click(this.ElementsSwagCart.IconCart, "Cart [Icon]");
+        await this.verifyElementIsVisibleAndContainsText(this.ElementsSwagCart.PageTitle, "Title [Dynamic Label]", "Your Cart", 3_000, false);
     
         this.mainMethodEnd("goToCart");
     }

@@ -1,4 +1,6 @@
-export class ConstantsProductsPage {
+import { ConstantsSwag } from "./constantsSwag";
+
+export class ConstantsProductsPage implements ConstantsSwag {
     public readonly existingProducts: string[] = 
     [
         "Sauce Labs Backpack",
