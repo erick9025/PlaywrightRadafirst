@@ -1,4 +1,4 @@
-import { UserInformation } from "../models/userIInformation";
+import { UserInformation } from "../models/userInformation";
 
 export class ExecutionParameters {
     private static _expectedTotal : number = 0;
