@@ -67,9 +67,10 @@ test.describe('Tests for Swag pages', () => {
         await swagProductsPage.addProductToCart("Sauce Labs Fleece Jacket");
         await swagProductsPage.sortProducts(ProductSortingOptions.NameAscending);
         await swagProductsPage.printTotalAddedSoFar();
-        await swagCartPage.goToCart();
-        await swagCartPage.printUserInfo(ExecutionParameters.userObject);
+        await swagCartPage.preStep();
+        await swagCartPage.goToCart();        
         await swagCartPage.verifyCartTotalIsCorrect();
+        await swagCartPage.postStep(ExecutionParameters.userObject);
     });
 
     test("Chaining calls SYNC", async () => {        

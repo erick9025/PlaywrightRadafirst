@@ -70,9 +70,10 @@ test.describe('Tests for Swag pages WITH PROXYMISE', () => {
                                 .addProductToCart("Sauce Labs Fleece Jacket")
                                 .sortProducts(ProductSortingOptions.NameAscending)
                                 .printTotalAddedSoFar();
-        await swagCartPage      .goToCart()
-                                .printUserInfo(ExecutionParameters.userObject)
-                                .verifyCartTotalIsCorrect();
+        await swagCartPage      .preStep()
+                                .goToCart()
+                                .verifyCartTotalIsCorrect()
+                                .postStep(ExecutionParameters.userObject);
     });
 
     test("PROXYMISE Chaining calls SYNC", async () => {        

@@ -61,15 +61,8 @@ export class SwagLoginPage extends SwagParentPage {
         await this.enterText(this.ElementsSwagLogin.inputUser, "Username [Input]", user);
         await this.enterText(this.ElementsSwagLogin.inputPassword, "Password [Input]", password);
         await this.click(this.ElementsSwagLogin.buttonLogin, "Login [Button]");
+
         this.mainMethodEnd("login");
-
-        let userInfo : UserInformation;
-        userInfo = new UserInformation();
-        userInfo.username = user;
-        userInfo.password = password;
-
-        ExecutionParameters.userObject = userInfo;
-
         return this;
     }
 

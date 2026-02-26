@@ -11,13 +11,5 @@ export class ExecutionParameters {
         this._expectedTotal = total;
     }
 
-    private static _userObject : UserInformation;
-
-    public static get userObject(): UserInformation {
-        return this._userObject;
-    }
-
-    public static set userObject(user: UserInformation) {
-        this._userObject = user;
-    }
+    public static userObject : UserInformation;
 }

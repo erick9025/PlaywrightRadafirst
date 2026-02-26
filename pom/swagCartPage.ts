@@ -59,13 +59,24 @@ export class SwagCartPage extends SwagParentPage {
         return this;
     }
 
-    public async printUserInfo(userObj: UserInformation): Promise<SwagCartPage> {        
-        this.mainMethodStart("printUserInfo");
+    public async preStep(): Promise<SwagCartPage> {        
+        this.mainMethodStart("preStep");
+
+        ExecutionParameters.userObject = new UserInformation();
+        ExecutionParameters.userObject.username = "Erick";
+        ExecutionParameters.userObject.password = "pa$$word123";
+    
+        this.mainMethodEnd("preStep");
+        return this;
+    }
+
+    public async postStep(userObj: UserInformation): Promise<SwagCartPage> {        
+        this.mainMethodStart("postStep");
 
         this.infoImportant("---Current user name: " + userObj.username);
         this.infoImportant("---Current user password: " + userObj.password);
     
-        this.mainMethodEnd("printUserInfo");
+        this.mainMethodEnd("postStep");
         return this;
     }
 
