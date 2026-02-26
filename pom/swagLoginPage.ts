@@ -1,9 +1,9 @@
-import { Asserts } from "../utils/asserts";
-import { TestUtilities } from "../utils/testUtilities";
-import { SwagParentPage } from "./parent/swagParentPage";
 import { Page } from '@playwright/test';
+import { SwagParentPage } from "./parent/swagParentPage";
+import { TestUtilities } from "../utils/testUtilities";
+import { Asserts } from "../utils/asserts";
 import { ExecutionParameters } from "../utils/executionParameters";
-import { UserInformation } from "../models/userIInformation";
+import { UserInformation } from "../models/userInformation";
 import proxymise from "proxymise";
 
 /*

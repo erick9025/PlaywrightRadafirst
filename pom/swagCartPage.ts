@@ -1,8 +1,9 @@
 import { Page } from '@playwright/test';
-import { ExecutionParameters } from "../utils/executionParameters";
 import { SwagParentPage } from "./parent/swagParentPage";
-import { ElementsSwagCart } from "./elements/elementsSwagCart";
-import { ConstantsCartPage } from "./constants/constantsCartPage";
+import { TestUtilities } from "../utils/testUtilities";
+import { Asserts } from "../utils/asserts";
+import { ExecutionParameters } from "../utils/executionParameters";
+import { UserInformation } from '../models/userInformation';
 import proxymise from "proxymise";
 
 /*
@@ -37,8 +38,7 @@ export class SwagCartPage extends SwagParentPage {
 
     // ******************************************** METHODS (3) *****************************************************
 
-    public async goToCart(): Promise<SwagCartPage> {
-        
+    public async goToCart(): Promise<SwagCartPage> {        
         this.mainMethodStart("goToCart");
 
         await this.click(this.ElementsSwagCart.IconCart, "Cart [Icon]");
@@ -48,8 +48,7 @@ export class SwagCartPage extends SwagParentPage {
         return this;
     }
 
-    public async verifyCartTotalIsCorrect(): Promise<SwagCartPage> {
-        
+    public async verifyCartTotalIsCorrect(): Promise<SwagCartPage> {        
         this.mainMethodStart("verifyCartTotalIsCorrect");
 
         this.logMessage("Total added so far: " + ExecutionParameters.expectedTotal);
@@ -57,6 +56,16 @@ export class SwagCartPage extends SwagParentPage {
         // ToDo Homework
     
         this.mainMethodEnd("verifyCartTotalIsCorrect");
+        return this;
+    }
+
+    public async printUserInfo(userObj: UserInformation): Promise<SwagCartPage> {        
+        this.mainMethodStart("printUserInfo");
+
+        this.infoImportant("---Current user name: " + userObj.username);
+        this.infoImportant("---Current user password: " + userObj.password);
+    
+        this.mainMethodEnd("printUserInfo");
         return this;
     }
 

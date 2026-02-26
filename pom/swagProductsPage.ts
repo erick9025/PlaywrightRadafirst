@@ -1,11 +1,9 @@
 import { Page } from '@playwright/test';
 import { SwagParentPage } from "./parent/swagParentPage";
-import { ExecutionParameters } from "../utils/executionParameters";
 import { TestUtilities } from "../utils/testUtilities";
 import { Asserts } from "../utils/asserts";
+import { ExecutionParameters } from "../utils/executionParameters";
 import { ProductSortingOptions } from "../utils/productSortingOptions";
-import { ElementsSwagProducts } from "./elements/elementsSwagProducts";
-import { ConstantsProductsPage } from "./constants/constantsProductsPage";
 import proxymise from "proxymise";
 
 /*
@@ -48,9 +46,6 @@ export class SwagProductsPage extends SwagParentPage {
     public async addProductToCart(wantedProduct : string): Promise<SwagProductsPage> {
         
         this.mainMethodStart("addProductToCart", wantedProduct);
-
-        this.infoImportant("---Current user name: " + ExecutionParameters.userObject.username);
-        this.infoImportant("---Current user password: " + ExecutionParameters.userObject.password);
 
         this.logMessage("Current existing products for sale:");
         this.ConstantsProductsPage.existingProducts.forEach(product => {

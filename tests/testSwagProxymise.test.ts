@@ -71,6 +71,7 @@ test.describe('Tests for Swag pages WITH PROXYMISE', () => {
                                 .sortProducts(ProductSortingOptions.NameAscending)
                                 .printTotalAddedSoFar();
         await swagCartPage      .goToCart()
+                                .printUserInfo(ExecutionParameters.userObject)
                                 .verifyCartTotalIsCorrect();
     });
 

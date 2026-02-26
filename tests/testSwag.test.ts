@@ -68,6 +68,7 @@ test.describe('Tests for Swag pages', () => {
         await swagProductsPage.sortProducts(ProductSortingOptions.NameAscending);
         await swagProductsPage.printTotalAddedSoFar();
         await swagCartPage.goToCart();
+        await swagCartPage.printUserInfo(ExecutionParameters.userObject);
         await swagCartPage.verifyCartTotalIsCorrect();
     });
 
