@@ -2,8 +2,8 @@ import { Asserts } from "../utils/asserts";
 import { TestUtilities } from "../utils/testUtilities";
 import { SwagParentPage } from "./parent/swagParentPage";
 import { Page } from '@playwright/test';
-import { ElementsSwagLogin } from "./elements/elementsSwagLogin";
-import { ConstantsLoginPage } from "./constants/constantsLoginPage";
+import { ExecutionParameters } from "../utils/executionParameters";
+import { UserInformation } from "../models/userIInformation";
 import proxymise from "proxymise";
 
 /*
@@ -62,6 +62,14 @@ export class SwagLoginPage extends SwagParentPage {
         await this.enterText(this.ElementsSwagLogin.inputPassword, "Password [Input]", password);
         await this.click(this.ElementsSwagLogin.buttonLogin, "Login [Button]");
         this.mainMethodEnd("login");
+
+        let userInfo : UserInformation;
+        userInfo = new UserInformation();
+        userInfo.username = user;
+        userInfo.password = password;
+
+        ExecutionParameters.userObject = userInfo;
+
         return this;
     }
 

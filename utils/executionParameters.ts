@@ -1,3 +1,5 @@
+import { UserInformation } from "../models/userIInformation";
+
 export class ExecutionParameters {
     private static _expectedTotal : number = 0;
 
@@ -7,5 +9,15 @@ export class ExecutionParameters {
 
     public static set expectedTotal(total: number) {
         this._expectedTotal = total;
+    }
+
+    private static _userObject : UserInformation;
+
+    public static get userObject(): UserInformation {
+        return this._userObject;
+    }
+
+    public static set userObject(user: UserInformation) {
+        this._userObject = user;
     }
 }

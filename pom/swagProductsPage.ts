@@ -49,6 +49,9 @@ export class SwagProductsPage extends SwagParentPage {
         
         this.mainMethodStart("addProductToCart", wantedProduct);
 
+        this.infoImportant("---Current user name: " + ExecutionParameters.userObject.username);
+        this.infoImportant("---Current user password: " + ExecutionParameters.userObject.password);
+
         this.logMessage("Current existing products for sale:");
         this.ConstantsProductsPage.existingProducts.forEach(product => {
             this.logMessage("..." + product);
