@@ -27,7 +27,6 @@ export class SwagLoginPage extends SwagParentPage {
         return new SwagLoginPage(page);
     }
 
-
     // ******************************************** CONSTRUCTOR (0) *****************************************************
     constructor(page: Page) {
         super(page);
