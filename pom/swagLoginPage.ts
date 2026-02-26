@@ -4,6 +4,7 @@ import { SwagParentPage } from "./parent/swagParentPage";
 import { Page } from '@playwright/test';
 import { ElementsSwagLogin } from "./elements/elementsSwagLogin";
 import { ConstantsLoginPage } from "./constants/constantsLoginPage";
+import proxymise from "proxymise";
 
 /*
 On POM, the application will be splitted into multiples pages (one per screen/functionality/feature)
@@ -18,27 +19,18 @@ Original responsibilites: 5
 Current responsibilites: 4
 */
 
-export class SwagLoginPage extends SwagParentPage<ElementsSwagLogin, ConstantsLoginPage> {
+export class SwagLoginPage extends SwagParentPage {
+
+    // ******************************************** STATIC PROXYMISE CONSTRUCTOR (0) *****************************************************
+    // This method is static now. Necessary for proxymise correct work
+    public static initPage(page: Page): SwagLoginPage {
+        return new SwagLoginPage(page);
+    }
+
 
     // ******************************************** CONSTRUCTOR (0) *****************************************************
     constructor(page: Page) {
         super(page);
-    }
-
-    protected createElements(): ElementsSwagLogin {
-        return new ElementsSwagLogin();
-    }
-
-    protected createConstants(): ConstantsLoginPage {
-        return new ConstantsLoginPage();
-    }
-
-    protected get ElementsSwagLogin(): ElementsSwagLogin {
-        return this.elements;
-    }
-
-    protected get ConstantsLoginPage(): ConstantsLoginPage {
-        return this.constants;
     }
 
     // ******************************************** PARAMETERS/ATTRIBUTES (1) *****************************************************
@@ -49,7 +41,7 @@ export class SwagLoginPage extends SwagParentPage<ElementsSwagLogin, ConstantsLo
     // Moved to ElementsSwagLogin class  
 
     // ******************************************** METHODS (3) *****************************************************
-    public async login(user: string = "", password: string = "") : Promise<void> {
+    public async login(user: string = "", password: string = "") : Promise<SwagLoginPage> {
 
         this.mainMethodStart("login");
         await this.goToURL("https://www.saucedemo.com/");
@@ -71,6 +63,7 @@ export class SwagLoginPage extends SwagParentPage<ElementsSwagLogin, ConstantsLo
         await this.enterText(this.ElementsSwagLogin.inputPassword, "Password [Input]", password);
         await this.click(this.ElementsSwagLogin.buttonLogin, "Login [Button]");
         this.mainMethodEnd("login");
+        return this;
     }
 
 
@@ -78,3 +71,5 @@ export class SwagLoginPage extends SwagParentPage<ElementsSwagLogin, ConstantsLo
     
     // Moved to ConstantsLoginPage class
 }
+
+export default proxymise(SwagLoginPage);

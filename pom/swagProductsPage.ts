@@ -6,6 +6,7 @@ import { Asserts } from "../utils/asserts";
 import { ProductSortingOptions } from "../utils/productSortingOptions";
 import { ElementsSwagProducts } from "./elements/elementsSwagProducts";
 import { ConstantsProductsPage } from "./constants/constantsProductsPage";
+import proxymise from "proxymise";
 
 /*
 On POM, the application will be splitted into multiples pages (one per screen/functionality/feature)
@@ -20,27 +21,17 @@ Original responsibilites: 5
 Current responsibilites: 2
 */
 
-export class SwagProductsPage extends SwagParentPage<ElementsSwagProducts, ConstantsProductsPage> {
+export class SwagProductsPage extends SwagParentPage {
+
+    // ******************************************** STATIC PROXYMISE CONSTRUCTOR (0) *****************************************************
+     // This method is static now. Necessary for proxymise correct work
+    public static initPage(page: Page): SwagProductsPage {
+        return new SwagProductsPage(page);
+    }
 
     // ******************************************** CONSTRUCTOR (0) *****************************************************
     constructor(page: Page) {
         super(page);
-    }
-
-    protected createElements(): ElementsSwagProducts {
-        return new ElementsSwagProducts();
-    }
-
-    protected createConstants(): ConstantsProductsPage {
-        return new ConstantsProductsPage();
-    }
-
-    protected get ElementsSwagProducts(): ElementsSwagProducts {
-        return this.elements;
-    }
-
-    protected get ConstantsProductsPage(): ConstantsProductsPage {
-        return this.constants;
     }
 
     // ******************************************** PARAMETERS/ATTRIBUTES (1) *****************************************************
@@ -54,7 +45,7 @@ export class SwagProductsPage extends SwagParentPage<ElementsSwagProducts, Const
 
     // ******************************************** METHODS (3) *****************************************************
 
-    public async addProductToCart(wantedProduct : string): Promise<void> {
+    public async addProductToCart(wantedProduct : string): Promise<SwagProductsPage> {
         
         this.mainMethodStart("addProductToCart", wantedProduct);
 
@@ -81,7 +72,7 @@ export class SwagProductsPage extends SwagParentPage<ElementsSwagProducts, Const
         if(btnTextBefore === "Remove") {
             this.logMessage("Item was already added: " + wantedProduct);
             this.methodEnd("addProductToCart", "Was already added: " + wantedProduct);
-            return;
+            return this;;
         }
 
         Asserts.assertEquals(btnTextBefore, "Add to cart", "Button text is correct before click");
@@ -101,14 +92,16 @@ export class SwagProductsPage extends SwagParentPage<ElementsSwagProducts, Const
         Asserts.assertEquals(btnTextAfter, "Remove", "Button text is correct after click");
     
         this.mainMethodEnd("addProductToCart", wantedProduct);
+        return this;
     }
 
-    public async printTotalAddedSoFar(): Promise<void> {        
+    public async printTotalAddedSoFar(): Promise<SwagProductsPage> {        
         this.mainMethodStart("printTotalAddedSoFar");
 
         this.infoImportant("Total $ so far: " + TestUtilities.formatCurrency(ExecutionParameters.expectedTotal));
 
         this.methodEnd("printTotalAddedSoFar");
+        return this;
     }
     
     // ToDo HOMEWORK fix below method (from repo 'PlaywrightProxymise' > SwagDashboardPage to 'PlaywrightRadafirst' > SwagProductsPage)
@@ -162,3 +155,5 @@ export class SwagProductsPage extends SwagParentPage<ElementsSwagProducts, Const
     
     // calls are here but logic is performed on Asserts.ts class
 }
+
+export default proxymise(SwagProductsPage);

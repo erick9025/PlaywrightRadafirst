@@ -3,6 +3,7 @@ import { ExecutionParameters } from "../utils/executionParameters";
 import { SwagParentPage } from "./parent/swagParentPage";
 import { ElementsSwagCart } from "./elements/elementsSwagCart";
 import { ConstantsCartPage } from "./constants/constantsCartPage";
+import proxymise from "proxymise";
 
 /*
 On POM, the application will be splitted into multiples pages (one per screen/functionality/feature)
@@ -17,28 +18,17 @@ Original responsibilites: 5
 Current responsibilites: 4
 */
 
-export class SwagCartPage extends SwagParentPage<ElementsSwagCart, ConstantsCartPage> {
+export class SwagCartPage extends SwagParentPage {
 
+    // ******************************************** STATIC PROXYMISE CONSTRUCTOR (0) *****************************************************
+    // This method is static now. Necessary for proxymise correct work
+    public static initPage(page: Page): SwagCartPage {
+        return new SwagCartPage(page);
+    }
 
     // ******************************************** CONSTRUCTOR (0) *****************************************************
     constructor(page: Page) {
         super(page);
-    }
-
-    protected createElements(): ElementsSwagCart {
-        return new ElementsSwagCart();
-    }
-
-    protected createConstants(): ConstantsCartPage {
-        return new ConstantsCartPage();
-    }
-
-    protected get ElementsSwagCart(): ElementsSwagCart {
-        return this.elements;
-    }
-
-    protected get ConstantsCartPage(): ConstantsCartPage {
-        return this.constants;
     }
 
     // ******************************************** PARAMETERS/ATTRIBUTES (1) *****************************************************
@@ -47,7 +37,7 @@ export class SwagCartPage extends SwagParentPage<ElementsSwagCart, ConstantsCart
 
     // ******************************************** METHODS (3) *****************************************************
 
-    public async goToCart(): Promise<void> {
+    public async goToCart(): Promise<SwagCartPage> {
         
         this.mainMethodStart("goToCart");
 
@@ -55,9 +45,10 @@ export class SwagCartPage extends SwagParentPage<ElementsSwagCart, ConstantsCart
         await this.verifyElementIsVisibleAndContainsText(this.ElementsSwagCart.PageTitle, "Title [Dynamic Label]", "Your Cart", 3_000, false);
     
         this.mainMethodEnd("goToCart");
+        return this;
     }
 
-    public async verifyCartTotalIsCorrect(): Promise<void> {
+    public async verifyCartTotalIsCorrect(): Promise<SwagCartPage> {
         
         this.mainMethodStart("verifyCartTotalIsCorrect");
 
@@ -66,9 +57,12 @@ export class SwagCartPage extends SwagParentPage<ElementsSwagCart, ConstantsCart
         // ToDo Homework
     
         this.mainMethodEnd("verifyCartTotalIsCorrect");
+        return this;
     }
 
     // ******************************************** CONSTANTS (4) *****************************************************
 
 
 }
+
+export default proxymise(SwagCartPage);

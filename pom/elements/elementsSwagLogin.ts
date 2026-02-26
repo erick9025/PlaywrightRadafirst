@@ -1,6 +1,4 @@
-import { ElementsSwag } from "./elementsSwag";
-
-export class ElementsSwagLogin implements ElementsSwag {
+export class ElementsSwagLogin {
     //Define locators that should return SINGLE element
     public readonly pageHeader: string = ".login_logo";
     public readonly inputUser: string = "#user-name";
