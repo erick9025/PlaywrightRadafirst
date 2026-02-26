@@ -1,9 +1,9 @@
 import { test, Browser, BrowserContext, Page, Locator, expect } from '@playwright/test';
+import { ProductSortingOptions } from '../utils/productSortingOptions';
+import { ExecutionParameters } from '../utils/executionParameters';
 import { SwagLoginPage } from '../pom/swagLoginPage';
 import { SwagProductsPage } from '../pom/swagProductsPage';
 import { SwagCartPage } from '../pom/swagCartPage';
-import { ProductSortingOptions } from '../utils/productSortingOptions';
-import { ExecutionParameters } from '../utils/executionParameters';
 
 test.describe('Tests for Swag pages', () => {
 
@@ -67,20 +67,11 @@ test.describe('Tests for Swag pages', () => {
         await swagProductsPage.addProductToCart("Sauce Labs Fleece Jacket");
         await swagProductsPage.sortProducts(ProductSortingOptions.NameAscending);
         await swagProductsPage.printTotalAddedSoFar();
-        await swagCartPage.goToCart();
+        await swagCartPage.preStep();
+        await swagCartPage.goToCart();        
         await swagCartPage.verifyCartTotalIsCorrect();
+        await swagCartPage.postStep(ExecutionParameters.userObject);
     });
-
-    /*
-    test("Swag Add products and go to cart", async () => {        
-        await swagProductsPage  .addProductToCart("Sauce Labs Backpack")
-                                .addProductToCart("Sauce Labs Fleece Jacket")
-                                .sortProducts(ProductSortingOptions.NameAscending)
-                                .printTotalAddedSoFar();
-        await swagCartPage      .goToCart()
-                                .verifyCartTotalIsCorrect();
-    });
-    */
 
     test("Chaining calls SYNC", async () => {        
         swagProductsPage    .step1()

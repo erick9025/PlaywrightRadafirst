@@ -1,7 +1,10 @@
-import { Asserts } from "../utils/asserts";
-import { TestUtilities } from "../utils/testUtilities";
-import { BasePage } from "./parent/basePage";
 import { Page } from '@playwright/test';
+import { SwagParentPage } from "./parent/swagParentPage";
+import { TestUtilities } from "../utils/testUtilities";
+import { Asserts } from "../utils/asserts";
+import { ExecutionParameters } from "../utils/executionParameters";
+import { UserInformation } from "../models/userInformation";
+import proxymise from "proxymise";
 
 /*
 On POM, the application will be splitted into multiples pages (one per screen/functionality/feature)
@@ -16,7 +19,13 @@ Original responsibilites: 5
 Current responsibilites: 4
 */
 
-export class SwagLoginPage extends BasePage {
+export class SwagLoginPage extends SwagParentPage {
+
+    // ******************************************** STATIC PROXYMISE CONSTRUCTOR (0) *****************************************************
+    // This method is static now. Necessary for proxymise correct work
+    public static initPage(page: Page): SwagLoginPage {
+        return new SwagLoginPage(page);
+    }
 
     // ******************************************** CONSTRUCTOR (0) *****************************************************
     constructor(page: Page) {
@@ -28,55 +37,39 @@ export class SwagLoginPage extends BasePage {
 
     // ******************************************** LOCATORS (2) *****************************************************
 
-    private readonly pageHeader: string = ".login_logo";
-    private readonly inputUser: string = "#user-name";
-    private readonly inputPassword: string = "#password";
-    private readonly buttonLogin: string = "#login-button,.submit-button"; // Sample OR CLAUSE with CSS Selector (comma ',')    
+    // Moved to ElementsSwagLogin class  
 
     // ******************************************** METHODS (3) *****************************************************
-    public async login(user: string = "", password: string = "") : Promise<void> {
+    public async login(user: string = "", password: string = "") : Promise<SwagLoginPage> {
 
         this.mainMethodStart("login");
         await this.goToURL("https://www.saucedemo.com/");
 
         // If user not provided, take default, same for password
         if(TestUtilities.isNullOrEmpty(user)) {
-            user = this.userStandard;
+            user = this.ConstantsLoginPage.userStandard;
         }
 
         if(TestUtilities.isNullOrEmpty(password)) {
-            password = this.correctPassword;
+            password = this.ConstantsLoginPage.correctPassword;
         }
 
-        const headerText: string = await this.returnTextFromElement(this.pageHeader, "Page Header [Header Centered]");
+        const headerText: string = await this.returnTextFromElement(this.ElementsSwagLogin.pageHeader, "Page Header [Header Centered]");
 
-        Asserts.assertEquals(this.expectedPageHeader, headerText, "Header must be correct");
+        Asserts.assertEquals(this.ConstantsLoginPage.expectedPageHeader, headerText, "Header must be correct");
 
-        await this.enterText(this.inputUser, "Username [Input]", user);
-        await this.enterText(this.inputPassword, "Password [Input]", password);
-        await this.click(this.buttonLogin, "Login [Button]");
+        await this.enterText(this.ElementsSwagLogin.inputUser, "Username [Input]", user);
+        await this.enterText(this.ElementsSwagLogin.inputPassword, "Password [Input]", password);
+        await this.click(this.ElementsSwagLogin.buttonLogin, "Login [Button]");
+
         this.mainMethodEnd("login");
+        return this;
     }
 
 
     // ******************************************** CONSTANTS (4) *****************************************************
-
-    private readonly expectedPageHeader: string = "Swag Labs";
-
-    /*
-    Accepted usernames are:
-        standard_user
-        locked_out_user
-        problem_user
-        performance_glitch_user
-        error_user
-        visual_user
-    */
-    private readonly userStandard: string = "standard_user";
-
-    /*
-    Password for all users:
-        secret_sauce
-    */
-    private readonly correctPassword: string = "secret_sauce";
+    
+    // Moved to ConstantsLoginPage class
 }
+
+export default proxymise(SwagLoginPage);

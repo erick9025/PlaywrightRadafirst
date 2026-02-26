@@ -1,9 +1,10 @@
 import { Page } from '@playwright/test';
 import { SwagParentPage } from "./parent/swagParentPage";
-import { ExecutionParameters } from "../utils/executionParameters";
 import { TestUtilities } from "../utils/testUtilities";
 import { Asserts } from "../utils/asserts";
+import { ExecutionParameters } from "../utils/executionParameters";
 import { ProductSortingOptions } from "../utils/productSortingOptions";
+import proxymise from "proxymise";
 
 /*
 On POM, the application will be splitted into multiples pages (one per screen/functionality/feature)
@@ -19,6 +20,12 @@ Current responsibilites: 2
 */
 
 export class SwagProductsPage extends SwagParentPage {
+
+    // ******************************************** STATIC PROXYMISE CONSTRUCTOR (0) *****************************************************
+     // This method is static now. Necessary for proxymise correct work
+    public static initPage(page: Page): SwagProductsPage {
+        return new SwagProductsPage(page);
+    }
 
     // ******************************************** CONSTRUCTOR (0) *****************************************************
     constructor(page: Page) {
@@ -36,7 +43,7 @@ export class SwagProductsPage extends SwagParentPage {
 
     // ******************************************** METHODS (3) *****************************************************
 
-    public async addProductToCart(wantedProduct : string): Promise<void> {
+    public async addProductToCart(wantedProduct : string): Promise<SwagProductsPage> {
         
         this.mainMethodStart("addProductToCart", wantedProduct);
 
@@ -63,7 +70,7 @@ export class SwagProductsPage extends SwagParentPage {
         if(btnTextBefore === "Remove") {
             this.logMessage("Item was already added: " + wantedProduct);
             this.methodEnd("addProductToCart", "Was already added: " + wantedProduct);
-            return;
+            return this;;
         }
 
         Asserts.assertEquals(btnTextBefore, "Add to cart", "Button text is correct before click");
@@ -83,14 +90,16 @@ export class SwagProductsPage extends SwagParentPage {
         Asserts.assertEquals(btnTextAfter, "Remove", "Button text is correct after click");
     
         this.mainMethodEnd("addProductToCart", wantedProduct);
+        return this;
     }
 
-    public async printTotalAddedSoFar(): Promise<void> {        
+    public async printTotalAddedSoFar(): Promise<SwagProductsPage> {        
         this.mainMethodStart("printTotalAddedSoFar");
 
         this.infoImportant("Total $ so far: " + TestUtilities.formatCurrency(ExecutionParameters.expectedTotal));
 
         this.methodEnd("printTotalAddedSoFar");
+        return this;
     }
     
     // ToDo HOMEWORK fix below method (from repo 'PlaywrightProxymise' > SwagDashboardPage to 'PlaywrightRadafirst' > SwagProductsPage)
@@ -144,3 +153,5 @@ export class SwagProductsPage extends SwagParentPage {
     
     // calls are here but logic is performed on Asserts.ts class
 }
+
+export default proxymise(SwagProductsPage);

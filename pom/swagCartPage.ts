@@ -1,8 +1,10 @@
-import { TestUtilities } from "../utils/testUtilities";
-import { BasePage } from "./parent/basePage";
 import { Page } from '@playwright/test';
+import { SwagParentPage } from "./parent/swagParentPage";
+import { TestUtilities } from "../utils/testUtilities";
 import { Asserts } from "../utils/asserts";
 import { ExecutionParameters } from "../utils/executionParameters";
+import { UserInformation } from '../models/userInformation';
+import proxymise from "proxymise";
 
 /*
 On POM, the application will be splitted into multiples pages (one per screen/functionality/feature)
@@ -17,8 +19,13 @@ Original responsibilites: 5
 Current responsibilites: 4
 */
 
-export class SwagCartPage extends BasePage {
+export class SwagCartPage extends SwagParentPage {
 
+    // ******************************************** STATIC PROXYMISE CONSTRUCTOR (0) *****************************************************
+    // This method is static now. Necessary for proxymise correct work
+    public static initPage(page: Page): SwagCartPage {
+        return new SwagCartPage(page);
+    }
 
     // ******************************************** CONSTRUCTOR (0) *****************************************************
     constructor(page: Page) {
@@ -29,24 +36,19 @@ export class SwagCartPage extends BasePage {
 
     // ******************************************** LOCATORS (2) *****************************************************
 
-    //Define locators that should return LIST OF elements
-    private readonly IconCart: string = "a.shopping_cart_link";
-    private readonly PageTitle: string = ".title";  
-
     // ******************************************** METHODS (3) *****************************************************
 
-    public async goToCart(): Promise<void> {
-        
+    public async goToCart(): Promise<SwagCartPage> {        
         this.mainMethodStart("goToCart");
 
-        await this.click(this.IconCart, "Cart [Icon]");
-        await this.verifyElementIsVisibleAndContainsText(this.PageTitle, "Title [Dynamic Label]", "Your Cart", 3_000, false);
+        await this.click(this.ElementsSwagCart.IconCart, "Cart [Icon]");
+        await this.verifyElementIsVisibleAndContainsText(this.ElementsSwagCart.PageTitle, "Title [Dynamic Label]", "Your Cart", 3_000, false);
     
         this.mainMethodEnd("goToCart");
+        return this;
     }
 
-    public async verifyCartTotalIsCorrect(): Promise<void> {
-        
+    public async verifyCartTotalIsCorrect(): Promise<SwagCartPage> {        
         this.mainMethodStart("verifyCartTotalIsCorrect");
 
         this.logMessage("Total added so far: " + ExecutionParameters.expectedTotal);
@@ -54,9 +56,33 @@ export class SwagCartPage extends BasePage {
         // ToDo Homework
     
         this.mainMethodEnd("verifyCartTotalIsCorrect");
+        return this;
+    }
+
+    public async preStep(): Promise<SwagCartPage> {        
+        this.mainMethodStart("preStep");
+
+        ExecutionParameters.userObject = new UserInformation();
+        ExecutionParameters.userObject.username = "Erick";
+        ExecutionParameters.userObject.password = "pa$$word123";
+    
+        this.mainMethodEnd("preStep");
+        return this;
+    }
+
+    public async postStep(userObj: UserInformation): Promise<SwagCartPage> {        
+        this.mainMethodStart("postStep");
+
+        this.infoImportant("---Current user name: " + userObj.username);
+        this.infoImportant("---Current user password: " + userObj.password);
+    
+        this.mainMethodEnd("postStep");
+        return this;
     }
 
     // ******************************************** CONSTANTS (4) *****************************************************
 
 
 }
+
+export default proxymise(SwagCartPage);
