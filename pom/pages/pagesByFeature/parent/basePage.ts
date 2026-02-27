@@ -1,6 +1,6 @@
 import { Page, Locator, expect } from '@playwright/test';
-import { TestUtilities } from "../../../utils/testUtilities";
-import { Asserts } from "../../../utils/asserts";
+import { TestUtilities } from "../../../../utils/testUtilities";
+import { Asserts } from "../../../../utils/asserts";
 
 export abstract class BasePage {
 

@@ -1,7 +1,7 @@
 import { Page } from '@playwright/test';
 import { SwagParentPage } from "./parent/swagParentPage";
-import { TestUtilities } from "../../utils/testUtilities";
-import { Asserts } from "../../utils/asserts";
+import { TestUtilities } from "../../../utils/testUtilities";
+import { Asserts } from "../../../utils/asserts";
 import proxymise from "proxymise";
 
 /*

@@ -1,0 +1,69 @@
+import { test, Browser, BrowserContext, Page } from '@playwright/test';
+import { ProductSortingOptions } from '../utils/productSortingOptions';
+import { ExecutionParameters } from '../utils/executionParameters';
+import { SwagPagesProxymise } from '../pom/pages/swagPagesProxymise';
+
+test.describe('Tests for Swag pages WITH PROXYMISE and Wrapper', () => {
+
+    let browser: Browser;
+    let context: BrowserContext;
+    let page: Page;
+    let PagesSwag: SwagPagesProxymise;
+
+    ////////////////////////////////////////////////////////// BEFORE/AFTER SETUP //////////////////////////////////////////////////////////
+    test.beforeAll(async ({ playwright }, testInfo) => {
+        // Resolve browser from playwright.config.ts project
+        const browserName = testInfo.project.use.browserName!;
+        const browserType = playwright[browserName];
+
+        browser = await browserType.launch({
+            headless: false,
+        });
+
+        PagesSwag = new SwagPagesProxymise();
+    });
+
+    test.beforeEach(async () => {
+        // Create a BrowserContext (isolated session)
+        context = await browser.newContext();
+
+        // Create a Page inside the context
+        page = await context.newPage();
+
+        // Static constructors call inside the object method (static inside non-static)
+        PagesSwag.initPages(page);
+
+        await PagesSwag.swagLoginPage.login();
+    });
+
+    test.afterEach(async () => {
+        await context.close();
+        ExecutionParameters.expectedTotal = 0; // Reset
+    });
+
+    test.afterAll(async () => {
+        await browser.close();
+    });
+
+    /////////////////////////////////////////////////////////// TESTS START HERE ///////////////////////////////////////////////////////////
+
+    test("PROXYMISE Pro Swag Add products only", async () => {
+        await PagesSwag.swagProductsPage    .addProductToCart("Sauce Labs Backpack")
+                                            .addProductToCart("Sauce Labs Backpack")
+                                            .addProductToCart("Sauce Labs Backpack")
+                                            .addProductToCart("Sauce Labs Backpack")
+                                            .addProductToCart("Sauce Labs Backpack")
+                                            .addProductToCart("Sauce Labs Fleece Jacket")
+                                            .sortProducts(ProductSortingOptions.NameAscending)
+                                            .printTotalAddedSoFar();
+    });
+
+    test("PROXYMISE Pro Swag Add products and go to cart", async () => {        
+        await PagesSwag.swagProductsPage    .addProductToCart("Sauce Labs Backpack")
+                                            .addProductToCart("Sauce Labs Fleece Jacket")
+                                            .sortProducts(ProductSortingOptions.NameAscending)
+                                            .printTotalAddedSoFar();
+        await PagesSwag.swagCartPage        .goToCart()
+                                            .verifyCartTotalIsCorrect();
+    });
+});

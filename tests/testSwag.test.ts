@@ -1,9 +1,9 @@
 import { test, Browser, BrowserContext, Page, Locator, expect } from '@playwright/test';
 import { ProductSortingOptions } from '../utils/productSortingOptions';
 import { ExecutionParameters } from '../utils/executionParameters';
-import { SwagLoginPage } from '../pom/pages/swagLoginPage';
-import { SwagProductsPage } from '../pom/pages/swagProductsPage';
-import { SwagCartPage } from '../pom/pages/swagCartPage';
+import { SwagLoginPage } from '../pom/pages/pagesByFeature/swagLoginPage';
+import { SwagProductsPage } from '../pom/pages/pagesByFeature/swagProductsPage';
+import { SwagCartPage } from '../pom/pages/pagesByFeature/swagCartPage';
 
 test.describe('Tests for Swag pages', () => {
 
@@ -69,19 +69,5 @@ test.describe('Tests for Swag pages', () => {
         await swagProductsPage.printTotalAddedSoFar();
         await swagCartPage.goToCart();        
         await swagCartPage.verifyCartTotalIsCorrect();
-    });
-
-    test("Chaining calls SYNC", async () => {        
-        swagProductsPage    .step1()
-                            .step2()
-                            .step3()
-                            .step4();
-    });
-
-    test("Not Chaining calls SYNC", async () => {        
-        swagProductsPage.step1();
-        swagProductsPage.step2();
-        swagProductsPage.step3();
-        swagProductsPage.step4();
     });
 });
