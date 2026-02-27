@@ -21,23 +21,23 @@ export abstract class BasePage {
 
     //****************************** */
 
-    protected infoIssue(messageForMinorIssue: string) : void {
+    protected logMessageIssue(messageForMinorIssue: string) : void {
         TestUtilities.logIssue(messageForMinorIssue);
     }
 
-    protected infoImportant(message: string, printBlankLineAfter: boolean = true) : void {
+    protected logMessageImportant(message: string, printBlankLineAfter: boolean = true) : void {
         TestUtilities.logToConsoleImportant(message, printBlankLineAfter);
     }
 
-    protected infoWarning(message: string, printBlankLineAfter: boolean = true) : void {
+    protected logMessageWarning(message: string, printBlankLineAfter: boolean = true) : void {
         TestUtilities.logToConsoleWarning(message, printBlankLineAfter);
     }
 
-    protected infoBold(message: string) : void {
+    protected logMessageBold(message: string) : void {
         TestUtilities.logToConsoleBold(message);
     }
 
-    /*protected infoColor(message: string, color: ChalkColorStyle) : void {
+    /*protected logMessageColor(message: string, color: ChalkColorStyle) : void {
         TestUtilities.logToConsoleWithColor(message, color);
     }*/
 
@@ -45,27 +45,27 @@ export abstract class BasePage {
         TestUtilities.logToConsoleNoTimestamp(""); 
     }
 
-    protected methodStart(methodName: string, additionalInfo: string = "") : void {
-        const hasInfo: boolean = !TestUtilities.isNullOrEmpty(additionalInfo);
+    protected methodStart(methodName: string, additionallogMessage: string = "") : void {
+        const haslogMessage: boolean = !TestUtilities.isNullOrEmpty(additionallogMessage);
         console.log("");        
-        TestUtilities.logMethodStart(hasInfo ? "...Starting method [" + methodName + "] " + additionalInfo : "...Starting method [" + methodName + "]");
+        TestUtilities.logMethodStart(haslogMessage ? "...Starting method [" + methodName + "] " + additionallogMessage : "...Starting method [" + methodName + "]");
     }
 
-    protected methodEnd(methodName: string, additionalInfo: string = "") : void {
-        const hasInfo: boolean = !TestUtilities.isNullOrEmpty(additionalInfo);
-        TestUtilities.logMethodEnd(hasInfo ? "...Ending method [" + methodName + "] " + additionalInfo : "...Ending method [" + methodName + "]");
+    protected methodEnd(methodName: string, additionallogMessage: string = "") : void {
+        const haslogMessage: boolean = !TestUtilities.isNullOrEmpty(additionallogMessage);
+        TestUtilities.logMethodEnd(haslogMessage ? "...Ending method [" + methodName + "] " + additionallogMessage : "...Ending method [" + methodName + "]");
         console.log(""); 
     }
 
-    protected mainMethodStart(mainMethodName : string, additionalInfo : string = "") : void {
-        const hasInfo: boolean = !TestUtilities.isNullOrEmpty(additionalInfo);
+    protected mainMethodStart(mainMethodName : string, additionallogMessage : string = "") : void {
+        const haslogMessage: boolean = !TestUtilities.isNullOrEmpty(additionallogMessage);
         console.log("");        
-        TestUtilities.logMainMethodStart(hasInfo ? "...Starting method [" + mainMethodName + "] " + additionalInfo : "...Starting method [" + mainMethodName + "]");
+        TestUtilities.logMainMethodStart(haslogMessage ? "...Starting method [" + mainMethodName + "] " + additionallogMessage : "...Starting method [" + mainMethodName + "]");
     }
 
-    protected mainMethodEnd(mainMethodName : string, additionalInfo : string = "") : void {
-        const hasInfo: boolean = !TestUtilities.isNullOrEmpty(additionalInfo);
-        TestUtilities.logMainMethodEnd(hasInfo ? "...Ending method [" + mainMethodName + "] " + additionalInfo : "...Ending method [" + mainMethodName + "]");
+    protected mainMethodEnd(mainMethodName : string, additionallogMessage : string = "") : void {
+        const haslogMessage: boolean = !TestUtilities.isNullOrEmpty(additionallogMessage);
+        TestUtilities.logMainMethodEnd(haslogMessage ? "...Ending method [" + mainMethodName + "] " + additionallogMessage : "...Ending method [" + mainMethodName + "]");
         console.log("");
     }
 
@@ -84,14 +84,37 @@ export abstract class BasePage {
         this.logMessage(`Entered text '${enterText}' into input element: ${description}`);
     }
 
-    protected async checkCheckbox(): Promise<void> { 
-        //ToDo implement method
-        Asserts.assertFail("Method not implemented yet: checkCheckbox");
+    protected async checkCheckbox(checkboxLocator: string, checkboxDescription: string, verifyAfterCheck: boolean = false): Promise<void>{
+        await this.page.locator(checkboxLocator).check();
+        this.logMessage("Checkbox is checked: " + checkboxDescription);
+
+        if(verifyAfterCheck) {
+            await expect(this.page.locator(checkboxLocator)).toBeChecked();
+            this.logMessage("Validation passed! Checkbox is checked after click: " + checkboxDescription);
+        }
     }
 
-    protected async uncheckCheckbox(): Promise<void> { 
-        //ToDo implement method
-        Asserts.assertFail("Method not implemented yet: uncheckCheckbox");
+    protected async uncheckCheckbox(checkboxLocator: string, checkboxDescription: string, verifyAfterUncheck: boolean = false): Promise<void>{
+        await this.page.locator(checkboxLocator).uncheck();
+        this.logMessage("Checkbox is unchecked: " + checkboxDescription);
+
+        if(verifyAfterUncheck) {
+            await expect(this.page.locator(checkboxLocator)).not.toBeChecked();
+            this.logMessage("Validation passed! Checkbox is unchecked after click: " + checkboxDescription);
+        }
+    }
+
+    protected async isCheckboxChecked(checkboxLocator: string, checkboxDescription: string): Promise<boolean>{
+        const isChecked: boolean = await this.page.locator(checkboxLocator).isChecked()
+
+        if(isChecked) {
+            this.logMessageBold(`Checkbox '${checkboxDescription}' is checked`);
+            return true;
+        }
+        else {
+            this.logMessageBold(`Checkbox '${checkboxDescription}' is NOT checked`);
+            return false;
+        }
     }
 
     protected async returnColumnNumberForHeader(headerText: string): Promise<number> {
@@ -139,6 +162,138 @@ export abstract class BasePage {
 
         this.logMessage(`Clicked on element: ${elementDescription} and waited for its triggered parallel API call with endpoint: ${apiEndpointOrPartialUrl} that took ${durationString} to run`);        
     }
+
+    protected async clickAndWaitCustomApi(
+            httpMethod: "GET" | "POST" | "PUT" | "DELETE",
+            elementLocator: string, 
+            elementDescription: string, 
+            apiEndpointOrPartialUrl: string,
+            timeoutMsForClick: number = 5_000, // 5 seconds
+            timeoutMsForApi: number = 1_500, // 1.5 seconds
+            expectedStatusCode: number = 200) // Sucessful API = OK
+        : Promise<void> {
+
+        this.logMessageImportant(`Will click '${elementDescription}' and wait for its triggered API call with partial URL '${apiEndpointOrPartialUrl}'`);
+        
+        const [response] = await Promise.all([
+            //Parallel step 1
+            this.page.waitForResponse(
+            resp => resp.url().includes(apiEndpointOrPartialUrl) && resp.status() === expectedStatusCode && resp.request().method() === httpMethod,
+                { timeout: timeoutMsForApi }
+            ),
+            //Parallel step 2
+            this.page.locator(elementLocator).click({ timeout: timeoutMsForClick }) // Click directly with Playwright by using locator as object
+        ]);
+
+        this.logMessage(`Clicked on element: ${elementDescription} and waited for its triggered ${httpMethod} API call with endpoint: ${apiEndpointOrPartialUrl} and response code ${expectedStatusCode}`);
+    }
+
+        protected async clickAndWaitMultipleSuccessfulApis(
+            elementLocator: string,
+            elementDescription: string,
+            apiEndpointOrPartialUrl: string | string[],
+            timeoutMsForClick: number = 5_000, // 5 seconds
+            timeoutMsForApi: number = 1_500,   // 1.5 seconds
+            expectedStatuses: number[] = [200] // allow customization if needed
+    ): Promise<void> {
+
+        this.mainMethodStart("clickAndWaitMultipleSuccessfulApis");
+
+        // Normalize to array to support single or multiple endpoints
+        const endpoints: string[] = Array.isArray(apiEndpointOrPartialUrl)
+            ? apiEndpointOrPartialUrl
+            : [apiEndpointOrPartialUrl];
+
+        const timeoutString: string =
+            timeoutMsForApi >= 1_000
+            ? `Seconds: ${(timeoutMsForApi / 1000).toString()}`
+            : `Milliseconds: ${timeoutMsForApi.toString()}`;
+
+        this.logMessageImportant(
+            `Will click '${elementDescription}' and wait (max ${timeoutString}) for its triggered API call(s) with partial URL(s): ${endpoints
+            .map((e) => `'${e}'`)
+            .join(", ")}`
+        );
+
+        const overallStart = Date.now(); // overall timer
+
+        // Prepare all waiters BEFORE the click to ensure we capture quick responses.
+        type WaitResult =
+            | { partial: string; ok: true; status: number; url: string; durationMs: number }
+            | { partial: string; ok: false; error: string; durationMs: number };
+
+        const waiters: Promise<WaitResult>[] = endpoints.map((partial) => {
+            const epStart = Date.now();
+            return this.page
+            .waitForResponse(
+                (resp) => {
+                const url = resp.url();
+                if (!url.includes(partial)) return false;
+                const status = resp.status();
+                return expectedStatuses.includes(status);
+                },
+                { timeout: timeoutMsForApi }
+            )
+            .then((res) => ({
+                partial,
+                ok: true as const,
+                status: res.status(),
+                url: res.url(),
+                durationMs: Date.now() - epStart,
+            }))
+            .catch((err: any) => ({
+                partial,
+                ok: false as const,
+                error:
+                err?.name === "TimeoutError" || /Timeout/i.test(String(err))
+                    ? `Timeout after ${timeoutMsForApi}ms`
+                    : String(err),
+                durationMs: Date.now() - epStart,
+            }));
+        });
+
+        // Fire the click in parallel with the response waiters
+        const [, results] = await Promise.all([
+            this.page.locator(elementLocator).click({ force: true, timeout: timeoutMsForClick }),
+            Promise.all(waiters),
+        ]);
+
+        const overallDurationMs = Date.now() - overallStart;
+        const overallDurationString =
+            overallDurationMs >= 1_000
+            ? `${(overallDurationMs / 1000).toFixed(2)} seconds`
+            : `${overallDurationMs} ms`;
+
+        // Log per-endpoint outcomes
+        for (const r of results) {
+            if (r.ok) {
+            const d = r.durationMs >= 1_000 ? `${(r.durationMs / 1000).toFixed(2)} s` : `${r.durationMs} ms`;
+            this.logMessageBold(
+                `✓ API '${r.partial}' matched URL: ${r.url}, status: ${r.status}, in ${d}`
+            );
+            } else {
+            const d = r.durationMs >= 1_000 ? `${(r.durationMs / 1000).toFixed(2)} s` : `${r.durationMs} ms`;
+            this.logMessageBold(
+                `✗ API '${r.partial}' failed: ${r.error} (waited ${d})`
+            );
+            }
+        }
+
+        const failed = results.filter((r) => !r.ok);
+
+        if (failed.length > 0) {
+            const summary = failed.map((f) => `'${f.partial}': ${f.error}`).join("; ");
+            this.logMessageImportant(`Clicked '${elementDescription}' but one or more API calls failed: ${summary}`);
+            Asserts.assertFail(`Validation failed for ${failed.length}/${endpoints.length} API endpoint(s): ${summary}`);
+        }
+
+        // Success path
+        this.logMessageImportant(`Clicked on element: ${elementDescription} and all ${endpoints.length} API call(s) succeeded in ${overallDurationString}`);
+        
+
+        this.mainMethodEnd("clickAndWaitMultipleSuccessfulApis");
+    }
+ 
 
     protected async selectDropdownOptionByValue(ddlLocator : string, valueStr : string, elementDescription : string = "") : Promise<void> {        
         await this.verifyElementIsVisible(ddlLocator, "Dropdown " + ddlLocator);

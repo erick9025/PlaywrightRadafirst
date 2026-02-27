@@ -83,7 +83,7 @@ export class SwagProductsPage extends SwagParentPage {
         const correspondingPriceStr : string = await this.returnTextFromElement(priceLocator, `'${wantedProduct}' price [Dynamic $ value]`);
         const correspondingPrice : number = TestUtilities.getNumericValue(TestUtilities.getTextAfter(correspondingPriceStr, "$"));
 
-        this.infoBold(`'${wantedProduct}' price: $${correspondingPrice}`);
+        this.logMessageBold(`'${wantedProduct}' price: $${correspondingPrice}`);
         ExecutionParameters.expectedTotal += correspondingPrice;
 
         let btnTextAfter = await this.returnTextFromElement(dynamicLocatorButton, "Add to cart [Button from " + wantedProduct + "]");
@@ -96,7 +96,7 @@ export class SwagProductsPage extends SwagParentPage {
     public async printTotalAddedSoFar(): Promise<SwagProductsPage> {        
         this.mainMethodStart("printTotalAddedSoFar");
 
-        this.infoImportant("Total $ so far: " + TestUtilities.formatCurrency(ExecutionParameters.expectedTotal));
+        this.logMessageImportant("Total $ so far: " + TestUtilities.formatCurrency(ExecutionParameters.expectedTotal));
 
         this.methodEnd("printTotalAddedSoFar");
         return this;
