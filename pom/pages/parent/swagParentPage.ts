@@ -1,11 +1,11 @@
 import { Page } from '@playwright/test';
 import { BasePage } from "./basePage";
-import { ElementsSwagLogin } from "../elements/elementsSwagLogin";
-import { ElementsSwagProducts } from "../elements/elementsSwagProducts";
-import { ElementsSwagCart } from "../elements/elementsSwagCart";
-import { ConstantsLoginPage } from "../constants/constantsLoginPage";
-import { ConstantsProductsPage } from "../constants/constantsProductsPage";
-import { ConstantsCartPage } from "../constants/constantsCartPage";
+import { ElementsSwagLogin } from "../../elements/elementsSwagLogin";
+import { ElementsSwagProducts } from "../../elements/elementsSwagProducts";
+import { ElementsSwagCart } from "../../elements/elementsSwagCart";
+import { ConstantsLoginPage } from "../../constants/constantsLoginPage";
+import { ConstantsProductsPage } from "../../constants/constantsProductsPage";
+import { ConstantsCartPage } from "../../constants/constantsCartPage";
 
 export abstract class SwagParentPage extends BasePage {
     // Elements for all page objects DECLARATION

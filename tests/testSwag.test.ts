@@ -1,9 +1,9 @@
 import { test, Browser, BrowserContext, Page, Locator, expect } from '@playwright/test';
 import { ProductSortingOptions } from '../utils/productSortingOptions';
 import { ExecutionParameters } from '../utils/executionParameters';
-import { SwagLoginPage } from '../pom/swagLoginPage';
-import { SwagProductsPage } from '../pom/swagProductsPage';
-import { SwagCartPage } from '../pom/swagCartPage';
+import { SwagLoginPage } from '../pom/pages/swagLoginPage';
+import { SwagProductsPage } from '../pom/pages/swagProductsPage';
+import { SwagCartPage } from '../pom/pages/swagCartPage';
 
 test.describe('Tests for Swag pages', () => {
 
@@ -67,10 +67,8 @@ test.describe('Tests for Swag pages', () => {
         await swagProductsPage.addProductToCart("Sauce Labs Fleece Jacket");
         await swagProductsPage.sortProducts(ProductSortingOptions.NameAscending);
         await swagProductsPage.printTotalAddedSoFar();
-        await swagCartPage.preStep();
         await swagCartPage.goToCart();        
         await swagCartPage.verifyCartTotalIsCorrect();
-        await swagCartPage.postStep(ExecutionParameters.userObject);
     });
 
     test("Chaining calls SYNC", async () => {        

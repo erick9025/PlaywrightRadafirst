@@ -1,9 +1,6 @@
 import { Page } from '@playwright/test';
 import { SwagParentPage } from "./parent/swagParentPage";
-import { TestUtilities } from "../utils/testUtilities";
-import { Asserts } from "../utils/asserts";
-import { ExecutionParameters } from "../utils/executionParameters";
-import { UserInformation } from '../models/userInformation';
+import { ExecutionParameters } from "../../utils/executionParameters";
 import proxymise from "proxymise";
 
 /*
@@ -59,30 +56,7 @@ export class SwagCartPage extends SwagParentPage {
         return this;
     }
 
-    public async preStep(): Promise<SwagCartPage> {        
-        this.mainMethodStart("preStep");
-
-        ExecutionParameters.userObject = new UserInformation();
-        ExecutionParameters.userObject.username = "Erick";
-        ExecutionParameters.userObject.password = "pa$$word123";
-    
-        this.mainMethodEnd("preStep");
-        return this;
-    }
-
-    public async postStep(userObj: UserInformation): Promise<SwagCartPage> {        
-        this.mainMethodStart("postStep");
-
-        this.infoImportant("---Current user name: " + userObj.username);
-        this.infoImportant("---Current user password: " + userObj.password);
-    
-        this.mainMethodEnd("postStep");
-        return this;
-    }
-
     // ******************************************** CONSTANTS (4) *****************************************************
-
-
 }
 
 export default proxymise(SwagCartPage);

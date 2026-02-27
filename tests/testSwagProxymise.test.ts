@@ -3,9 +3,9 @@ import { ProductSortingOptions } from '../utils/productSortingOptions';
 import { ExecutionParameters } from '../utils/executionParameters';
 
 // Proxymise requires DEFAULT imports
-import SwagLoginPage from '../pom/swagLoginPage';
-import SwagProductsPage from '../pom/swagProductsPage';
-import SwagCartPage from '../pom/swagCartPage';
+import SwagLoginPage from '../pom/pages/swagLoginPage';
+import SwagProductsPage from '../pom/pages/swagProductsPage';
+import SwagCartPage from '../pom/pages/swagCartPage';
 
 test.describe('Tests for Swag pages WITH PROXYMISE', () => {
 
@@ -70,10 +70,8 @@ test.describe('Tests for Swag pages WITH PROXYMISE', () => {
                                 .addProductToCart("Sauce Labs Fleece Jacket")
                                 .sortProducts(ProductSortingOptions.NameAscending)
                                 .printTotalAddedSoFar();
-        await swagCartPage      .preStep()
-                                .goToCart()
-                                .verifyCartTotalIsCorrect()
-                                .postStep(ExecutionParameters.userObject);
+        await swagCartPage      .goToCart()
+                                .verifyCartTotalIsCorrect();
     });
 
     test("PROXYMISE Chaining calls SYNC", async () => {        
