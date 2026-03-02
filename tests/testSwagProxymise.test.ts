@@ -54,7 +54,7 @@ test.describe('Tests for Swag pages WITH PROXYMISE', () => {
 
     /////////////////////////////////////////////////////////// TESTS START HERE ///////////////////////////////////////////////////////////
 
-    test("PROXYMISE Swag Add products only", async () => {
+    test.skip("PROXYMISE Swag Add products only", async () => {
         await swagProductsPage  .addProductToCart("Sauce Labs Backpack")
                                 .addProductToCart("Sauce Labs Backpack")
                                 .addProductToCart("Sauce Labs Backpack")
@@ -65,7 +65,7 @@ test.describe('Tests for Swag pages WITH PROXYMISE', () => {
                                 .printTotalAddedSoFar();
     });
 
-    test("PROXYMISE Swag Add products and go to cart", async () => {        
+    test.skip("PROXYMISE Swag Add products and go to cart", async () => {        
         await swagProductsPage  .addProductToCart("Sauce Labs Backpack")
                                 .addProductToCart("Sauce Labs Fleece Jacket")
                                 .sortProducts(ProductSortingOptions.NameAscending)

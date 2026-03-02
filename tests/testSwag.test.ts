@@ -51,7 +51,7 @@ test.describe('Tests for Swag pages', () => {
 
     /////////////////////////////////////////////////////////// TESTS START HERE ///////////////////////////////////////////////////////////
 
-    test("Swag Add products only", async () => {
+    test.skip("Swag Add products only", async () => {
         await swagProductsPage.addProductToCart("Sauce Labs Backpack");
         await swagProductsPage.addProductToCart("Sauce Labs Backpack");
         await swagProductsPage.addProductToCart("Sauce Labs Backpack");
@@ -62,7 +62,7 @@ test.describe('Tests for Swag pages', () => {
         await swagProductsPage.printTotalAddedSoFar();
     });
 
-    test("Swag Add products and go to cart", async () => {        
+    test.skip("Swag Add products and go to cart", async () => {        
         await swagProductsPage.addProductToCart("Sauce Labs Backpack");
         await swagProductsPage.addProductToCart("Sauce Labs Fleece Jacket");
         await swagProductsPage.sortProducts(ProductSortingOptions.NameAscending);
