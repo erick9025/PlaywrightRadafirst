@@ -9,7 +9,7 @@ test.describe('Tests for Swag pages', () => {
     let context: BrowserContext;
     let page: Page;
 
-    let emailPage: EmailVendor;
+    let emailPage: EmailVendor; // DISGUISED as ABSTRACT CLASS (this AC internally implements the 3 smaller interfaces) --> indirecly uses interfaces
 
     ////////////////////////////////////////////////////////// BEFORE/AFTER SETUP //////////////////////////////////////////////////////////
     test.beforeAll(async ({ playwright }, testInfo) => {
