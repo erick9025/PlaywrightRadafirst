@@ -1,8 +1,7 @@
-import { IEmailProvider } from "./interfaces/iEmailProvider";
-import { BasePage } from "../pagesByFeature/parent/basePage";
+import { EmailVendor } from "./abstractClasses/emailVendor";
 import { TestUtilities } from "../../../utils/testUtilities";
 
-export class MailinatorPage extends BasePage implements IEmailProvider {
+export class MailinatorPage extends EmailVendor {
 
     private readonly _inputEmail: string = "#many_login_email";
     private readonly _inputPassword: string = "#many_login_password";

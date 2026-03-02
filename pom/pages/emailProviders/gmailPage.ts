@@ -1,12 +1,11 @@
-import { IEmailProvider } from "./interfaces/iEmailProvider";
-import { BasePage } from "../pagesByFeature/parent/basePage";
+import { EmailVendor } from "./abstractClasses/emailVendor";
 
-export class GmailPage extends BasePage implements IEmailProvider {
+export class GmailPage extends EmailVendor {
 
     private readonly _inputEmail: string = "input[type='email']";
     private readonly _buttonNext: string = "div#identifierNext button";
     
-     public async goTo(): Promise<void> {
+    public async goTo(): Promise<void> {
         await this.page.waitForTimeout(5_000);
         await this.goToURL("https://accounts.google.com/ServiceLogin?hl=es&service=mail");
     }

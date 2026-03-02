@@ -1,5 +1,5 @@
-export interface IEmailProvider {
-    openEmail(subject: string, fromEmail: string) : any;
+export interface ILoginService {
+    login(user: string, password: string) : any;
 }
 
 /*Interface declares for methods

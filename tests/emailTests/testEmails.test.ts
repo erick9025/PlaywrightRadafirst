@@ -1,7 +1,7 @@
 import { test, Browser, BrowserContext, Page } from '@playwright/test';
 import { MailinatorPage } from '../../pom/pages/emailProviders/mailinatorPage';
 import { GmailPage } from '../../pom/pages/emailProviders/gmailPage';
-import { IEmailProvider } from '../../pom/pages/emailProviders/interfaces/iEmailProvider';
+import { EmailVendor } from '../../pom/pages/emailProviders/abstractClasses/emailVendor';
 
 test.describe('Tests for Swag pages', () => {
 
@@ -9,7 +9,7 @@ test.describe('Tests for Swag pages', () => {
     let context: BrowserContext;
     let page: Page;
 
-    let emailPage: IEmailProvider;
+    let emailPage: EmailVendor;
 
     ////////////////////////////////////////////////////////// BEFORE/AFTER SETUP //////////////////////////////////////////////////////////
     test.beforeAll(async ({ playwright }, testInfo) => {
@@ -30,8 +30,8 @@ test.describe('Tests for Swag pages', () => {
         page = await context.newPage();
 
         // Use polymorphism to instance as class A or as class B
-        //emailPage = new MailinatorPage(page); // Class A
-        emailPage = new GmailPage(page); // Class B
+        emailPage = new MailinatorPage(page); // Class A
+        //emailPage = new GmailPage(page); // Class B
     });
 
     test.afterEach(async () => {
