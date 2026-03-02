@@ -9,7 +9,7 @@ test.describe('Tests for Swag pages', () => {
     let context: BrowserContext;
     let page: Page;
 
-    let emailPage: IEmailProvider;
+    let emailPage: IEmailProvider; // DISGUISE directly as the ONLY INTERFACE related
 
     ////////////////////////////////////////////////////////// BEFORE/AFTER SETUP //////////////////////////////////////////////////////////
     test.beforeAll(async ({ playwright }, testInfo) => {
