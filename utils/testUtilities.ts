@@ -24,21 +24,6 @@ export class TestUtilities {
         return index + 1;
     }
 
-    public static async pending(page: Page, headerText: string): Promise<number> {
-        throw new Error("Not implemented method yet");
-        let columnNumber: number = 0;
-
-        const headers: Locator = page.locator('//thead//th');
-        const count: number = await headers.count();
-
-        for (let i = 0; i < count; i++) {
-            const text: string = await headers.nth(i).innerText();
-            console.log(text.trim());
-        }
-
-        return columnNumber;
-    }
-
     // STATIC keywords allows me to call this method with no need of an instance of a class (DIRECTLY)
     public static formatCurrency(value: number): string {
         return new Intl.NumberFormat('en-US', {
