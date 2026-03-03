@@ -1,7 +1,7 @@
 import { test, Browser, BrowserContext, Page } from '@playwright/test';
-import { ProductSortingOptions } from '../utils/productSortingOptions';
-import { ExecutionParameters } from '../utils/executionParameters';
-import { SwagPagesProxymise } from '../pom/pages/swagPagesProxymise';
+import { ProductSortingOptions } from '../../utils/productSortingOptions';
+import { ExecutionParameters } from '../../utils/executionParameters';
+import { SwagPagesProxymise } from '../../pom/pages/swagPagesProxymise';
 
 test.describe('Tests for Swag pages WITH PROXYMISE and Wrapper', () => {
 

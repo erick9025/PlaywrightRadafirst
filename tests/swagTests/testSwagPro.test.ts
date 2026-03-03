@@ -1,7 +1,7 @@
 import { test, Browser, BrowserContext, Page, Locator, expect } from '@playwright/test';
-import { ProductSortingOptions } from '../utils/productSortingOptions';
-import { ExecutionParameters } from '../utils/executionParameters';
-import { SwagPages } from '../pom/pages/swagPages';
+import { ProductSortingOptions } from '../../utils/productSortingOptions';
+import { ExecutionParameters } from '../../utils/executionParameters';
+import { SwagPages } from '../../pom/pages/swagPages';
 
 test.describe('Tests for Swag pages', () => {
 

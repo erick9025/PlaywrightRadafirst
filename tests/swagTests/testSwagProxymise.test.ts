@@ -1,11 +1,11 @@
 import { test, Browser, BrowserContext, Page } from '@playwright/test';
-import { ProductSortingOptions } from '../utils/productSortingOptions';
-import { ExecutionParameters } from '../utils/executionParameters';
+import { ProductSortingOptions } from '../../utils/productSortingOptions';
+import { ExecutionParameters } from '../../utils/executionParameters';
 
 // Proxymise requires DEFAULT imports
-import SwagLoginPage from '../pom/pages/pagesByFeature/swagLoginPage';
-import SwagProductsPage from '../pom/pages/pagesByFeature/swagProductsPage';
-import SwagCartPage from '../pom/pages/pagesByFeature/swagCartPage';
+import SwagLoginPage from '../../pom/pages/pagesByFeature/swagLoginPage';
+import SwagProductsPage from '../../pom/pages/pagesByFeature/swagProductsPage';
+import SwagCartPage from '../../pom/pages/pagesByFeature/swagCartPage';
 
 test.describe('Tests for Swag pages WITH PROXYMISE', () => {
 
