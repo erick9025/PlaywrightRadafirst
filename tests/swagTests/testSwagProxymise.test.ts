@@ -1,11 +1,11 @@
 import { test, Browser, BrowserContext, Page } from '@playwright/test';
-import { ProductSortingOptions } from '../../utils/productSortingOptions';
-import { ExecutionParameters } from '../../utils/executionParameters';
+import { ProductSortingOptions } from '../../src/utils/productSortingOptions';
+import { ExecutionParameters } from '../../src/utils/executionParameters';
 
 // Proxymise requires DEFAULT imports
-import SwagLoginPage from '../../pom/pages/pagesByFeature/swagLoginPage';
-import SwagProductsPage from '../../pom/pages/pagesByFeature/swagProductsPage';
-import SwagCartPage from '../../pom/pages/pagesByFeature/swagCartPage';
+import SwagLoginPage from '../../src/pom/pages/pagesByFeature/swagLoginPage';
+import SwagProductsPage from '../../src/pom/pages/pagesByFeature/swagProductsPage';
+import SwagCartPage from '../../src/pom/pages/pagesByFeature/swagCartPage';
 
 test.describe('Tests for Swag pages WITH PROXYMISE', () => {
 
@@ -54,7 +54,7 @@ test.describe('Tests for Swag pages WITH PROXYMISE', () => {
 
     /////////////////////////////////////////////////////////// TESTS START HERE ///////////////////////////////////////////////////////////
 
-    test.skip("PROXYMISE Swag Add products only", async () => {
+    test("PROXYMISE Swag Add products only", async () => {
         await swagProductsPage  .addProductToCart("Sauce Labs Backpack")
                                 .addProductToCart("Sauce Labs Backpack")
                                 .addProductToCart("Sauce Labs Backpack")
@@ -65,7 +65,7 @@ test.describe('Tests for Swag pages WITH PROXYMISE', () => {
                                 .printTotalAddedSoFar();
     });
 
-    test.skip("PROXYMISE Swag Add products and go to cart", async () => {        
+    test("PROXYMISE Swag Add products and go to cart", async () => {        
         await swagProductsPage  .addProductToCart("Sauce Labs Backpack")
                                 .addProductToCart("Sauce Labs Fleece Jacket")
                                 .sortProducts(ProductSortingOptions.NameAscending)

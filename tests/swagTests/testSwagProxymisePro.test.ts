@@ -1,7 +1,7 @@
 import { test, Browser, BrowserContext, Page } from '@playwright/test';
-import { ProductSortingOptions } from '../../utils/productSortingOptions';
-import { ExecutionParameters } from '../../utils/executionParameters';
-import { SwagPagesProxymise } from '../../pom/pages/swagPagesProxymise';
+import { ProductSortingOptions } from '../../src/utils/productSortingOptions';
+import { ExecutionParameters } from '../../src/utils/executionParameters';
+import { SwagPagesProxymise } from '../../src/pom/pages/swagPagesProxymise';
 
 test.describe('Tests for Swag pages WITH PROXYMISE and Wrapper', () => {
 
@@ -47,7 +47,7 @@ test.describe('Tests for Swag pages WITH PROXYMISE and Wrapper', () => {
 
     /////////////////////////////////////////////////////////// TESTS START HERE ///////////////////////////////////////////////////////////
 
-    test.skip("PROXYMISE Pro Swag Add products only", async () => {
+    test("PROXYMISE Pro Swag Add products only", async () => {
         await PagesSwag.swagProductsPage    .addProductToCart("Sauce Labs Backpack")
                                             .addProductToCart("Sauce Labs Backpack")
                                             .addProductToCart("Sauce Labs Backpack")
@@ -58,7 +58,7 @@ test.describe('Tests for Swag pages WITH PROXYMISE and Wrapper', () => {
                                             .printTotalAddedSoFar();
     });
 
-    test.skip("PROXYMISE Pro Swag Add products and go to cart", async () => {        
+    test("PROXYMISE Pro Swag Add products and go to cart", async () => {        
         await PagesSwag.swagProductsPage    .addProductToCart("Sauce Labs Backpack")
                                             .addProductToCart("Sauce Labs Fleece Jacket")
                                             .sortProducts(ProductSortingOptions.NameAscending)

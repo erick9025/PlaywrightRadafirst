@@ -1,9 +1,9 @@
-import { test, Browser, BrowserContext, Page, Locator, expect } from '@playwright/test';
-import { ProductSortingOptions } from '../../utils/productSortingOptions';
-import { ExecutionParameters } from '../../utils/executionParameters';
-import { SwagLoginPage } from '../../pom/pages/pagesByFeature/swagLoginPage';
-import { SwagProductsPage } from '../../pom/pages/pagesByFeature/swagProductsPage';
-import { SwagCartPage } from '../../pom/pages/pagesByFeature/swagCartPage';
+import { test, Browser, BrowserContext, Page } from '@playwright/test';
+import { ProductSortingOptions } from '../../src/utils/productSortingOptions';
+import { ExecutionParameters } from '../../src/utils/executionParameters';
+import { SwagLoginPage } from '../../src/pom/pages/pagesByFeature/swagLoginPage';
+import { SwagProductsPage } from '../../src/pom/pages/pagesByFeature/swagProductsPage';
+import { SwagCartPage } from '../../src/pom/pages/pagesByFeature/swagCartPage';
 
 test.describe('Tests for Swag pages', () => {
 
@@ -51,7 +51,7 @@ test.describe('Tests for Swag pages', () => {
 
     /////////////////////////////////////////////////////////// TESTS START HERE ///////////////////////////////////////////////////////////
 
-    test.skip("Swag Add products only", async () => {
+    test("Swag Add products only", async () => {
         await swagProductsPage.addProductToCart("Sauce Labs Backpack");
         await swagProductsPage.addProductToCart("Sauce Labs Backpack");
         await swagProductsPage.addProductToCart("Sauce Labs Backpack");
@@ -62,7 +62,7 @@ test.describe('Tests for Swag pages', () => {
         await swagProductsPage.printTotalAddedSoFar();
     });
 
-    test.skip("Swag Add products and go to cart", async () => {        
+    test("Swag Add products and go to cart", async () => {        
         await swagProductsPage.addProductToCart("Sauce Labs Backpack");
         await swagProductsPage.addProductToCart("Sauce Labs Fleece Jacket");
         await swagProductsPage.sortProducts(ProductSortingOptions.NameAscending);

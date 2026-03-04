@@ -1,7 +1,7 @@
-import { test, Browser, BrowserContext, Page, Locator, expect } from '@playwright/test';
-import { ProductSortingOptions } from '../../utils/productSortingOptions';
-import { ExecutionParameters } from '../../utils/executionParameters';
-import { SwagPages } from '../../pom/pages/swagPages';
+import { test, Browser, BrowserContext, Page } from '@playwright/test';
+import { ProductSortingOptions } from '../../src/utils/productSortingOptions';
+import { ExecutionParameters } from '../../src/utils/executionParameters';
+import { SwagPages } from '../../src/pom/pages/swagPages';
 
 test.describe('Tests for Swag pages', () => {
 
@@ -46,7 +46,7 @@ test.describe('Tests for Swag pages', () => {
 
     /////////////////////////////////////////////////////////// TESTS START HERE ///////////////////////////////////////////////////////////
 
-    test.skip("Swag Add products only", async () => {
+    test("Swag Add products only", async () => {
         await PagesSwag.swagProductsPage.addProductToCart("Sauce Labs Backpack");
         await PagesSwag.swagProductsPage.addProductToCart("Sauce Labs Backpack");
         await PagesSwag.swagProductsPage.addProductToCart("Sauce Labs Backpack");
@@ -57,7 +57,7 @@ test.describe('Tests for Swag pages', () => {
         await PagesSwag.swagProductsPage.printTotalAddedSoFar();
     });
 
-    test.skip("Swag Add products and go to cart", async () => {        
+    test("Swag Add products and go to cart", async () => {        
         await PagesSwag.swagProductsPage.addProductToCart("Sauce Labs Backpack");
         await PagesSwag.swagProductsPage.addProductToCart("Sauce Labs Fleece Jacket");
         await PagesSwag.swagProductsPage.sortProducts(ProductSortingOptions.NameAscending);

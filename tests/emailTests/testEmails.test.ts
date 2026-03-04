@@ -1,7 +1,7 @@
 import { test, Browser, BrowserContext, Page } from '@playwright/test';
-import { MailinatorPage } from '../../pom/pages/emailProviders/mailinatorPage';
-import { GmailPage } from '../../pom/pages/emailProviders/gmailPage';
-import { IEmailProvider } from '../../pom/pages/emailProviders/interfaces/iEmailProvider';
+import { MailinatorPage } from '../../src/pom/pages/emailProviders/mailinatorPage';
+import { GmailPage } from '../../src/pom/pages/emailProviders/gmailPage';
+import { IEmailProvider } from '../../src/pom/pages/emailProviders/interfaces/iEmailProvider';
 
 test.describe('Tests for Swag pages', () => {
 
