@@ -1,7 +1,7 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { PlaywrightWorld } from "../support/world";
-import { SwagLoginPage } from "../../pom/pages/pagesByFeature/swagLoginPage";
+import { SwagLoginPage } from "../pom/pages/pagesByFeature/swagLoginPage";
 
 Given("I am on the Swag login page", async function (this: PlaywrightWorld) {
   const loginPage = new SwagLoginPage(this.page);

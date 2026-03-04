@@ -1,5 +1,5 @@
 import { expect } from "@playwright/test";
-import { TestUtilities } from "../utils/testUtilities.ts";
+import { TestUtilities } from "../utils/testUtilities";
 import { z,  } from "zod";
 import chalk from 'chalk';
 
