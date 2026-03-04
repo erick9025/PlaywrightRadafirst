@@ -146,7 +146,7 @@ export abstract class BasePage {
 
         const startTime: number = Date.now(); // Record start time
         
-        const [response] = await Promise.all([
+        await Promise.all([
             //Parallel step 1
             this.page.waitForResponse(
             resp => resp.url().includes(apiEndpointOrPartialUrl) && resp.status() === expectedStatusCode, // ALWAYS Sucessful API = OK
@@ -175,7 +175,7 @@ export abstract class BasePage {
 
         this.logMessageImportant(`Will click '${elementDescription}' and wait for its triggered API call with partial URL '${apiEndpointOrPartialUrl}'`);
         
-        const [response] = await Promise.all([
+        await Promise.all([
             //Parallel step 1
             this.page.waitForResponse(
             resp => resp.url().includes(apiEndpointOrPartialUrl) && resp.status() === expectedStatusCode && resp.request().method() === httpMethod,
@@ -273,14 +273,15 @@ export abstract class BasePage {
                 `✓ API '${r.partial}' matched URL: ${r.url}, status: ${r.status}, in ${d}`
             );
             } else {
-            const d = r.durationMs >= 1_000 ? `${(r.durationMs / 1000).toFixed(2)} s` : `${r.durationMs} ms`;
+            const failR = r as Extract<WaitResult, { ok: false }>;
+            const d = failR.durationMs >= 1_000 ? `${(failR.durationMs / 1000).toFixed(2)} s` : `${failR.durationMs} ms`;
             this.logMessageBold(
-                `✗ API '${r.partial}' failed: ${r.error} (waited ${d})`
+                `✗ API '${failR.partial}' failed: ${failR.error} (waited ${d})`
             );
             }
         }
 
-        const failed = results.filter((r) => !r.ok);
+        const failed = results.filter((r): r is Extract<WaitResult, { ok: false }> => !r.ok);
 
         if (failed.length > 0) {
             const summary = failed.map((f) => `'${f.partial}': ${f.error}`).join("; ");
@@ -298,7 +299,7 @@ export abstract class BasePage {
     protected async selectDropdownOptionByValue(ddlLocator : string, valueStr : string, elementDescription : string = "") : Promise<void> {        
         await this.verifyElementIsVisible(ddlLocator, "Dropdown " + ddlLocator);
         await this.page.locator(ddlLocator).selectOption({ value: valueStr });
-        var selectedValue = await this.page.locator(ddlLocator).inputValue();
+        const selectedValue = await this.page.locator(ddlLocator).inputValue();
         expect(selectedValue).toBe(valueStr);
         this.logMessage("Selected by value: " + valueStr);
     }
@@ -471,9 +472,9 @@ export abstract class BasePage {
     }
 
     protected async getCountFromList(locator : string) : Promise<number> {
-        let allElements = await this.page.locator(locator);
-        let count : number = await allElements.count();
-        await this.logMessage("List has " + count  + " elements");
+        const allElements: Locator = this.page.locator(locator);
+        const count: number = await allElements.count();
+        this.logMessage("List has " + count  + " elements");
 
         return count;
     }
