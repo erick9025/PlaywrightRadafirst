@@ -188,7 +188,8 @@ export abstract class BasePage {
         this.logMessage(`Clicked on element: ${elementDescription} and waited for its triggered ${httpMethod} API call with endpoint: ${apiEndpointOrPartialUrl} and response code ${expectedStatusCode}`);
     }
 
-        protected async clickAndWaitMultipleSuccessfulApis(
+    // ToDo Fix Error here
+    protected async clickAndWaitMultipleSuccessfulApis(
             elementLocator: string,
             elementDescription: string,
             apiEndpointOrPartialUrl: string | string[],
@@ -292,8 +293,7 @@ export abstract class BasePage {
         
 
         this.mainMethodEnd("clickAndWaitMultipleSuccessfulApis");
-    }
- 
+    } 
 
     protected async selectDropdownOptionByValue(ddlLocator : string, valueStr : string, elementDescription : string = "") : Promise<void> {        
         await this.verifyElementIsVisible(ddlLocator, "Dropdown " + ddlLocator);

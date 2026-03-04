@@ -1,0 +1,8 @@
+{
+  "default": {
+    "require": ["src/support/**/*.ts", "src/step-definitions/**/*.ts"],
+    "paths": ["src/features/**/*.feature"],
+    "format": ["@cucumber/pretty-formatter"],
+    "requireModule": ["ts-node/register"]
+  }
+}

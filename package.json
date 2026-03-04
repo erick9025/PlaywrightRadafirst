@@ -6,7 +6,9 @@
   "scripts": {
     "regen": "npx playwright show-report",
     "erick": "echo Erick Jimenez",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cucumber": "cucumber-js",
+    "cucumber:tags": "cucumber-js --tags @smoke"
   },
   "repository": {
     "type": "git",
@@ -21,8 +23,12 @@
   },
   "homepage": "https://github.com/erick9025/PlaywrightRadafirst#readme",
   "devDependencies": {
+    "@cucumber/cucumber": "^12.7.0",
+    "@cucumber/pretty-formatter": "^3.2.0",
     "@playwright/test": "^1.58.2",
-    "@types/proxymise": "^1.0.3"
+    "@types/proxymise": "^1.0.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "chalk": "^5.6.2",
