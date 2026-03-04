@@ -2,7 +2,10 @@
   "default": {
     "require": ["src/support/**/*.ts", "src/step-definitions/**/*.ts"],
     "paths": ["src/features/**/*.feature"],
-    "format": ["@cucumber/pretty-formatter"],
+    "format": [
+      "@cucumber/pretty-formatter",
+      "html:reports/cucumber-report.html"
+    ],
     "requireModule": ["ts-node/register"]
   }
 }
