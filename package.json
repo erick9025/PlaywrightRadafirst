@@ -8,7 +8,8 @@
     "erick": "echo Erick Jimenez",
     "test": "echo \"Error: no test specified\" && exit 1",
     "cucumber": "cucumber-js",
-    "cucumber:tags": "cucumber-js --tags @smoke"
+    "cucumber:tags": "cucumber-js --tags @smoke",
+    "playwright:bdd": "bddgen --config playwright.bdd.config.js && playwright test --config playwright.bdd.config.js"
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,7 @@
     "@playwright/test": "^1.58.2",
     "@types/proxymise": "^1.0.3",
     "multiple-cucumber-html-reporter": "^3.10.0",
+    "playwright-bdd": "^8.4.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   },
