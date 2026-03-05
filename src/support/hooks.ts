@@ -1,15 +1,19 @@
-import { Before, After } from "@cucumber/cucumber";
-import { chromium } from "@playwright/test";
-import { PlaywrightWorld } from "./world";
+import { createBdd } from "playwright-bdd";
 
-Before(async function (this: PlaywrightWorld) {
-  this.browser = await chromium.launch({ headless: true });
-  this.context = await this.browser.newContext();
-  this.page = await this.context.newPage();
+const { Before, After, BeforeAll, AfterAll } = createBdd();
+
+BeforeAll(async function () {
+  console.log("BeforeAll ERICK");
 });
 
-After(async function (this: PlaywrightWorld) {
-  await this.page?.close();
-  await this.context?.close();
-  await this.browser?.close();
+Before(async function ({ page: _page }) {
+  console.log("Before each ERICK");
+});
+
+After(async function ({ page: _page }) {
+  console.log("After each ERICK");
+});
+
+AfterAll(async function () {
+  console.log("AfterAll ERICK");
 });

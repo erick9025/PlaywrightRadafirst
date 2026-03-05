@@ -1,7 +1,7 @@
 // Generated from: src\features\swagGherkin.feature
 import { test } from "playwright-bdd";
 
-test.describe('User Login', () => {
+test.describe('SWAG pages', () => {
 
   test('Successful login with valid credentials to Swag Sauce', async ({ Given, When, Then, And, page }) => { 
     await Given('I am on the Swag login page', null, { page }); 
@@ -112,6 +112,11 @@ test.describe('User Login', () => {
 });
 
 // == technical section ==
+
+test.beforeAll('BeforeAll Hooks', ({ $runBeforeAllHooks }) => $runBeforeAllHooks(test, {  }, bddFileData));
+test.afterAll('AfterAll Hooks', ({ $registerAfterAllHooks }) => $registerAfterAllHooks(test, {  }, bddFileData));
+test.beforeEach('BeforeEach Hooks', ({ $runScenarioHooks, page }) => $runScenarioHooks('before', { page }));
+test.afterEach('AfterEach Hooks', ({ $runScenarioHooks, page }) => $runScenarioHooks('after', { page }));
 
 test.use({
   $test: [({}, use) => use(test), { scope: 'test', box: true }],
