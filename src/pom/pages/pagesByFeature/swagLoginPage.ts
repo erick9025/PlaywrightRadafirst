@@ -39,7 +39,12 @@ export class SwagLoginPage extends SwagParentPage {
 
     // ******************************************** METHODS (3) *****************************************************
     public async goTo(): Promise<SwagLoginPage> {
-        await this.goToURL("https://www.saucedemo.com/");
+        const url: string = "https://www.saucedemo.com/";
+        this.mainMethodStart("goTo", "Opening URL: " + url)
+
+        await this.goToURL(url);
+
+        this.mainMethodEnd("goTo");
         return this;
     }
 
@@ -66,6 +71,17 @@ export class SwagLoginPage extends SwagParentPage {
         await this.click(this.ElementsSwagLogin.buttonLogin, "Login [Button]");
 
         this.mainMethodEnd("login");
+        return this;
+    }
+
+    public async verifyWeAreOnDashboard() : Promise<SwagLoginPage> {
+        this.mainMethodStart("verifyWeAreOnDashboard")
+
+        const currentURL: string = this.page.url().toString();
+
+        Asserts.assertStringContains(currentURL, "inventory", "URL should say 'inventory'");
+
+        this.mainMethodEnd("verifyWeAreOnDashboard");
         return this;
     }
 

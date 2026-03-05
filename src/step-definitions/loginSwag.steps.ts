@@ -18,5 +18,6 @@ When(
 );
 
 Then("I should be redirected to the Swag dashboard", async ({ page }) => {
-  await expect(page).toHaveURL("https://www.saucedemo.com/inventory.html");
+  const loginPage = new SwagLoginPage(page);
+  await loginPage.verifyWeAreOnDashboard();
 });

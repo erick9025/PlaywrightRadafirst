@@ -9,6 +9,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "cucumber": "cucumber-js",
     "cucumber:tags": "cucumber-js --tags @smoke",
+    "playwright:regular": "npx playwright test --workers=8 --headed",
     "playwright:bdd": "bddgen --config playwright.bdd.config.js && playwright test --config playwright.bdd.config.js"
   },
   "repository": {
