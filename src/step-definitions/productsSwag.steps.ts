@@ -11,3 +11,11 @@ When(
     await productsPage.addProductToCart(productName);
   }
 );
+
+Then(
+  "I print {string}",
+  async ({ page }, something: string) => {
+    const productsPage = new SwagProductsPage(page);
+    await productsPage.printSomething(something);
+  }
+);
