@@ -125,26 +125,6 @@ export class SwagProductsPage extends SwagParentPage {
         return this;
     }
 
-    public step1() : SwagProductsPage {
-        this.logMessage("Doing step 1");
-        return this;
-    }
-
-    public step2() : SwagProductsPage {
-        this.logMessage("Doing step 2");
-        return this;
-    }
-
-    public step3() : SwagProductsPage {
-        this.logMessage("Doing step 3");
-        return this;
-    }
-
-    public step4() : SwagProductsPage {
-        this.logMessage("Doing step 4");
-        return this;
-    }
-
     // ******************************************** CONSTANTS (4) *****************************************************
     
     // moved to a separate class
