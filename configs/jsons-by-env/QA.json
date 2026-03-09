@@ -1,0 +1,27 @@
+{
+    "baseURL": "https://qa.ejimenez.com",
+    "erickVar" : "zwei",
+    "erickVarString" : "stringQA",
+    "erickVarInt" : 2,
+    "erickVarFloat" : 2.2,
+    "erickVarBoolean" : true,
+    "credentials": {
+        "myUsername": "qaUser",
+        "myPassword": "qaPassword"
+    },
+    "browsers": 
+        [ 
+            {
+                    "name" : "Chromium",
+                    "description": "Google Chrome"
+            },
+            {
+                    "name" : "Firefox",
+                    "description": "Mozilla Firefox "
+            },
+            {
+                    "name" : "Web Kit",
+                    "description": "Native for Playwright"
+            }
+        ]    
+  }

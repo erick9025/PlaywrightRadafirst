@@ -1,8 +1,9 @@
-import { test, Browser, BrowserContext, Page, Locator, expect } from '@playwright/test';
+import { test, Browser, BrowserContext, Page, TestInfo } from '@playwright/test';
 import { ProductSortingOptions } from '../../utils/productSortingOptions';
 import { ExecutionParameters } from '../../utils/executionParameters';
 import { SwagPages } from '../../pom/pages/swagPages';
 import { TestUtilities } from '../../utils/testUtilities';
+import { configParameters } from '../../configs/loadedConfig';
 
 test.describe('Tests for Swag pages', () => {
 
@@ -49,9 +50,20 @@ test.describe('Tests for Swag pages', () => {
 
     test("Swag Add products and go to cart", async () => {     
 
-        TestUtilities.logMessage("BASE_URL: " + process.env.BASE_URL!);
-        TestUtilities.logMessage("APP_USERNAME: " + process.env.APP_USERNAME!);
-        TestUtilities.logMessage("APP_PASSWORD: " + process.env.APP_PASSWORD!);
+        TestUtilities.logMessage("baseURL: " + configParameters.baseURL);
+        TestUtilities.logMessage("erickVar: " + configParameters.erickVar);
+        TestUtilities.logMessage("erickVarString: " + configParameters.erickVarString);
+        TestUtilities.logMessage("erickVarInt: " + configParameters.erickVarInt);
+        TestUtilities.logMessage("erickVarFloat: " + configParameters.erickVarFloat);
+        TestUtilities.logMessage("erickVarBoolean: " + configParameters.erickVarBoolean);
+        TestUtilities.logMessage("...............................");
+        TestUtilities.logMessage("credentials.myUsername: " + configParameters.credentials.myUsername);
+        TestUtilities.logMessage("credentials.myPassword: " + configParameters.credentials.myPassword);
+
+        configParameters.browsers.forEach( browser => {
+            TestUtilities.logMessage("....name: " + browser.name);
+            TestUtilities.logMessage("....description: " + browser.description);
+        });
 
         await PagesSwag.swagProductsPage.addProductToCart("Sauce Labs Backpack");
         await PagesSwag.swagProductsPage.addProductToCart("Sauce Labs Fleece Jacket");
