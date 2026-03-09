@@ -1,4 +1,12 @@
 import { defineConfig } from '@playwright/test';
+import dotenv from 'dotenv';
+
+export const myEnv = process.env.TEST_ENV || 'dev';
+
+dotenv.config({
+  path: `.env.${myEnv}`
+})
+
 
 export default defineConfig({
   testDir: './tests',
@@ -14,6 +22,8 @@ export default defineConfig({
     ['json']
   ],
   use: {
+    baseURL: process.env.BASE_URL,
+    headless: true,
     trace: 'on',
     screenshot: 'on',
     video: 'retain-on-failure',

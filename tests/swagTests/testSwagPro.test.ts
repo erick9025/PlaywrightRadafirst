@@ -2,6 +2,7 @@ import { test, Browser, BrowserContext, Page, Locator, expect } from '@playwrigh
 import { ProductSortingOptions } from '../../utils/productSortingOptions';
 import { ExecutionParameters } from '../../utils/executionParameters';
 import { SwagPages } from '../../pom/pages/swagPages';
+import { TestUtilities } from '../../utils/testUtilities';
 
 test.describe('Tests for Swag pages', () => {
 
@@ -46,18 +47,12 @@ test.describe('Tests for Swag pages', () => {
 
     /////////////////////////////////////////////////////////// TESTS START HERE ///////////////////////////////////////////////////////////
 
-    test("Swag Add products only", async () => {
-        await PagesSwag.swagProductsPage.addProductToCart("Sauce Labs Backpack");
-        await PagesSwag.swagProductsPage.addProductToCart("Sauce Labs Backpack");
-        await PagesSwag.swagProductsPage.addProductToCart("Sauce Labs Backpack");
-        await PagesSwag.swagProductsPage.addProductToCart("Sauce Labs Backpack");
-        await PagesSwag.swagProductsPage.addProductToCart("Sauce Labs Backpack");
-        await PagesSwag.swagProductsPage.addProductToCart("Sauce Labs Fleece Jacket");
-        await PagesSwag.swagProductsPage.sortProducts(ProductSortingOptions.NameAscending);
-        await PagesSwag.swagProductsPage.printTotalAddedSoFar();
-    });
+    test("Swag Add products and go to cart", async () => {     
 
-    test("Swag Add products and go to cart", async () => {        
+        TestUtilities.logMessage("BASE_URL: " + process.env.BASE_URL!);
+        TestUtilities.logMessage("APP_USERNAME: " + process.env.APP_USERNAME!);
+        TestUtilities.logMessage("APP_PASSWORD: " + process.env.APP_PASSWORD!);
+
         await PagesSwag.swagProductsPage.addProductToCart("Sauce Labs Backpack");
         await PagesSwag.swagProductsPage.addProductToCart("Sauce Labs Fleece Jacket");
         await PagesSwag.swagProductsPage.sortProducts(ProductSortingOptions.NameAscending);
