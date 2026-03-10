@@ -242,7 +242,7 @@ export abstract class BaseApiInteractions {
         }
 
         result = schema!.safeParse(this.responseJson);
-        //Asserts.assertCorrectZodSchema(this.responseJson, schema!, "Attempting to deserialize using Zod Schema"); // ToDo
+        Asserts.assertCorrectZodSchema(this.responseJson, schema!, "Attempting to deserialize using Zod Schema"); 
         
         // If your assertion guarantees success, you can use non-null assertion
         return result.data!;

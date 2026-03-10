@@ -251,13 +251,13 @@ export class Asserts {
         }
     }
 
-    /*public static assertCorrectZodSchema(jsonResponseFromApi: string, schema : z.ZodType<any, z.ZodTypeDef, any>, message: string, trueIfHard : boolean = true): void {
-        const result : z.SafeParseReturnType<any, any>= schema.safeParse(jsonResponseFromApi);
+    public static assertCorrectZodSchema(jsonResponseFromApi: string, schema : z.ZodType<any>, message: string, trueIfHard : boolean = true): void {
+        const result = schema.safeParse(jsonResponseFromApi);
         let itFailed : boolean = false;
 
         if (!result.success) {
             //console.error("Validation failed. Details:");
-            result.error.errors.forEach((err) => {
+            result.error.issues.forEach((err) => {
                 console.error(`❌ Path: ${err.path.join('.')} — ${err.message}`);
             });
             itFailed = true;
@@ -275,7 +275,7 @@ export class Asserts {
                 this.throwError("assertTruthy", error, message, "Result should be truthy when JSON corresponds to correct Zod schema.");
             }
         }
-    }*/
+    }
 
     // Add this helper function to your Asserts class
     private static ensureError(value: unknown): Error {
@@ -285,5 +285,10 @@ export class Asserts {
         
         // Convert non-Error values to Error objects
         return new Error(String(value));
+    }
+
+    private static assertFailSpecialPrivate(message: string): void {
+        let error : Error = new Error("Test case FAILED! " + message);
+        throw error;
     }
 }
