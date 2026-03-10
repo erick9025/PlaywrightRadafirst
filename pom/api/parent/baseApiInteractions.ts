@@ -8,16 +8,6 @@ export abstract class BaseApiInteractions {
 
     private readonly CLOSE_CONNECTION : boolean = false; //close after each call, or close ONCE at the end of all tests using hooks
 
-    private doingHybridTests: boolean = false;
-
-    protected getDoingHybridTests(): boolean { 
-        return this.doingHybridTests;
-    }
-
-    protected setDoingHybridTests(value: boolean): void {
-        this.doingHybridTests = value;
-    }
-
     // These 4 are NOT exposed
 
     // BELOW ERROR is caused when you add a tsconfig.json in your solution: this adds additional restriction to the languages, like forcing you to declare parameters type inside method signatures, etc.
@@ -30,8 +20,14 @@ export abstract class BaseApiInteractions {
     protected deserializingSchema?: z.ZodType;
 
     // We want these 2 exposed in case we want to use them directly in tests
-    public statusCode : number = -1;
-    public responseJson! : string; //can be 'any' instead of 'string'
+    private _statusCode : number = -1;
+    private _responseJson! : string; //can be 'any' instead of 'string'
+
+    public get statusCode() : number { return this._statusCode; }
+    private set statusCode(value: number) { this._statusCode = value; }
+
+    public get responseJson() : string { return this._responseJson; }
+    private set responseJson(value: string) { this._responseJson = value; }
 
     constructor() {
     }
@@ -47,7 +43,7 @@ export abstract class BaseApiInteractions {
 
     private async closeConnectionInternally(fromWhere : HttpMethod) : Promise<void> {
         if(this.CLOSE_CONNECTION) {
-            this.info("Closing connection from HTTP call: " + fromWhere);
+            this.logMessage("Closing connection from HTTP call: " + fromWhere);
             await this.closeConnection();
         }        
     }
@@ -69,7 +65,7 @@ export abstract class BaseApiInteractions {
             this.responseJson = await this.responseObject.json(); 
         }
         catch(error) {
-            this.infoImportant("Response is not in correct format, possiblly a 403 - Forbidden status. Error: " + error);
+            this.logMessageImportant("Response is not in correct format, possiblly a 403 - Forbidden status. Error: " + error);
         }            
     }
 
@@ -77,19 +73,19 @@ export abstract class BaseApiInteractions {
         TestUtilities.logMessageNoTimestamp(""); // Just a blank line for better console readability
     }
 
-    protected info(message : string) : void {
+    protected logMessage(message : string) : void {
         TestUtilities.logMessage(message);
     }
 
-    protected infoImportant(message: string, printBlankLineAfter: boolean = true) : void {
+    protected logMessageImportant(message: string, printBlankLineAfter: boolean = true) : void {
         TestUtilities.logMessageImportant(message, printBlankLineAfter);
     }
 
-    protected infoWarning(message: string, printBlankLineAfter: boolean = true) : void {
+    protected logMessageWarning(message: string, printBlankLineAfter: boolean = true) : void {
         TestUtilities.logMessageWarning(message, printBlankLineAfter);
     }
 
-    protected infoBold(message: string) : void {
+    protected logMessageBold(message: string) : void {
         TestUtilities.logMessageBold(message);
     }
 
@@ -98,13 +94,13 @@ export abstract class BaseApiInteractions {
     }
 
     protected printResponseDetails() : void {
-        this.info("Response status: " + this.statusCode);
-        this.info("Response body: " + JSON.stringify(this.responseJson));
+        this.logMessage("Response status: " + this.statusCode);
+        this.logMessage("Response body: " + JSON.stringify(this.responseJson));
     }
 
     private printRequestURL(url: string, method: HttpMethod): void {
-        this.infoImportant(`Executing HTTP '${method}' REST request with URL:`, false);
-        this.infoBold(url);
+        this.logMessageImportant(`Executing HTTP '${method}' REST request with URL:`, false);
+        this.logMessageBold(url);
     } 
 
     protected async executeGetRequest(url: string, headers?: Record<string, string>): Promise<void> {
@@ -122,7 +118,7 @@ export abstract class BaseApiInteractions {
     //bodyOrPayload can be 'object' (more specific) or 'any' (more general)
     protected async executePostRequest(url: string, bodyOrPayload: object, headers?: Record<string, string>): Promise<void> {
         this.printRequestURL(url, HttpMethod.POST);
-        this.info("POST Body: " + JSON.stringify(bodyOrPayload));
+        this.logMessage("POST Body: " + JSON.stringify(bodyOrPayload));
 
         this.printHeaders(headers);
 
@@ -154,7 +150,7 @@ export abstract class BaseApiInteractions {
 
     protected async executePutRequest(url: string, body: any, headers?: Record<string, string>): Promise<void> {
         this.printRequestURL(url, HttpMethod.PUT);
-        this.info("PUT Body: " + JSON.stringify(body));
+        this.logMessage("PUT Body: " + JSON.stringify(body));
 
         this.printHeaders(headers);
 
@@ -170,7 +166,7 @@ export abstract class BaseApiInteractions {
 
     protected async executePatchRequest(url: string, body: any, headers?: Record<string, string>): Promise<void> {
         this.printRequestURL(url, HttpMethod.PATCH);
-        this.info("PATCH Body: " + JSON.stringify(body));
+        this.logMessage("PATCH Body: " + JSON.stringify(body));
 
         this.printHeaders(headers);
 
@@ -198,7 +194,7 @@ export abstract class BaseApiInteractions {
 
     // We can do 2 things and deserialization will not fail, 1ST : Remove/Comment a field, 2nd: Add a field that is not in the api response (public fake: string;)
     protected deserializeResponseWithoutSchema<T>(): T { // Way #1 - without schema checking (SIMPLER)
-        this.info("Standardly deserializing response to the specified Class model.");
+        this.logMessage("Standardly deserializing response to the specified Class model.");
 
         let deserializedObjectFromClassT: T;
 
@@ -234,7 +230,7 @@ export abstract class BaseApiInteractions {
     // ...1 : Declare a field that does NOT exist on the response JSON (--> ¿?)
     // ...2 : Do not declare a field (or comment) that EXISTS on the response JSON (--> still passes)
     protected deserializeResponseWithExplicitSchema<T>(schema?: z.ZodSchema<T>): T { // Way #2 - with schema checking (SAFER & MORE COMPLEX)
-        this.info("Safely deserializing response to the specified Zod Schema.");
+        this.logMessage("Safely deserializing response to the specified Zod Schema.");
         let result;
 
         if (!schema) {
@@ -250,12 +246,12 @@ export abstract class BaseApiInteractions {
 
     private printHeaders(headers?: Record<string, string>): void {
         if (headers && Object.keys(headers).length > 0) {
-            this.info("Headers:");
+            this.logMessage("Headers:");
             for (const [key, value] of Object.entries(headers)) {
-                this.info(`  ${key}: ${value}`);
+                this.logMessage(`  ${key}: ${value}`);
             }
         } else {
-            this.info("No additional headers provided.");
+            this.logMessage("No additional headers provided.");
         }
     }
 }
