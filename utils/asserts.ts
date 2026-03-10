@@ -162,7 +162,7 @@ export class Asserts {
 
     public static assertEquals(expectedValue: number | string, actualValue: number | string, message: string, trueIfHard : boolean = true): void {
         try {            
-            trueIfHard ? expect(actualValue).toBe(expectedValue) : expect.soft(actualValue).toBe(expectedValue); // ToDo REPLICATE THIS IN THE REMAINING ASSERTS
+            trueIfHard ? expect(actualValue).toBe(expectedValue) : expect.soft(actualValue).toBe(expectedValue);
             TestUtilities.logMessage("Assert PASSED! [" + expectedValue + "] is equal to [" + actualValue + "] " + message);
         } catch (error) {
             this.throwError("assertEquals", this.ensureError(error), message, "[" + actualValue + "] should be equal to [" + expectedValue + "]");

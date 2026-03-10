@@ -74,23 +74,23 @@ export abstract class BaseApiInteractions {
     }
 
     protected newEmptyLine(): void {
-        TestUtilities.logToConsoleNoTimestamp(""); // Just a blank line for better console readability
+        TestUtilities.logMessageNoTimestamp(""); // Just a blank line for better console readability
     }
 
     protected info(message : string) : void {
-        TestUtilities.logToConsole(message);
+        TestUtilities.logMessage(message);
     }
 
     protected infoImportant(message: string, printBlankLineAfter: boolean = true) : void {
-        TestUtilities.logToConsoleImportant(message, printBlankLineAfter);
+        TestUtilities.logMessageImportant(message, printBlankLineAfter);
     }
 
     protected infoWarning(message: string, printBlankLineAfter: boolean = true) : void {
-        TestUtilities.logToConsoleWarning(message, printBlankLineAfter);
+        TestUtilities.logMessageWarning(message, printBlankLineAfter);
     }
 
     protected infoBold(message: string) : void {
-        TestUtilities.logToConsoleBold(message);
+        TestUtilities.logMessageBold(message);
     }
 
     protected error(errorMessage : string) : void {
