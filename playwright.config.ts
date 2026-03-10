@@ -13,7 +13,7 @@ export const configFile = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
 export const config: ProjectTestConfigRadafirst = {
   testDir: './tests',
   workers: 4,
-  retries: 2, // Retry failed tests up to 2 times
+  retries: process.env.CI ? 2 : 0, // Retry failed tests up to 2 times
   timeout: 15_000, // Global timeout for all tests in milliseconds (default is 30 seconds)
   expect: {
     timeout: 1_000

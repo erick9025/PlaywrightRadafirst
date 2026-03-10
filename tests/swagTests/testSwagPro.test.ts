@@ -1,7 +1,7 @@
 import { test, Browser, BrowserContext, Page, TestInfo } from '@playwright/test';
 import { ProductSortingOptions } from '../../utils/productSortingOptions';
 import { ExecutionParameters } from '../../utils/executionParameters';
-import { SwagPages } from '../../pom/pages/swagPages';
+import { SwagPages } from '../../pom/web/pages/swagPages';
 import { TestUtilities } from '../../utils/testUtilities';
 import { configParameters } from '../../configs/loadedConfig';
 
