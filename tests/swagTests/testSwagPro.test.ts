@@ -1,4 +1,4 @@
-import { test, Browser, BrowserContext, Page, TestInfo } from '@playwright/test';
+import { test, Browser, BrowserContext, Page } from '@playwright/test';
 import { ProductSortingOptions } from '../../utils/productSortingOptions';
 import { ExecutionParameters } from '../../utils/executionParameters';
 import { SwagPages } from '../../pom/web/pages/swagPages';
