@@ -27,7 +27,7 @@ export abstract class BaseApiInteractions {
     protected requestContext!: APIRequestContext;
     protected responseObject!: APIResponse;
     protected defaultHeaders!: Record<string, string>;
-    protected deserializingSchema?: z.ZodType<any, z.ZodTypeDef, any>;    
+    protected deserializingSchema?: z.ZodType;
 
     // We want these 2 exposed in case we want to use them directly in tests
     public statusCode : number = -1;
@@ -226,7 +226,7 @@ export abstract class BaseApiInteractions {
     // ...1 : Declare a field that does NOT exist on the response JSON (--> ¿?)
     // ...2 : Do not declare a field (or comment) that EXISTS on the response JSON (--> still passes)
     protected deserializeResponse<T>(): T { // Way #2 - with schema checking (SAFER & MORE COMPLEX)
-        return this.deserializeResponseWithExplicitSchema<T>(this.deserializingSchema as z.ZodType<T, z.ZodTypeDef, any>);
+        return this.deserializeResponseWithExplicitSchema<T>(this.deserializingSchema as z.ZodType<T>);
     }
 
     // Declare Schema for later deserialization
