@@ -44,6 +44,7 @@ test.describe('Tests for Apis with POM', () => {
     
     const object: ResponseGetPlaceDetails = new ResponseGetPlaceDetails();
 
+    // Use factory pattern to return known objects/places STATIC METHOD INSIDE CLASS 'ResponseGetPlaceDetails' (ToDo)
     object.location = {
         latitude: "-38.383494",
         longitude: "33.427362"
