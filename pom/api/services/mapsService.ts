@@ -57,7 +57,10 @@ export class MapsService extends BaseApiService {
         this.logMessage("Website: " + this.responseGetPlaceDetails.website);
         this.logMessage("Language: " + this.responseGetPlaceDetails.language);
 
-        Asserts.assertObjectsEqual(expectedInfo!, this.responseGetPlaceDetails, "The place details should match the expected info");
+        // Only assert when the object was provided
+        if(expectedInfo){
+            Asserts.assertObjectsEqual(expectedInfo, this.responseGetPlaceDetails, "The place details should match the expected info");
+        }        
 
         this.mainMethodEnd("getPlaceDetails :: " + placeId);
         return this;
