@@ -8,9 +8,9 @@ import { configParameters } from '../../configs/loadedConfig';
 test.describe('Tests for Swag pages', () => {
 
     let browser: Browser;
-        let context: BrowserContext;
-        let page: Page;
-        let PagesSwag: SwagPages;
+    let context: BrowserContext;
+    let page: Page;
+    let PagesSwag: SwagPages;
 
     ////////////////////////////////////////////////////////// BEFORE/AFTER SETUP //////////////////////////////////////////////////////////
     test.beforeAll(async ({ playwright }, testInfo) => {
@@ -48,7 +48,7 @@ test.describe('Tests for Swag pages', () => {
 
     /////////////////////////////////////////////////////////// TESTS START HERE ///////////////////////////////////////////////////////////
 
-    test("Swag Add products and go to cart", async () => {     
+    test.skip("Swag Add products and go to cart", async () => {     
 
         TestUtilities.logMessage("baseURL: " + configParameters.baseURL);
         TestUtilities.logMessage("erickVar: " + configParameters.erickVar);

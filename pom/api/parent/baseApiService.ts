@@ -4,9 +4,9 @@ import { Asserts } from "../../../utils/asserts.ts";
 import { request, APIRequestContext, APIResponse } from '@playwright/test';
 import { z } from "zod";
 
-export abstract class BaseApiInteractions {
+export abstract class BaseApiService {
 
-    private readonly CLOSE_CONNECTION : boolean = false; //close after each call, or close ONCE at the end of all tests using hooks
+    private readonly _closeConnection : boolean = false; // close after each call, or close ONCE at the end of all tests using hooks
 
     // These 4 are NOT exposed
 
@@ -30,8 +30,11 @@ export abstract class BaseApiInteractions {
     private set responseJson(value: string) { this._responseJson = value; }
 
     constructor() {
+        // We can initialize default headers here if needed, or leave it to be set by child classes or individual tests
     }
     
+    // ***************************************** INTERNAL METHODS - NOT EXPOSED TO TESTS *****************************************
+
     private async init() : Promise<void> {
         if(this.requestContext) {
             //Do nothing, already defined/instanced
@@ -42,7 +45,7 @@ export abstract class BaseApiInteractions {
     }
 
     private async closeConnectionInternally(fromWhere : HttpMethod) : Promise<void> {
-        if(this.CLOSE_CONNECTION) {
+        if(this._closeConnection) {
             this.logMessage("Closing connection from HTTP call: " + fromWhere);
             await this.closeConnection();
         }        
@@ -65,8 +68,34 @@ export abstract class BaseApiInteractions {
             this.responseJson = await this.responseObject.json(); 
         }
         catch(error) {
-            this.logMessageImportant("Response is not in correct format, possiblly a 403 - Forbidden status. Error: " + error);
+            this.logMessageImportant("Response is not in correct format, possibly a 403 - Forbidden status. Error: " + error);
         }            
+    }
+
+    // ***************************************** UTILITY METHODS *****************************************
+
+    protected methodStart(methodName: string, additionallogMessage: string = "") : void {
+        const haslogMessage: boolean = !TestUtilities.isNullOrEmpty(additionallogMessage);
+        console.log("");        
+        TestUtilities.logMethodStart(haslogMessage ? "...Starting method [" + methodName + "] " + additionallogMessage : "...Starting method [" + methodName + "]");
+    }
+
+    protected methodEnd(methodName: string, additionallogMessage: string = "") : void {
+        const haslogMessage: boolean = !TestUtilities.isNullOrEmpty(additionallogMessage);
+        TestUtilities.logMethodEnd(haslogMessage ? "...Ending method [" + methodName + "] " + additionallogMessage : "...Ending method [" + methodName + "]");
+        console.log(""); 
+    }
+
+    protected mainMethodStart(mainMethodName : string, additionallogMessage : string = "") : void {
+        const haslogMessage: boolean = !TestUtilities.isNullOrEmpty(additionallogMessage);
+        console.log("");        
+        TestUtilities.logMainMethodStart(haslogMessage ? "...Starting method [" + mainMethodName + "] " + additionallogMessage : "...Starting method [" + mainMethodName + "]");
+    }
+
+    protected mainMethodEnd(mainMethodName : string, additionallogMessage : string = "") : void {
+        const haslogMessage: boolean = !TestUtilities.isNullOrEmpty(additionallogMessage);
+        TestUtilities.logMainMethodEnd(haslogMessage ? "...Ending method [" + mainMethodName + "] " + additionallogMessage : "...Ending method [" + mainMethodName + "]");
+        console.log("");
     }
 
     protected newEmptyLine(): void {
@@ -103,9 +132,22 @@ export abstract class BaseApiInteractions {
         this.logMessageBold(url);
     } 
 
+    private printHeaders(headers?: Record<string, string>): void {
+        if (headers && Object.keys(headers).length > 0) {
+            this.logMessage("Headers:");
+            for (const [key, value] of Object.entries(headers)) {
+                this.logMessage(`  ${key}: ${value}`);
+            }
+        } 
+        else {
+            this.logMessage("No additional headers provided.");
+        }
+    }
+
+    // ***************************************** HTTP METHODS *****************************************
+
     protected async executeGetRequest(url: string, headers?: Record<string, string>): Promise<void> {
         this.printRequestURL(url, HttpMethod.GET);
-
         this.printHeaders(headers);
 
         await this.init();
@@ -118,8 +160,7 @@ export abstract class BaseApiInteractions {
     //bodyOrPayload can be 'object' (more specific) or 'any' (more general)
     protected async executePostRequest(url: string, bodyOrPayload: object, headers?: Record<string, string>): Promise<void> {
         this.printRequestURL(url, HttpMethod.POST);
-        this.logMessage("POST Body: " + JSON.stringify(bodyOrPayload));
-
+        this.logMessage("POST Body: " + JSON.stringify(bodyOrPayload)); // Serialize the bodyOrPayload to a JSON string for logging purposes, but we will pass the original object to the request method to let Playwright handle the serialization. This way we can maintain the benefits of type checking and avoid issues with manual stringification.
         this.printHeaders(headers);
 
         await this.init();
@@ -151,12 +192,12 @@ export abstract class BaseApiInteractions {
     protected async executePutRequest(url: string, body: any, headers?: Record<string, string>): Promise<void> {
         this.printRequestURL(url, HttpMethod.PUT);
         this.logMessage("PUT Body: " + JSON.stringify(body));
-
         this.printHeaders(headers);
 
         await this.init();
         this.responseObject = await this.requestContext.put(url, { 
             headers,
+            //data: JSON.stringify(body) // Explicit 'SERIALIZE' Transform an object of a CLASS into a JSON
             data: body 
         });
 
@@ -167,7 +208,6 @@ export abstract class BaseApiInteractions {
     protected async executePatchRequest(url: string, body: any, headers?: Record<string, string>): Promise<void> {
         this.printRequestURL(url, HttpMethod.PATCH);
         this.logMessage("PATCH Body: " + JSON.stringify(body));
-
         this.printHeaders(headers);
 
         await this.init();
@@ -182,7 +222,6 @@ export abstract class BaseApiInteractions {
 
     protected async executeDeleteRequest(url: string, headers?: Record<string, string>): Promise<void> {
         this.printRequestURL(url, HttpMethod.DELETE);
-
         this.printHeaders(headers);
 
         await this.init();
@@ -191,6 +230,8 @@ export abstract class BaseApiInteractions {
         await this.assignReturnValues();
         await this.closeConnectionInternally(HttpMethod.DELETE);
     }
+
+    // ***************************************** RESPONSE DESERIALIZATION METHODS *****************************************
 
     // We can do 2 things and deserialization will not fail, 1ST : Remove/Comment a field, 2nd: Add a field that is not in the api response (public fake: string;)
     protected deserializeResponseWithoutSchema<T>(): T { // Way #1 - without schema checking (SIMPLER)
@@ -201,7 +242,7 @@ export abstract class BaseApiInteractions {
         try{
             deserializedObjectFromClassT = this.responseJson as unknown as T; // Must be explicit 'DESERIALIZE': Transform a JSON into an object of a CLASS
         }
-        catch(error) { // HEADS UP: This catch never actually happen because JavaScript is so flexible, so we can't really validate unless we add endless methods to validate typeof (see below commented function)
+        catch(error) { // HEADS UP: This catch will almost never actually happen because JavaScript is so flexible, so we can't really validate unless we add endless methods to validate typeof (see below commented function)
             throw error;
         }
 
@@ -237,21 +278,9 @@ export abstract class BaseApiInteractions {
             Asserts.assertFail("Schema is required for safe deserialization. Please provide one (you can ask ChatGPT how to do it by giving him a JSON)");
         }
 
-        result = schema!.safeParse(this.responseJson);
-        Asserts.assertCorrectZodSchema(this.responseJson, schema!, "Attempting to deserialize using Zod Schema"); 
+        result = Asserts.assertCorrectZodSchema(this.responseJson, schema!, "Attempting to deserialize using Zod Schema");         
         
         // If your assertion guarantees success, you can use non-null assertion
-        return result.data!;
-    }
-
-    private printHeaders(headers?: Record<string, string>): void {
-        if (headers && Object.keys(headers).length > 0) {
-            this.logMessage("Headers:");
-            for (const [key, value] of Object.entries(headers)) {
-                this.logMessage(`  ${key}: ${value}`);
-            }
-        } else {
-            this.logMessage("No additional headers provided.");
-        }
+        return result!.data!;
     }
 }
