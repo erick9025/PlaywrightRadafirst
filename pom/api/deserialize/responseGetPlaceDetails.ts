@@ -1,7 +1,7 @@
 import { IPrintableObject } from "../models/iPrintableObject";
 import { TestUtilities } from "../../../utils/testUtilities";
 
-export class ResponseGetPlaceDetails /*implements IPrintableObject*/ {
+export class ResponseGetPlaceDetails implements IPrintableObject {
   location!: ResponseGetPlaceDetailsLocation;
   accuracy!: string;
   name!: string;

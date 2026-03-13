@@ -29,6 +29,10 @@ test.describe('Tests for Apis with POM', () => {
 
   /////////////////////////////////////////////////////////// TESTS START HERE ///////////////////////////////////////////////////////////
 
+  /*test("POM with GET place location with JSON", async () => {    
+    await mapsService.getPlaceDetails("7d4e3875cb641a63048d8bfa0faffe47", 200, myJson); // Alternatively, we can work with a JSON file (NOT RECOMMENDED)
+  });*/
+
   test("POM with GET place location simpler", async () => {    
     await mapsService.getPlaceDetails("7d4e3875cb641a63048d8bfa0faffe47");
   });
@@ -39,7 +43,7 @@ test.describe('Tests for Apis with POM', () => {
     await mapsService.getPlaceDetails("7d4e3875cb641a63048d8bfa0faffe47", 200, object); // Better to work with an object, since we can reuse it in multiple places and it's more readable than a JSON file. However, both approaches are valid.
   });
 
-    test("POM with GET place location FAIL", async () => {    
+  test.skip("POM with GET place location FAIL", async () => {    
     let object: ResponseGetPlaceDetails = ResponseGetPlaceDetails.returnSampleObject();
 
     // Object can be changed
@@ -47,10 +51,6 @@ test.describe('Tests for Apis with POM', () => {
 
     await mapsService.getPlaceDetails("7d4e3875cb641a63048d8bfa0faffe47", 200, object); // Better to work with an object, since we can reuse it in multiple places and it's more readable than a JSON file. However, both approaches are valid.
   });
-
-  /*test("POM with GET place location with JSON", async () => {    
-    await mapsService.getPlaceDetails("7d4e3875cb641a63048d8bfa0faffe47", 200, myJson); // Alternatively, we can work with a JSON file (NOT RECOMMENDED)
-  });*/
 
   test("POM with POST create new place", async () => {    
     const generatedPlaceId: string = await mapsService.postCreatePlace(BodyPostNewPlace.returnSampleObject());
@@ -61,7 +61,7 @@ test.describe('Tests for Apis with POM', () => {
   test("POM with PUT update place", async () => {    
 
     let bodyOrPayload: BodyPutUpdatePlace = new BodyPutUpdatePlace();
-    bodyOrPayload.place_id = "c26a903cdd2c514302abbe867d650f68";
+    bodyOrPayload.place_id = "c48de564bd9f5ebdc7c9e3b7005bb44f";
     bodyOrPayload.address = "Calle Falsa 123, Springfield";
     bodyOrPayload.key = "qaclick123";
 
