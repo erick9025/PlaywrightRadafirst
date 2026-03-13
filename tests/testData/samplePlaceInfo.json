@@ -1,0 +1,13 @@
+{
+    "location": {
+        "latitude": "-38.383494",
+        "longitude": "33.427362"
+    },
+    "accuracy": "2",
+    "name": "Cafe Unosquare",
+    "phone_number": "(52) 55 4000 4000",
+    "address": "Constitucion 1990",
+    "types": "coffe,restaurant,bar,brunch",
+    "website": "https://unosquare.com",
+    "language": "United States-SP"
+}

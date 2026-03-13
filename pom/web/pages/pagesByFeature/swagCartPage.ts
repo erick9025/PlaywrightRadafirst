@@ -1,6 +1,6 @@
 import { Page } from '@playwright/test';
 import { SwagParentPage } from "./parent/swagParentPage";
-import { ExecutionParameters } from "../../../utils/executionParameters";
+import { ExecutionParameters } from "../../../../utils/executionParameters";
 import proxymise from "proxymise";
 
 /*

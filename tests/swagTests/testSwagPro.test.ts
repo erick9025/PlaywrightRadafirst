@@ -1,16 +1,16 @@
-import { test, Browser, BrowserContext, Page, TestInfo } from '@playwright/test';
+import { test, Browser, BrowserContext, Page } from '@playwright/test';
 import { ProductSortingOptions } from '../../utils/productSortingOptions';
 import { ExecutionParameters } from '../../utils/executionParameters';
-import { SwagPages } from '../../pom/pages/swagPages';
+import { SwagPages } from '../../pom/web/pages/swagPages';
 import { TestUtilities } from '../../utils/testUtilities';
 import { configParameters } from '../../configs/loadedConfig';
 
 test.describe('Tests for Swag pages', () => {
 
     let browser: Browser;
-        let context: BrowserContext;
-        let page: Page;
-        let PagesSwag: SwagPages;
+    let context: BrowserContext;
+    let page: Page;
+    let PagesSwag: SwagPages;
 
     ////////////////////////////////////////////////////////// BEFORE/AFTER SETUP //////////////////////////////////////////////////////////
     test.beforeAll(async ({ playwright }, testInfo) => {

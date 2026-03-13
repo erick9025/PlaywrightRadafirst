@@ -162,7 +162,7 @@ export class Asserts {
 
     public static assertEquals(expectedValue: number | string, actualValue: number | string, message: string, trueIfHard : boolean = true): void {
         try {            
-            trueIfHard ? expect(actualValue).toBe(expectedValue) : expect.soft(actualValue).toBe(expectedValue); // ToDo REPLICATE THIS IN THE REMAINING ASSERTS
+            trueIfHard ? expect(actualValue).toBe(expectedValue) : expect.soft(actualValue).toBe(expectedValue);
             TestUtilities.logMessage("Assert PASSED! [" + expectedValue + "] is equal to [" + actualValue + "] " + message);
         } catch (error) {
             this.throwError("assertEquals", this.ensureError(error), message, "[" + actualValue + "] should be equal to [" + expectedValue + "]");
@@ -251,16 +251,14 @@ export class Asserts {
         }
     }
 
-    /*public static assertCorrectZodSchema(jsonResponseFromApi: string, schema : z.ZodType<any, z.ZodTypeDef, any>, message: string, trueIfHard : boolean = true): void {
-        const result : z.SafeParseReturnType<any, any>= schema.safeParse(jsonResponseFromApi);
-        let itFailed : boolean = false;
+    public static assertCorrectZodSchema(jsonResponseFromApi: string, schema : z.ZodType<any>, message: string, trueIfHard : boolean = true): z.ZodSafeParseResult<any> | undefined {
+        const result = schema.safeParse(jsonResponseFromApi);
 
         if (!result.success) {
             //console.error("Validation failed. Details:");
-            result.error.errors.forEach((err) => {
+            result.error.issues.forEach((err) => {
                 console.error(`❌ Path: ${err.path.join('.')} — ${err.message}`);
             });
-            itFailed = true;
             this.assertFailSpecialPrivate("Result should be truthy when JSON corresponds to correct Zod schema. More details are displayed on stderr section on HTML Playwright report"); // a 'throw' happens here, preventing below try-catch block being executed
         } 
         
@@ -268,14 +266,16 @@ export class Asserts {
             //Ensures that value is true in a boolean context, anything but false, 0, '', null, undefined or NaN. Use this method when you don't care about the specific value.
             trueIfHard ? expect(result).toBeTruthy() : expect.soft(result).toBeTruthy();
             TestUtilities.logMessage("Assert PASSED! Result is truthy when JSON corresponds to correct Zod schema: " + message);
+            return result;
         } 
         // Below 'catch' block will not actually happen, because of above 'return' statement, if we got to the 'try' that means assert was already succesful ( we are just keeping it as second safe and to keep consistency with above asserts)
         catch (error) {
             if (error instanceof Error) {
                 this.throwError("assertTruthy", error, message, "Result should be truthy when JSON corresponds to correct Zod schema.");
+                return undefined;
             }
         }
-    }*/
+    }
 
     // Add this helper function to your Asserts class
     private static ensureError(value: unknown): Error {
@@ -285,5 +285,10 @@ export class Asserts {
         
         // Convert non-Error values to Error objects
         return new Error(String(value));
+    }
+
+    private static assertFailSpecialPrivate(message: string): void {
+        let error : Error = new Error("Test case FAILED! " + message);
+        throw error;
     }
 }

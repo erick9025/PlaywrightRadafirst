@@ -1,9 +1,9 @@
 import { Page } from '@playwright/test';
 import { SwagParentPage } from "./parent/swagParentPage";
-import { TestUtilities } from "../../../utils/testUtilities";
-import { Asserts } from "../../../utils/asserts";
-import { ExecutionParameters } from "../../../utils/executionParameters";
-import { ProductSortingOptions } from "../../../utils/productSortingOptions";
+import { TestUtilities } from "../../../../utils/testUtilities";
+import { Asserts } from "../../../../utils/asserts";
+import { ExecutionParameters } from "../../../../utils/executionParameters";
+import { ProductSortingOptions } from "../../../../utils/productSortingOptions";
 import proxymise from "proxymise";
 
 /*

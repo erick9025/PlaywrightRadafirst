@@ -1,6 +1,6 @@
 import { Page, Locator, expect } from '@playwright/test';
-import { TestUtilities } from "../../../../utils/testUtilities";
-import { Asserts } from "../../../../utils/asserts";
+import { TestUtilities } from "../../../../../utils/testUtilities";
+import { Asserts } from "../../../../../utils/asserts";
 
 export abstract class BasePage {
 
@@ -11,38 +11,32 @@ export abstract class BasePage {
     }
 
     //------------------------------------ LOGGING INTERACTIONS ------------------------------------
-    protected logToConsole(message: string) : void {
-        TestUtilities.logToConsole(message);
-    }
-
     protected logMessage(message: string) : void {
         TestUtilities.logMessage(message);
     }
-
-    //****************************** */
-
+    
     protected logMessageIssue(messageForMinorIssue: string) : void {
         TestUtilities.logIssue(messageForMinorIssue);
     }
 
     protected logMessageImportant(message: string, printBlankLineAfter: boolean = true) : void {
-        TestUtilities.logToConsoleImportant(message, printBlankLineAfter);
+        TestUtilities.logMessageImportant(message, printBlankLineAfter);
     }
 
     protected logMessageWarning(message: string, printBlankLineAfter: boolean = true) : void {
-        TestUtilities.logToConsoleWarning(message, printBlankLineAfter);
+        TestUtilities.logMessageWarning(message, printBlankLineAfter);
     }
 
     protected logMessageBold(message: string) : void {
-        TestUtilities.logToConsoleBold(message);
+        TestUtilities.logMessageBold(message);
     }
 
     /*protected logMessageColor(message: string, color: ChalkColorStyle) : void {
-        TestUtilities.logToConsoleWithColor(message, color);
+        TestUtilities.logMessageWithColor(message, color);
     }*/
 
     protected newEmptyLine() : void {
-        TestUtilities.logToConsoleNoTimestamp(""); 
+        TestUtilities.logMessageNoTimestamp(""); 
     }
 
     protected methodStart(methodName: string, additionallogMessage: string = "") : void {
@@ -422,11 +416,11 @@ export abstract class BasePage {
         try {
             await this.page.locator(locator).waitFor({ state: 'detached', timeout: timeoutMs });
             isDetached = true;
-            TestUtilities.logToConsole("Element is detached: " + elementDescription);
+            TestUtilities.logMessage("Element is detached: " + elementDescription);
         } 
         catch {
             isDetached = false;
-            TestUtilities.logToConsole("Element is NOT detached: " + elementDescription);
+            TestUtilities.logMessage("Element is NOT detached: " + elementDescription);
         }
 
         return isDetached;
@@ -438,11 +432,11 @@ export abstract class BasePage {
         try {
             await this.page.locator(locator).waitFor({ state: 'hidden', timeout: timeoutMs });
             isHidden = true;
-            TestUtilities.logToConsole("Element is hidden: " + elementDescription);
+            TestUtilities.logMessage("Element is hidden: " + elementDescription);
         } 
         catch {
             isHidden = false;
-            TestUtilities.logToConsole("Element is NOT hidden: " + elementDescription);
+            TestUtilities.logMessage("Element is NOT hidden: " + elementDescription);
         }
 
         return isHidden;
@@ -454,11 +448,11 @@ export abstract class BasePage {
         try {
             await this.page.locator(locator).waitFor({ state: 'visible', timeout: timeoutMs });
             isVisible = true;
-            TestUtilities.logToConsole("Element is visible: " + elementDescription);
+            TestUtilities.logMessage("Element is visible: " + elementDescription);
         } 
         catch {
             isVisible = false;
-            TestUtilities.logToConsole("Element is NOT visible: " + elementDescription);
+            TestUtilities.logMessage("Element is NOT visible: " + elementDescription);
         }
 
         return isVisible;

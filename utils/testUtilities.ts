@@ -2,6 +2,8 @@ import { Page, Locator, test, expect } from '@playwright/test';
 import { Asserts } from './asserts';
 import chalk from 'chalk';
 
+export type ChalkColorStyle = 'red' | 'green' | 'blue' | 'yellow' | 'cyan' | 'magenta' | 'white' | 'gray' | 'bgRed' | 'bgGreen' | 'bgBlue' | 'bgYellow' | 'bgCyan' | 'bgMagenta' | 'bgWhite' | 'bold' | 'italic' | 'underline';
+
 export class TestUtilities {
 
     // Async functions/methods return
@@ -34,16 +36,6 @@ export class TestUtilities {
         }).format(value);
     };
 
-    //******************************** ToDo consolidate into 1 below************************* */
-    public static logToConsole(message: string): void {
-        const timestamp : string = TestUtilities.formatTimestamp();
-        console.log(chalk.bgWhite(timestamp + ": " + message));
-        test.info().annotations.push({
-            type: `${timestamp}`,
-            description: `${message}`
-        });
-    }
-
     public static logMessage(message: string): void {
         const timestamp : string = TestUtilities.formatTimestamp();
         console.log(chalk.bgWhite(timestamp + ": " + message));
@@ -52,8 +44,7 @@ export class TestUtilities {
             description: `${message}`
         });
     }
-    //******************************** ToDo consolidate into 1 above************************* */
-
+    
     public static logErrorToConsole(errorMessage: string): void {
         const timestamp = TestUtilities.getCurrentFormattedTimestamp();
         console.error(chalk.bgRed(timestamp + ": " + errorMessage));
@@ -124,7 +115,7 @@ export class TestUtilities {
         const startIndex = fullText.indexOf(startText);
         const endIndex = fullText.indexOf(endText, startIndex + startText.length);
 
-        //TestUtilities.logToConsole("Getting text between '" + startText + "' (left) and '" + endText + "' (right) from string: " + fullText);
+        //TestUtilities.logMessage("Getting text between '" + startText + "' (left) and '" + endText + "' (right) from string: " + fullText);
 
         if(limitsShouldExist) {
             //CustomAsserts.assertFalse(startIndex === -1 || endIndex === -1, "Both limits (LEFT & RIGHT) should be present in text: " + fullText);
@@ -156,7 +147,7 @@ export class TestUtilities {
         const timeoutMsForApi: number = 1_500; // 1.5 seconds
         const timeoutString: string = timeoutMsForApi > 1_000 ? "Seconds: " + (timeoutMsForApi / 1000).toString() : "Miliseconds:" + (timeoutMsForApi).toString();
 
-        TestUtilities.logToConsole(`Will click '${elementDescription}' and wait (for a max of ${timeoutString}) for its triggered API call with partial URL '${apiEndpointOrPartialUrl}'`);
+        TestUtilities.logMessage(`Will click '${elementDescription}' and wait (for a max of ${timeoutString}) for its triggered API call with partial URL '${apiEndpointOrPartialUrl}'`);
 
         const startTime: number = Date.now(); // Record start time
         
@@ -174,10 +165,10 @@ export class TestUtilities {
         const durationMs: number = endTime - startTime; // Calculate elapsed milliseconds
         const durationString: string = durationMs > 1_000 ? (durationMs /1000).toString() + " seconds" : (durationMs).toString() + " ms";
 
-        TestUtilities.logToConsole(`Clicked on element: ${elementDescription} and waited for its triggered parallel API call with endpoint: ${apiEndpointOrPartialUrl} that took ${durationString} to run`);        
+        TestUtilities.logMessage(`Clicked on element: ${elementDescription} and waited for its triggered parallel API call with endpoint: ${apiEndpointOrPartialUrl} that took ${durationString} to run`);        
     }
 
-    public static logToConsoleImportant(message: string, printBlankLineAfter: boolean = true): void {
+    public static logMessageImportant(message: string, printBlankLineAfter: boolean = true): void {
         const charL: string = "⚡⚡⚡";
         const charR: string = "⚡⚡⚡";
         const timestamp: string = TestUtilities.getCurrentFormattedTimestamp();
@@ -195,7 +186,7 @@ export class TestUtilities {
         }        
     }
 
-    public static logToConsoleWarning(message: string, printBlankLineAfter: boolean = true): void {
+    public static logMessageWarning(message: string, printBlankLineAfter: boolean = true): void {
         const charL: string = "🚨🚨🚨";
         const charR: string = "⚠️⚠️⚠️";
         const timestamp: string = TestUtilities.getCurrentFormattedTimestamp();
@@ -213,7 +204,7 @@ export class TestUtilities {
         }        
     }
 
-    public static logToConsoleBold(message: string): void {
+    public static logMessageBold(message: string): void {
         const timestamp: string = TestUtilities.getCurrentFormattedTimestamp();
         console.log(chalk.bgWhite(timestamp + ": " + message));
         test.info().annotations.push({
@@ -286,16 +277,16 @@ export class TestUtilities {
         });
     }
 
-    /*public static logToConsoleWithColor(message: string, style: ChalkColorStyle): void {
+    public static logMessageWithColor(message: string, style: ChalkColorStyle): void {
         const timestamp: string = TestUtilities.getCurrentFormattedTimestamp();
         const styleFn = (chalk as any)[style];
         const output = typeof styleFn === 'function'
             ? styleFn(`${timestamp}: ${message}`)
             : `${timestamp}: ${message}`;
         console.log(output);
-    }*/
+    }
 
-    public static logToConsoleNoTimestamp(message: string): void {
+    public static logMessageNoTimestamp(message: string): void {
         console.log(chalk.bgWhite(message));
         test.info().annotations.push({
             type: ``,
