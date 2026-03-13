@@ -2,8 +2,9 @@ import { test } from '@playwright/test';
 import { MapsService } from '../../pom/api/services/mapsService';
 import { ResponseGetPlaceDetails } from '../../pom/api/deserialize/responseGetPlaceDetails';
 import { BodyPostNewPlace } from '../../pom/api/serialize/bodyPostNewPlace';
-import myJson from '../testData/samplePlaceInfo.json';
+import { BodyPutUpdatePlace } from '../../pom/api/serialize/bodyPutUpdatePlace';
 import { TestUtilities } from '../../utils/testUtilities';
+import myJson from '../testData/samplePlaceInfo.json';
 
 test.describe('Tests for Apis with POM', () => {
 
@@ -55,5 +56,15 @@ test.describe('Tests for Apis with POM', () => {
     const generatedPlaceId: string = await mapsService.postCreatePlace(BodyPostNewPlace.returnSampleObject());
 
     TestUtilities.logMessage("Generated place id: " + generatedPlaceId);
+  });
+
+  test("POM with PUT update place", async () => {    
+
+    let bodyOrPayload: BodyPutUpdatePlace = new BodyPutUpdatePlace();
+    bodyOrPayload.place_id = "c26a903cdd2c514302abbe867d650f68";
+    bodyOrPayload.address = "Calle Falsa 123, Springfield";
+    bodyOrPayload.key = "qaclick123";
+
+    await mapsService.putUpdatePlace(bodyOrPayload);
   });
 });

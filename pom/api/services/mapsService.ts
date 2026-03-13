@@ -4,17 +4,20 @@ import { TestUtilities } from "../../../utils/testUtilities";
 import { Asserts } from "../../../utils/asserts";
 import { ResponseGetPlaceDetails } from "../deserialize/responseGetPlaceDetails";
 import { ResponsePostNewPlace } from "../deserialize/responsePostNewPlace";
+import { ResponsePutUpdatePlace } from "../deserialize/responsePutUpdatePlace";
 import { BodyPostNewPlace } from "../serialize/bodyPostNewPlace";
+import { BodyPutUpdatePlace } from "../serialize/bodyPutUpdatePlace";
 import { z } from "zod";
-import { Assert } from "node:assert";
 
 export class MapsService extends BaseApiService {
     // Bodies/Payloads
     public bodyPostNewPlace!: BodyPostNewPlace;
+    public bodyPutUpdatePlace!: BodyPutUpdatePlace;
 
     // Responses
     public responseGetPlaceDetails!: ResponseGetPlaceDetails;
     public responsePostNewPlace!: ResponsePostNewPlace;
+    public responsePutUpdatePlace!: ResponsePutUpdatePlace;
 
     // Constants
     private readonly _constants : MapsConstants = new MapsConstants();
@@ -93,5 +96,26 @@ export class MapsService extends BaseApiService {
         this.mainMethodEnd("postCreatePlace");
         this.bodyPostNewPlace = payload; // Save the payload used for the POST request in case we want to use it later
         return placeId;
+    }
+
+    public async putUpdatePlace(payload: BodyPutUpdatePlace, expectedResponseCode: number = 200): Promise<void> {
+        this.mainMethodStart("putUpdatePlace");
+
+        await this.executePutRequest(this._constants.endpointPutUpdatePlace, payload);
+
+        Asserts.assertEquals(expectedResponseCode, this.statusCode, "Status code should be the expected one");
+
+        // Assign schema
+        this.deserializingSchema = z.object({
+            msg: z.string()
+        });
+
+        // Deserialize response
+        this.responsePutUpdatePlace = this.deserializeResponse<ResponsePutUpdatePlace>(); // With schema: RECOMMENDED
+
+        Asserts.assertEquals("Address successfully updated", this.responsePutUpdatePlace.msg, "Message in response should be correct");
+
+        this.mainMethodEnd("putUpdatePlace");
+        this.bodyPutUpdatePlace = payload; // Save the payload used for the PUT request in case we want to use it later
     }
 }
