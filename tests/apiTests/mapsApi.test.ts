@@ -1,6 +1,9 @@
 import { test } from '@playwright/test';
 import { MapsService } from '../../pom/api/services/mapsService';
 import { ResponseGetPlaceDetails } from '../../pom/api/deserialize/responseGetPlaceDetails';
+import { BodyPostNewPlace } from '../../pom/api/serialize/bodyPostNewPlace';
+import myJson from '../testData/samplePlaceInfo.json';
+import { TestUtilities } from '../../utils/testUtilities';
 
 test.describe('Tests for Apis with POM', () => {
 
@@ -25,38 +28,32 @@ test.describe('Tests for Apis with POM', () => {
 
   /////////////////////////////////////////////////////////// TESTS START HERE ///////////////////////////////////////////////////////////
 
+  test("POM with GET place location simpler", async () => {    
+    await mapsService.getPlaceDetails("7d4e3875cb641a63048d8bfa0faffe47");
+  });
+
   test("POM with GET place location", async () => {    
-    /*
-    {
-    "location": {
-        "latitude": "-38.383494",
-        "longitude": "33.427362"
-    },
-    "accuracy": "2",
-    "name": "Cafe Unosquare",
-    "phone_number": "(52) 55 4000 4000",
-    "address": "Constitucion 1990",
-    "types": "coffe,restaurant,bar,brunch",
-    "website": "https://unosquare.com",
-    "language": "United States-SP"
-}
-    */
-    
-    const object: ResponseGetPlaceDetails = new ResponseGetPlaceDetails();
+    const object: ResponseGetPlaceDetails = ResponseGetPlaceDetails.returnSampleObject();
 
-    // Use factory pattern to return known objects/places STATIC METHOD INSIDE CLASS 'ResponseGetPlaceDetails' (ToDo)
-    object.location = {
-        latitude: "-38.383494",
-        longitude: "33.427362"
-      };
-    object.accuracy = "2";
-    object.name = "Cafe Unosquare";
-    object.phone_number = "(52) 55 4000 4000";
-    object.address = "Constitucion 1990";
-    object.types = "coffe,restaurant,bar,brunch";
-    object.website = "https://unosquare.com.mx"; // Intentional Error with .mx
-    object.language = "United States-SP";
+    await mapsService.getPlaceDetails("7d4e3875cb641a63048d8bfa0faffe47", 200, object); // Better to work with an object, since we can reuse it in multiple places and it's more readable than a JSON file. However, both approaches are valid.
+  });
 
-    await mapsService.getPlaceDetails("7d4e3875cb641a63048d8bfa0faffe47", 200, object);      
+    test("POM with GET place location FAIL", async () => {    
+    let object: ResponseGetPlaceDetails = ResponseGetPlaceDetails.returnSampleObject();
+
+    // Object can be changed
+    object.accuracy = "78"; // Intentional error to see the assertion fail
+
+    await mapsService.getPlaceDetails("7d4e3875cb641a63048d8bfa0faffe47", 200, object); // Better to work with an object, since we can reuse it in multiple places and it's more readable than a JSON file. However, both approaches are valid.
+  });
+
+  /*test("POM with GET place location with JSON", async () => {    
+    await mapsService.getPlaceDetails("7d4e3875cb641a63048d8bfa0faffe47", 200, myJson); // Alternatively, we can work with a JSON file (NOT RECOMMENDED)
+  });*/
+
+  test("POM with POST create new place", async () => {    
+    const generatedPlaceId: string = await mapsService.postCreatePlace(BodyPostNewPlace.returnSampleObject());
+
+    TestUtilities.logMessage("Generated place id: " + generatedPlaceId);
   });
 });
