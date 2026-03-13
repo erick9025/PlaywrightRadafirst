@@ -48,7 +48,7 @@ test.describe('Tests for Swag pages', () => {
 
     /////////////////////////////////////////////////////////// TESTS START HERE ///////////////////////////////////////////////////////////
 
-    test.skip("Swag Add products and go to cart", async () => {     
+    test("Swag Add products and go to cart", async () => {     
 
         TestUtilities.logMessage("baseURL: " + configParameters.baseURL);
         TestUtilities.logMessage("erickVar: " + configParameters.erickVar);
