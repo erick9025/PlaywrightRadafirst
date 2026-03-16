@@ -9,7 +9,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "NOTREADYtestMapsServiceWithAllure": "npm run clean:allure && npx playwright test mapsServiceTest.spec.ts",
     "testMapsService": "npx playwright test testMapsApi",
-    "testSwag": "npx playwright test testSwagPro"
+    "testSwag": "npx playwright test testSwagPro",
+    "testSwagAll": "npx playwright test testSwag"
   },
   "repository": {
     "type": "git",

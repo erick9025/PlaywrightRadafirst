@@ -6,6 +6,7 @@ import { TestUtilities } from '../../utils/testUtilities';
 import { configParameters } from '../../configs/loadedConfig';
 
 test.describe('Tests for Swag pages', () => {
+    test.describe.configure({ mode: 'serial' });
 
     let browser: Browser;
     let context: BrowserContext;

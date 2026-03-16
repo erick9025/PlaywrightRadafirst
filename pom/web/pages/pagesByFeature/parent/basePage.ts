@@ -63,6 +63,13 @@ export abstract class BasePage {
         console.log("");
     }
 
+    // ................................................. REGULAR METHODS .................................................
+
+    public async waitNSeconds(seconds: number): Promise<void> {
+        this.logMessage(`Waiting for ${seconds} seconds...`);
+        await this.page.waitForTimeout(seconds * 1_000);
+    }
+
     protected async goToURL(url: string): Promise<void> { 
         await this.page.goto(url);
         this.logMessage("Sucessfully opened URL: " + url);
