@@ -13,7 +13,7 @@ export const configFile = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
 export const config: ProjectTestConfigRadafirst = {
   workers: 4,
   retries: process.env.CI ? 2 : 0, // Retry failed tests up to 2 times
-  timeout: 10_000, // Global timeout for all tests in milliseconds (default is 30 seconds)
+  timeout: 30_000, // Global timeout for all tests in milliseconds (default is 30 seconds)
   expect: {
     timeout: 1_000
   },
@@ -39,7 +39,7 @@ export const config: ProjectTestConfigRadafirst = {
     video: 'retain-on-failure',
     // 👇 Add this section
     launchOptions: {
-      slowMo: 1500
+      slowMo: 1
     }
   },
   projects: [

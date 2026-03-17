@@ -1,8 +1,7 @@
-import { test as base } from '@playwright/test';
-import { chromium } from 'playwright';
+import { test as base, chromium, Page } from '@playwright/test';
 
 export const test = base.extend<{
-  persistentPage: any;
+  persistentPage: Page | undefined;
 }>({
   persistentPage: async ({}, use, testInfo) => {
     if (testInfo.project.name !== 'persistent-chrome') {
@@ -12,6 +11,7 @@ export const test = base.extend<{
 
     const context = await chromium.launchPersistentContext(
       'C:/Users/erick.jimenez/AppData/Local/Google/Chrome/User Data',
+      //'C:/ErickAutomation/ChromeProfiles/Default',
       {
         channel: 'chrome',
         args: ['--profile-directory=Default'],
@@ -19,9 +19,12 @@ export const test = base.extend<{
       }
     );
 
-    const page = await context.newPage();
-    await use(page);
-
-    await context.close();
+    try {
+      const page = await context.newPage();
+      await use(page);
+    } 
+    finally {
+      await context.close();
+    }
   },
 });
