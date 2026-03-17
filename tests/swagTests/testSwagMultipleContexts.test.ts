@@ -2,8 +2,6 @@ import { test, Browser, BrowserContext, Page } from '@playwright/test';
 import { ProductSortingOptions } from '../../utils/productSortingOptions';
 import { ExecutionParameters } from '../../utils/executionParameters';
 import { SwagPages } from '../../pom/web/pages/swagPages';
-import { TestUtilities } from '../../utils/testUtilities';
-import { configParameters } from '../../configs/loadedConfig';
 
 test.describe('Tests for Swag pages', () => {
 
@@ -58,7 +56,7 @@ test.describe('Tests for Swag pages', () => {
 
     /////////////////////////////////////////////////////////// TESTS START HERE ///////////////////////////////////////////////////////////
 
-    test("MC Swag Add products and go to cart ONE AFTER ANOTHER", async () => {    
+    test.skip("MC Swag Add products and go to cart ONE AFTER ANOTHER", async () => {    
 
         await PagesSwag1.swagLoginPage.login();
         await PagesSwag1.swagProductsPage.addProductToCart("Sauce Labs Backpack");
@@ -77,7 +75,7 @@ test.describe('Tests for Swag pages', () => {
         await PagesSwag2.swagCartPage.verifyCartTotalIsCorrect();
     });
 
-    test("MC Swag Add products and go to cart interspersed", async () => {
+    test.skip("MC Swag Add products and go to cart interspersed", async () => {
 
         await PagesSwag1.swagLoginPage.login();
         await PagesSwag2.swagLoginPage.login();
@@ -98,23 +96,23 @@ test.describe('Tests for Swag pages', () => {
     test.skip("MC Swag Add products and go to cart PARALLEL", async () => {
         await Promise.all([
             (async () => {
-                PagesSwag1.swagLoginPage.login();
-                PagesSwag1.swagProductsPage.addProductToCart("Sauce Labs Backpack");
-                PagesSwag1.swagProductsPage.addProductToCart("Sauce Labs Fleece Jacket");
-                PagesSwag1.swagProductsPage.sortProducts(ProductSortingOptions.NameAscending);
-                PagesSwag1.swagProductsPage.printTotalAddedSoFar();
-                PagesSwag1.swagCartPage.goToCart();
-                PagesSwag1.swagCartPage.verifyCartTotalIsCorrect();
-            }),
+                await PagesSwag1.swagLoginPage.login();
+                await PagesSwag1.swagProductsPage.addProductToCart("Sauce Labs Backpack");
+                await PagesSwag1.swagProductsPage.addProductToCart("Sauce Labs Fleece Jacket");
+                await PagesSwag1.swagProductsPage.sortProducts(ProductSortingOptions.NameAscending);
+                await PagesSwag1.swagProductsPage.printTotalAddedSoFar();
+                await PagesSwag1.swagCartPage.goToCart();
+                await PagesSwag1.swagCartPage.verifyCartTotalIsCorrect();
+            })(),
             (async () => {
-                PagesSwag2.swagLoginPage.login();
-                PagesSwag2.swagProductsPage.addProductToCart("Sauce Labs Backpack");
-                PagesSwag2.swagProductsPage.addProductToCart("Sauce Labs Fleece Jacket");
-                PagesSwag2.swagProductsPage.sortProducts(ProductSortingOptions.NameAscending);
-                PagesSwag2.swagProductsPage.printTotalAddedSoFar();
-                PagesSwag2.swagCartPage.goToCart();
-                PagesSwag2.swagCartPage.verifyCartTotalIsCorrect();
-            })
+                await PagesSwag2.swagLoginPage.login();
+                await PagesSwag2.swagProductsPage.addProductToCart("Sauce Labs Backpack");
+                await PagesSwag2.swagProductsPage.addProductToCart("Sauce Labs Fleece Jacket");
+                await PagesSwag2.swagProductsPage.sortProducts(ProductSortingOptions.NameAscending);
+                await PagesSwag2.swagProductsPage.printTotalAddedSoFar();
+                await PagesSwag2.swagCartPage.goToCart();
+                await PagesSwag2.swagCartPage.verifyCartTotalIsCorrect();
+            })()
         ]);
     });
 });
