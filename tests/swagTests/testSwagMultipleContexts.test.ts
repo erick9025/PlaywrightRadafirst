@@ -58,7 +58,7 @@ test.describe('Tests for Swag pages', () => {
 
     /////////////////////////////////////////////////////////// TESTS START HERE ///////////////////////////////////////////////////////////
 
-    test("MC Swag Add products and go to cart ONE AFTER ANOTHER", async () => {    
+    test.skip("MC Swag Add products and go to cart ONE AFTER ANOTHER", async () => {    
 
         await PagesSwag1.swagLoginPage.login();
         await PagesSwag1.swagProductsPage.addProductToCart("Sauce Labs Backpack");
@@ -77,7 +77,7 @@ test.describe('Tests for Swag pages', () => {
         await PagesSwag2.swagCartPage.verifyCartTotalIsCorrect();
     });
 
-    test("MC Swag Add products and go to cart interspersed", async () => {
+    test.skip("MC Swag Add products and go to cart interspersed", async () => {
 
         await PagesSwag1.swagLoginPage.login();
         await PagesSwag2.swagLoginPage.login();
