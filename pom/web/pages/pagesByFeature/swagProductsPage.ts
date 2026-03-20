@@ -125,6 +125,15 @@ export class SwagProductsPage extends SwagParentPage {
         return this;
     }
 
+    public async clickOnButton(locator : string) : Promise<SwagProductsPage> {
+        this.methodStart("clickOnButton", locator);
+
+        await this.click(locator, "Button with locator: " + locator);
+
+        this.methodEnd("clickOnButton", locator);
+        return this;
+    }
+
     // ******************************************** CONSTANTS (4) *****************************************************
     
     // moved to a separate class

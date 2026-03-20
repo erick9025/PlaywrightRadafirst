@@ -49,7 +49,11 @@ test.describe('Tests for Swag pages', () => {
 
     /////////////////////////////////////////////////////////// TESTS START HERE ///////////////////////////////////////////////////////////
 
-    test("Swag Add products and go to cart", async () => {     
+    test("Testing playwright special locators", async () => {     
+        await PagesSwag.swagProductsPage.clickOnButton(".inventory_list .inventory_item:has-text('Fleece') button");
+    });
+
+    test.skip("Swag Add products and go to cart", async () => {  
 
         TestUtilities.logMessage("baseURL: " + configParameters.baseURL);
         TestUtilities.logMessage("erickVar: " + configParameters.erickVar);
