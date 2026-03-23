@@ -50,7 +50,7 @@ export class SwagCartPage extends SwagParentPage {
 
         this.logMessage("Total added so far: " + ExecutionParameters.expectedTotal);
 
-        // ToDo Homework
+        await this.verifyElementIsVisible("button.checkout_button", "Checkout button");
     
         this.mainMethodEnd("verifyCartTotalIsCorrect");
         return this;

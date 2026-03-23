@@ -1,57 +1,62 @@
-import { Browser, BrowserContext, Page } from '@playwright/test';
 import { test } from '../testHooks/swagParentTest';
 import { ProductSortingOptions } from '../../utils/productSortingOptions';
-import { ExecutionParameters } from '../../utils/executionParameters';
-import { SwagPages } from '../../pom/web/pages/swagPages';
+import { SwagLoginPage } from '../../pom/web/pages/pagesByFeature/swagLoginPage';
 
 test.describe('Tests for Swag pages', () => {
-    let browser: Browser;
-    let context: BrowserContext;
-    let page: Page;
-    let PagesSwag: SwagPages;
+    test.beforeEach(async () => {
+        console.log("ERICK FIRST beforeEach block inside testSwagPro.test.ts");
+    });
 
-    /*
-    test.beforeAll(     globalSetup --> si se puede
-    test.beforeEach(    globalSetupEach
-    test.afterEach(     globalTeardownEach
-    test.afterAll(      globalTeardown  --> si se puede
-    */
+    test("Swag Add products and go to cart with hooks", async ({ AllPages }) => {  
+        
+        await AllPages.SwagLoginPage.login();
+        await AllPages.SwagProductsPage.addProductToCart("Sauce Labs Backpack");
+        await AllPages.SwagProductsPage.addProductToCart("Sauce Labs Fleece Jacket");
+        await AllPages.SwagProductsPage.sortProducts(ProductSortingOptions.NameAscending);
+        await AllPages.SwagProductsPage.printTotalAddedSoFar();
+        await AllPages.SwagCartPage.goToCart();        
+        await AllPages.SwagCartPage.verifyCartTotalIsCorrect();
+    });
 
 
-    /////////////////////////////////////////////////////////// TESTS START HERE ///////////////////////////////////////////////////////////
+    test("Swag Add products and go to cart with hooks 2", async ({ AllPages, browser }) => {  
+        
+        await AllPages.SwagLoginPage.login();
+        await AllPages.SwagProductsPage.addProductToCart("Sauce Labs Backpack");
+        await AllPages.SwagProductsPage.addProductToCart("Sauce Labs Fleece Jacket");
+        await AllPages.SwagProductsPage.sortProducts(ProductSortingOptions.NameAscending);
+        await AllPages.SwagProductsPage.printTotalAddedSoFar();
+        await AllPages.SwagCartPage.goToCart();        
+        await AllPages.SwagCartPage.verifyCartTotalIsCorrect();
 
-    test("Swag Add products and go to cart with hooks", async ({ playwright }, testInfo) => {  
+        // Clean
+        await AllPages.resetAllPagesWithFreshContext(browser);
 
-        // Resolve browser from playwright.config.ts project
-        const browserName = testInfo.project.use.browserName!;
-        const browserType = playwright[browserName];
+        await AllPages.SwagLoginPage.login();
+        await AllPages.SwagProductsPage.addProductToCart("Sauce Labs Backpack");
+        await AllPages.SwagProductsPage.addProductToCart("Sauce Labs Fleece Jacket");
+        await AllPages.SwagProductsPage.sortProducts(ProductSortingOptions.NameAscending);
+        await AllPages.SwagProductsPage.printTotalAddedSoFar();
+        await AllPages.SwagCartPage.goToCart();        
+        await AllPages.SwagCartPage.verifyCartTotalIsCorrect();
+    });
 
-        browser = await browserType.launch({
-            headless: false,
-        });
+    test("Swag Add products and go to cart with hooks 3", async ({ AllPages, page }) => {  
+        
+        await AllPages.SwagLoginPage.login();
+        await AllPages.SwagProductsPage.addProductToCart("Sauce Labs Backpack");
+        await AllPages.SwagProductsPage.addProductToCart("Sauce Labs Fleece Jacket");
+        await AllPages.SwagProductsPage.sortProducts(ProductSortingOptions.NameAscending);
+        await AllPages.SwagProductsPage.printTotalAddedSoFar();
+        await AllPages.SwagCartPage.goToCart();        
+        await AllPages.SwagCartPage.verifyCartTotalIsCorrect();
 
-        PagesSwag = new SwagPages();
+        await AllPages.initSecondaryPageBasedOnPage(page, SwagLoginPage)
+        await AllPages.SwagLoginPage2.login();
 
-        // Create a BrowserContext (isolated session)
-        context = await browser.newContext();
-
-        // Create a Page inside the context
-        page = await context.newPage();
-
-        PagesSwag.instancePages(page);
-
-        await PagesSwag.swagLoginPage.login();
-
-        await PagesSwag.swagProductsPage.addProductToCart("Sauce Labs Backpack");
-        await PagesSwag.swagProductsPage.addProductToCart("Sauce Labs Fleece Jacket");
-        await PagesSwag.swagProductsPage.sortProducts(ProductSortingOptions.NameAscending);
-        await PagesSwag.swagProductsPage.printTotalAddedSoFar();
-        await PagesSwag.swagCartPage.goToCart();        
-        await PagesSwag.swagCartPage.verifyCartTotalIsCorrect();
-
-        await context.close();
-        ExecutionParameters.expectedTotal = 0; // Reset
-
-        await browser.close();
+        await AllPages.SwagCartPage.verifyCartTotalIsCorrect();
+        await AllPages.SwagCartPage.verifyCartTotalIsCorrect();
+        await AllPages.SwagCartPage.verifyCartTotalIsCorrect();
+        await AllPages.SwagCartPage.verifyCartTotalIsCorrect();
     });
 });

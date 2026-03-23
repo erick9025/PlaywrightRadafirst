@@ -23,7 +23,7 @@ test.describe('Tests for Swag pages', () => {
             headless: false,
         });
 
-        PagesSwag = new SwagPages();
+        
     });
 
     test.beforeEach(async () => {
@@ -33,7 +33,7 @@ test.describe('Tests for Swag pages', () => {
         // Create a Page inside the context
         page = await context.newPage();
 
-        PagesSwag.instancePages(page);
+        PagesSwag = new SwagPages(page);
 
         await PagesSwag.swagLoginPage.login();
     });
