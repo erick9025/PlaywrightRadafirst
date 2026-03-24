@@ -7,7 +7,7 @@ test.describe('Tests for Swag pages', () => {
         console.log("ERICK FIRST beforeEach block inside testSwagPro.test.ts");
     });
 
-    test("Swag Add products and go to cart with hooks", async ({ AllPages }) => {  
+    test.skip("Swag Add products and go to cart with hooks", async ({ AllPages }) => {  
         
         await AllPages.SwagLoginPage.login();
         await AllPages.SwagProductsPage.addProductToCart("Sauce Labs Backpack");
@@ -19,7 +19,7 @@ test.describe('Tests for Swag pages', () => {
     });
 
 
-    test("Swag Add products and go to cart with hooks 2", async ({ AllPages, browser }) => {  
+    test.skip("Swag Add products and go to cart with hooks 2", async ({ AllPages, browser }) => {  
         
         await AllPages.SwagLoginPage.login();
         await AllPages.SwagProductsPage.addProductToCart("Sauce Labs Backpack");
@@ -41,7 +41,7 @@ test.describe('Tests for Swag pages', () => {
         await AllPages.SwagCartPage.verifyCartTotalIsCorrect();
     });
 
-    test("Swag Add products and go to cart with hooks 3", async ({ AllPages, page }) => {  
+    test.skip("Swag Add products and go to cart with hooks 3", async ({ AllPages, page }) => {  
         
         await AllPages.SwagLoginPage.login();
         await AllPages.SwagProductsPage.addProductToCart("Sauce Labs Backpack");

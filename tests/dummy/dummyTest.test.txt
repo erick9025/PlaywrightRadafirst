@@ -1,9 +1,0 @@
-import { test } from '@playwright/test';
-
-test.describe('Dummy test suite', () => {
-
-    test('Dummy test case', async ({ page }) => {
-        await page.goto('https://google.com');
-        await page.waitForTimeout(5_000); // Just to see the page before it closes, not recommended for real tests
-    });
-});

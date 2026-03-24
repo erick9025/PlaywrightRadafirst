@@ -39,7 +39,7 @@ export const config: ProjectTestConfigRadafirst = {
     video: 'retain-on-failure',
     // 👇 Add this section
     launchOptions: {
-      slowMo: 500
+      slowMo: 1
     }
   },
   projects: [
