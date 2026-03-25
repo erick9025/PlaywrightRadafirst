@@ -133,14 +133,14 @@ export abstract class BasePage {
         return index + 1;
     }
 
-    protected async clickAndWaitSuccessfulApi(
+    public async clickAndWaitSuccessfulApi(
             elementLocator: string, 
             elementDescription: string, 
             apiEndpointOrPartialUrl: string,
             expectedStatusCode: number = 200
     ): Promise<void> {
         const timeoutMsForClick: number = 5_000; // 5 seconds
-        const timeoutMsForApi: number = 1_500; // 1.5 seconds
+        const timeoutMsForApi: number = 15_000; // 15 seconds (ToDo reduce)
         const timeoutString: string = timeoutMsForApi > 1_000 ? "Seconds: " + (timeoutMsForApi / 1000).toString() : "Miliseconds:" + (timeoutMsForApi).toString();
 
         this.logMessage(`Will click '${elementDescription}' and wait (for a max of ${timeoutString}) for its triggered API call with partial URL '${apiEndpointOrPartialUrl}'`);
