@@ -66,7 +66,7 @@ test.describe('Tests for Swag pages', () => {
 
     //............................... DDT EXCEL ...............................
 
-    const testData = TestUtilities.getTestData("../testData/excelSwag.xlsx");
+    const testData = TestUtilities.getTestData("tests/testData/excelSwag.xlsx");
 
     //C:\Users\erick.jimenez\Documents\GitHub\PlaywrightRadafirst\tests\testData\excelSwag.xlsx
     //C:\Users\erick.jimenez\Documents\GitHub\testData\excelSwag.xlsx
