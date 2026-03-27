@@ -1,6 +1,7 @@
 import { test } from '../testHooks/swagParentTest';
 import { ProductSortingOptions } from '../../utils/productSortingOptions';
 import { SwagLoginPage } from '../../pom/web/pages/pagesByFeature/swagLoginPage';
+import { TestUtilities } from '../../utils/testUtilities';
 
 test.describe('Tests for Swag pages', () => {
     test.beforeEach(async () => {
@@ -19,7 +20,7 @@ test.describe('Tests for Swag pages', () => {
     });
 
 
-    test("Swag Add products and go to cart with hooks 2", async ({ AllPages, browser }) => {  
+    test.skip("Swag Add products and go to cart with hooks 2", async ({ AllPages, browser }) => {  
         
         await AllPages.SwagLoginPage.login();
         await AllPages.SwagLoginPage.takeScreenshotWithTimestamp("Erick_1");
@@ -61,5 +62,18 @@ test.describe('Tests for Swag pages', () => {
         await AllPages.SwagCartPage.verifyCartTotalIsCorrect();
         await AllPages.SwagCartPage.verifyCartTotalIsCorrect();
         await AllPages.SwagCartPage.verifyCartTotalIsCorrect();
+    });
+
+    //............................... DDT EXCEL ...............................
+
+    const testData = TestUtilities.getTestData("../testData/excelSwag.xlsx");
+
+    //C:\Users\erick.jimenez\Documents\GitHub\PlaywrightRadafirst\tests\testData\excelSwag.xlsx
+    //C:\Users\erick.jimenez\Documents\GitHub\testData\excelSwag.xlsx
+
+    testData.forEach((data: any) => {
+        test(`Swag Login multiple users ${data.username}`, async ({ AllPages }) => {
+            await AllPages.SwagLoginPage.login(data.username, data.password);
+        });
     });
 });

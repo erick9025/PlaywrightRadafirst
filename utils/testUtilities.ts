@@ -1,6 +1,7 @@
 import { Browser, BrowserContext, Page, Locator, test, expect } from '@playwright/test';
 import { Asserts } from './asserts';
 import chalk from 'chalk';
+import * as XLSX from 'xlsx';
 
 export type ChalkColorStyle = 'red' | 'green' | 'blue' | 'yellow' | 'cyan' | 'magenta' | 'white' | 'gray' | 'bgRed' | 'bgGreen' | 'bgBlue' | 'bgYellow' | 'bgCyan' | 'bgMagenta' | 'bgWhite' | 'bold' | 'italic' | 'underline';
 
@@ -350,5 +351,13 @@ export class TestUtilities {
             TestUtilities.logMessageBold("Video recording is DISABLED for these scripts/tests.");
             return await browser.newContext();
         }
+    }
+
+    public static getTestData(filePath: string): any[] {
+        const workbook = XLSX.readFile(filePath);
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+
+        return XLSX.utils.sheet_to_json(sheet);
     }
 }
