@@ -19,15 +19,18 @@ test.describe('Tests for Swag pages', () => {
     });
 
 
-    test.skip("Swag Add products and go to cart with hooks 2", async ({ AllPages, browser }) => {  
+    test("Swag Add products and go to cart with hooks 2", async ({ AllPages, browser }) => {  
         
         await AllPages.SwagLoginPage.login();
+        await AllPages.SwagLoginPage.takeScreenshotWithTimestamp("Erick_1");
         await AllPages.SwagProductsPage.addProductToCart("Sauce Labs Backpack");
         await AllPages.SwagProductsPage.addProductToCart("Sauce Labs Fleece Jacket");
         await AllPages.SwagProductsPage.sortProducts(ProductSortingOptions.NameAscending);
+        await AllPages.SwagLoginPage.takeScreenshotWithTimestamp("Erick_2");
         await AllPages.SwagProductsPage.printTotalAddedSoFar();
         await AllPages.SwagCartPage.goToCart();        
         await AllPages.SwagCartPage.verifyCartTotalIsCorrect();
+        await AllPages.SwagLoginPage.takeScreenshotWithTimestamp("Erick_3");
 
         // Clean
         await AllPages.resetAllPagesWithFreshContext(browser);

@@ -1,4 +1,4 @@
-import { Page, Locator, test, expect } from '@playwright/test';
+import { Browser, BrowserContext, Page, Locator, test, expect } from '@playwright/test';
 import { Asserts } from './asserts';
 import chalk from 'chalk';
 
@@ -333,5 +333,22 @@ export class TestUtilities {
         }
 
         return num;
+    }
+
+    public static async returnBrowserContextWithVideo(browser: Browser): Promise<BrowserContext> {
+        if (!process.env.CI) { // Enable video only when running locally (not in CI) and when boolean is true in config file
+            TestUtilities.logMessageBold("Video recording is ENABLED for these scripts/tests.");
+            console.log("Video recording is ENABLED for these scripts/tests.");
+            return await browser.newContext({
+            recordVideo: {
+                dir: 'videos/', // output folder
+                size: { width: 1920, height: 1080 }, // optional
+            },
+            });
+        }
+        else {
+            TestUtilities.logMessageBold("Video recording is DISABLED for these scripts/tests.");
+            return await browser.newContext();
+        }
     }
 }

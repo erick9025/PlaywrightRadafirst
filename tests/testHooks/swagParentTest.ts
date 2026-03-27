@@ -5,6 +5,7 @@ import globalSetup from "./beforeAndAfterSetup/globalSetup";
 import globalTeardown from "./beforeAndAfterSetup/globalTeardown";
 import globalSetupEach from "./beforeAndAfterSetup/globalSetupEach";
 import globalTeardownEach from "./beforeAndAfterSetup/globalTeardownEach";
+import { TestUtilities } from "../../utils/testUtilities";
 
 // Playwright objects
 let context: BrowserContext;
@@ -28,7 +29,7 @@ test.beforeAll(async ({ browser }) => {
   console.log('beforeAll block (inside swagParentTest.ts)');
   
   if(!CREATE_CONTEXT_BEFORE_EACH_TEST) { // if false
-    context = await browser.newContext();
+    context = await TestUtilities.returnBrowserContextWithVideo(browser);
     page = await context.newPage();
     await page.setViewportSize({ width: 1920, height: 1080 });
 
@@ -42,7 +43,7 @@ test.beforeEach(async ({ browser }) => {
   console.log('beforeEach block (inside swagParentTest.ts)');
 
   if(CREATE_CONTEXT_BEFORE_EACH_TEST) { // if true
-    context = await browser.newContext();
+    context = await TestUtilities.returnBrowserContextWithVideo(browser);
     page = await context.newPage();
     await page.setViewportSize({ width: 1920, height: 1080 });
 

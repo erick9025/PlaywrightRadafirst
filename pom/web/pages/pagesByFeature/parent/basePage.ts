@@ -478,4 +478,11 @@ export abstract class BasePage {
 
         return count;
     }
+
+    public async takeScreenshotWithTimestamp(description: string): Promise<void> {
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+        const fileName = `${description}_${timestamp}.png`;
+        await this.page.screenshot({ path: fileName });
+        this.logMessage("Screenshot taken: " + fileName);
+    }
 }

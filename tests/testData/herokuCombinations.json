@@ -1,0 +1,12 @@
+[
+    {
+        "tcName" : "Download a with pro click from POM 200",
+        "endpoint" : "https://the-internet.herokuapp.com/download",
+        "expectedStatusCode" : 200
+    },
+    {
+        "tcName" : "Download a with pro click from POM 304",
+        "endpoint" : "/download",
+        "expectedStatusCode" : 304
+    }
+]

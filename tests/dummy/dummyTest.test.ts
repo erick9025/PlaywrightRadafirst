@@ -2,6 +2,7 @@ import { test, expect, Page } from '@playwright/test';
 import { SwagProductsPage } from '../../pom/web/pages/pagesByFeature/swagProductsPage';
 import path from 'path';
 import os from 'os';
+const testData = require('../testData/herokuCombinations.json');
 
 test.describe('Dummy test suite', () => {
 
@@ -20,7 +21,7 @@ test.describe('Dummy test suite', () => {
         await page.context().close();
     });
 
-    // .......................... TESTIN INJECTION .........................
+    // .......................... TESTING INJECTION .........................
 
     test.skip('Dummy test case', async ({ page }) => {
         await page.goto('https://google.com');
@@ -30,7 +31,7 @@ test.describe('Dummy test suite', () => {
     const WAIT_TIME = 3_000; // 3 seconds, just to see the page before it closes, not recommended for real tests
     let page: Page;
 
-    // ......................... TESTIN ALERTS .........................
+    // ......................... TESTING ALERTS .........................
 
     test.skip('1 handle alert - SINGLE BUTTON', async () => {
         await page.goto('https://practice.expandtesting.com/js-dialogs');
@@ -98,7 +99,7 @@ test.describe('Dummy test suite', () => {
         await page.click('#js-prompt');
     });
 
-    // ......................... TESTIN IFRAMES .........................
+    // ......................... TESTING IFRAMES .........................
 
     test.skip('TESTING IFRAMES - fail', async ({ page }) => {
         await page.goto('https://elementdir.com/iframes?utm_source=chatgpt.com');
@@ -112,7 +113,7 @@ test.describe('Dummy test suite', () => {
         await page.frameLocator("iframe[title='Wikipedia Demo']").locator("a[href*='wiki/HTML']").click();
     });
 
-    // ......................... TESTIN FILE UPLOAD & DOWNLOAD .........................
+    // ......................... TESTING FILE UPLOAD & DOWNLOAD .........................
 
     test.skip('upload jpg from Downloads folder', async ({ page }) => {
 
@@ -141,22 +142,44 @@ test.describe('Dummy test suite', () => {
 
     })
 
-    test('download a with pro click from POM', async ({ page }) => {
+    // DDT with JSON to run N times with different data sets
+    for (const dataSet of testData) {
+        test.skip(`${dataSet.tcName}`, async ({ page }) => {
+            const myPage: SwagProductsPage = new SwagProductsPage(page);
 
-        const myPage: SwagProductsPage = new SwagProductsPage(page);
+            await page.goto('https://the-internet.herokuapp.com/download');
 
-        await page.goto('https://the-internet.herokuapp.com/download');
+            //await page.locator("a[href$='Resume.docx']").first().click() // Native click
+            await myPage.clickAndWaitSuccessfulApi("a[href$='testing.pdf']", "Resume [Link]", dataSet.endpoint, dataSet.expectedStatusCode); // Our custom click coming from BasePage.ts (POM)
 
-        //await page.locator("a[href$='Resume.docx']").first().click() // Native click
-        await myPage.clickAndWaitSuccessfulApi("a[href$='Resume.docx']", "Resume [Link]", "herokuapp.com/download/", 304); // Our custom click coming from BasePage.ts (POM)
+            await page.waitForTimeout(WAIT_TIME); // Just to see the page before it closes, not recommended for real tests
+        });
+    }
 
-        await page.waitForTimeout(WAIT_TIME); // Just to see the page before it closes, not recommended for real tests
-    })
+    const testData2: Record<string, number> = {
+        "Test case 1": 200,
+        "Test case 2": 304
+    };
+
+    for (const [key, value] of Object.entries(testData2)) {
+        test.skip(`${key}`, async ({ page }) => {
+            const myPage: SwagProductsPage = new SwagProductsPage(page);
+
+            await page.goto('https://the-internet.herokuapp.com/download');
+
+            //await page.locator("a[href$='Resume.docx']").first().click() // Native click
+            await myPage.clickAndWaitSuccessfulApi("a[href$='testing.pdf']", "Resume [Link]", "/download", value); // Our custom click coming from BasePage.ts (POM)
+
+            await page.waitForTimeout(WAIT_TIME); // Just to see the page before it closes, not recommended for real tests
+        });
+    }
 
     test.skip('download a file with promise', async ({ page }) => {
 
         await page.goto('https://the-internet.herokuapp.com/download');
         await page.waitForTimeout(WAIT_TIME); // Just to see the page before it interacts, not recommended for real tests
+
+        await page.screenshot({ path: 'screenshot1Erick.png' });
 
         // Wait for download + trigger click
         const [download] = await Promise.all([
@@ -175,6 +198,8 @@ test.describe('Dummy test suite', () => {
 
         // Basic assertion
         expect(fileName).toBeTruthy();
+
+        await page.screenshot({ path: 'screenshot2Erick.png' });
     });
 });
 
