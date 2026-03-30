@@ -36,10 +36,10 @@ export const config: ProjectTestConfigRadafirst = {
     // From here are the default/original values
     trace: 'on',
     screenshot: 'on',
-    video: 'retain-on-failure',
+    video: 'off',
     // 👇 Add this section
     launchOptions: {
-      slowMo: 1
+      slowMo: 1500
     }
   },
   projects: [

@@ -3,36 +3,26 @@ import { ProductSortingOptions } from '../../utils/productSortingOptions';
 import { SwagLoginPage } from '../../pom/web/pages/pagesByFeature/swagLoginPage';
 import { TestUtilities } from '../../utils/testUtilities';
 
-test.describe('Tests for Swag pages SEQUENTIAL/SERIAL', () => {
-    test.use({ createContextBeforeEach: false }); // Set to false to create a single context for all tests (faster but less isolated)
-
-    /* Test Case 1001: Login to page
+test.describe('Tests for Swag pages', () => {
+    
+    /* Linked test cases from AZURE DEVOPS:
+    Test Case 1001: Login to page
     Test Case 1002: Add products to cart
     Test Case 1003: Sort products and print total added so far
-    Test Case 1004: Go to cart and verify total is correct */
-
-    test("Pt: 1 - Swag Add products and go to cart with hooks", async ({ AllPages }) => {         
+    Test Case 1004: Go to cart and verify total is correct 
+    */
+    
+    test("[1001][1002][1003][1004] Swag Add products and go to cart with hooks", async ({ AllPages }) => {  
+        
         await AllPages.SwagLoginPage.login();
-    });
-
-    test("Pt: 2 - Swag Add products and go to cart with hooks", async ({ AllPages }) => {  
         await AllPages.SwagProductsPage.addProductToCart("Sauce Labs Backpack");
         await AllPages.SwagProductsPage.addProductToCart("Sauce Labs Fleece Jacket");
-    });
-
-    test("Pt: 3 - Swag Add products and go to cart with hooks", async ({ AllPages }) => {         
         await AllPages.SwagProductsPage.sortProducts(ProductSortingOptions.NameAscending);
         await AllPages.SwagProductsPage.printTotalAddedSoFar();
-    });
-
-    test("Pt: 4 - Swag Add products and go to cart with hooks", async ({ AllPages }) => {  
         await AllPages.SwagCartPage.goToCart();        
         await AllPages.SwagCartPage.verifyCartTotalIsCorrect();
     });
-});
 
-/*
-test.describe('Tests for Swag pages REGULAR/MULTI THREAD', () => {
 
     test("Swag Add products and go to cart with hooks 2", async ({ AllPages, browser }) => {  
         
@@ -91,4 +81,3 @@ test.describe('Tests for Swag pages REGULAR/MULTI THREAD', () => {
         });
     });
 });
-*/

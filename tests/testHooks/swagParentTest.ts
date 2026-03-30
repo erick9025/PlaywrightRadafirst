@@ -14,21 +14,18 @@ let page: Page;
 // Page objects (POM) into a consolidate object
 let AllPages: SwagPages;
 
-// Boolean to control whether the context is created BEFORE EACH test (recommended to avoid log out)
-// ... or just once before all tests (faster but the context is not recreated and the previous user is already logged in)
-const CREATE_CONTEXT_BEFORE_EACH_TEST = true;
-
 // Use DEPENCENCY INJECTION to make the consolidated Pages object for Swag Portal (POM) available in all tests that import this swagParentTest.ts file, without the need to import it in each test file or initialize it in a beforeEach block in each test file, we just need to initialize it once here in the beforeAll block and then it will be available in all tests that import this swagParentTest.ts file through the custom test object we are exporting at the end of this file. This way we can have a single initialization of the PagesCP object that can be used across all tests that need it, and we don't have to worry about initializing it multiple times or importing it in each test file. We just need to make sure that any test that imports this swagParentTest.ts file has access to the AllPagesCP object through the custom test object we are exporting at the end of this file.
-export const test = base.extend<{ AllPages: SwagPages }>({
+export const test = base.extend<{ AllPages: SwagPages, createContextBeforeEach: boolean }>({
+  createContextBeforeEach: [true, { option: true }], // Set to true to create a new context before each test, set to false to create a single context for all tests (faster but less isolated)
   AllPages: async ({ }, use) => {
     await use(AllPages);
   },
 });
 
-test.beforeAll(async ({ browser }) => {
+test.beforeAll(async ({ browser, createContextBeforeEach }) => {
   console.log('beforeAll block (inside swagParentTest.ts)');
   
-  if(!CREATE_CONTEXT_BEFORE_EACH_TEST) { // if false
+  if(!createContextBeforeEach) { // if false
     context = await TestUtilities.returnBrowserContextWithVideo(browser);
     page = await context.newPage();
     await page.setViewportSize({ width: 1920, height: 1080 });
@@ -39,10 +36,10 @@ test.beforeAll(async ({ browser }) => {
   await globalSetup(); // Call the global teardown function before all tests have completed
 });
 
-test.beforeEach(async ({ browser }) => {
+test.beforeEach(async ({ browser, createContextBeforeEach }) => {
   console.log('beforeEach block (inside swagParentTest.ts)');
 
-  if(CREATE_CONTEXT_BEFORE_EACH_TEST) { // if true
+  if(createContextBeforeEach) { // if true
     context = await TestUtilities.returnBrowserContextWithVideo(browser);
     page = await context.newPage();
     await page.setViewportSize({ width: 1920, height: 1080 });
