@@ -43,7 +43,7 @@ export const config: ProjectTestConfigRadafirst = {
     }
   },
   projects: [
-    {
+    /*{
       name: 'Chromium Sequential',
       workers: 1,
       testMatch: '*Sequential.test.ts',
@@ -68,6 +68,13 @@ export const config: ProjectTestConfigRadafirst = {
       use: {
         browserName: 'chromium',
         channel: 'chrome', // Real Google Chrome
+      },
+    },*/
+    {
+      name: 'Chromium',
+      use: {
+        browserName: 'chromium',
+        channel: 'chrome',
       },
     },
     /*{
