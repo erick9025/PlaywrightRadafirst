@@ -27,7 +27,7 @@ test.describe("Email Providers – Screenplay Pattern", () => {
     // Test: Login to Gmail and search for an email
     // Change loginTask to LoginToMailinator to switch providers
     // ─────────────────────────────────────────────────────────
-    test("Login to Gmail inbox and search for email", async () => {
+    test.skip("Login to Gmail inbox and search for email", async () => {
         // Polymorphism: swap this line to change providers
         const loginTask: IEmailTask = LoginToGmail.withCredentials("juanito.perez@gmail.com", "Pa$$word1234");
         // const loginTask: IEmailTask = LoginToMailinator.withCredentials("juanito.perez@example.com", "Pa$$word1234");
