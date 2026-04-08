@@ -1,6 +1,7 @@
 import type { Actor } from "../../core/Actor";
 import type { Performable } from "../../core/Performable";
 import { ScreenplayLogger } from "../../logger/ScreenplayLogger";
+import * as utils from "../../utils/utils";
 
 /**
  * Builder for the OpenEmail Task.
@@ -25,7 +26,7 @@ class OpenEmailBuilder {
 
                 ScreenplayLogger.log(`Will search for an email with partial subject: ${subject}`);
 
-                if (!ScreenplayLogger.isNullOrEmpty(senderEmail)) {
+                if (!utils.isNullOrEmpty(senderEmail)) {
                     ScreenplayLogger.log(`Email also has to come from: ${senderEmail}`);
                 } else {
                     ScreenplayLogger.log("Email can come from anyone");

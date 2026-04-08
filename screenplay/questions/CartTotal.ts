@@ -1,7 +1,7 @@
 import type { Actor } from "../core/Actor";
 import type { Question } from "../core/Question";
 import { SwagConstants } from "../constants/SwagConstants";
-import { ScreenplayLogger } from "../logger/ScreenplayLogger";
+import * as utils from "../utils/utils";
 
 /**
  * Question: retrieve the accumulated cart total that was tracked in the actor's memory
@@ -22,6 +22,6 @@ export class CartTotal implements Question<string> {
 
     public async answeredBy(actor: Actor): Promise<string> {
         const total = actor.recallOrDefault<number>(SwagConstants.memoryKeys.cartTotal, 0);
-        return ScreenplayLogger.formatCurrency(total);
+        return utils.formatCurrency(total);
     }
 }

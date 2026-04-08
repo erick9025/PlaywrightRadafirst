@@ -4,7 +4,7 @@ import { BrowseTheWeb } from "../abilities/BrowseTheWeb";
 import { SwagProductsElements } from "../elements/SwagProductsElements";
 import { SwagConstants } from "../constants/SwagConstants";
 import { ScreenplayLogger } from "../logger/ScreenplayLogger";
-import { resolveLocator } from "../utils/locatorUtils";
+import * as utils from "../utils/utils";
 
 /**
  * High-level Task: add a product to the cart by its display name.
@@ -32,8 +32,8 @@ export class AddProductToCart implements Performable {
         SwagConstants.existingProducts.forEach(p => ScreenplayLogger.log("..." + p));
         ScreenplayLogger.log("Adding to the cart the product: " + this.productName);
 
-        const labelLocator  = resolveLocator(SwagProductsElements.itemFromCatalogDescriptionCssPW, this.productName);
-        const buttonLocator = resolveLocator(SwagProductsElements.buttonAddToCartItemFromCatalog, this.productName);
+        const labelLocator  = utils.resolveLocator(SwagProductsElements.itemFromCatalogDescriptionCssPW, this.productName);
+        const buttonLocator = utils.resolveLocator(SwagProductsElements.buttonAddToCartItemFromCatalog, this.productName);
 
         // Verify the product label is visible
         await page.locator(labelLocator).waitFor({ state: "visible" });
@@ -52,10 +52,10 @@ export class AddProductToCart implements Performable {
         ScreenplayLogger.log(`Clicked 'Add to cart' for: ${this.productName}`);
 
         // Read product price and accumulate in actor memory
-        const priceLocator = resolveLocator(SwagProductsElements.itemPriceLocator, this.productName);
+        const priceLocator = utils.resolveLocator(SwagProductsElements.itemPriceLocator, this.productName);
         const priceText    = await page.locator(priceLocator).innerText();
-        const price        = ScreenplayLogger.getNumericValue(
-            ScreenplayLogger.getTextAfter(priceText, "$")
+        const price        = utils.getNumericValue(
+            utils.getTextAfter(priceText, "$")
         );
 
         ScreenplayLogger.logBold(`'${this.productName}' price: $${price}`);

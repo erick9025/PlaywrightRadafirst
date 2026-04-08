@@ -13,7 +13,7 @@ export class ScreenplayLogger {
     // ----- Timestamp helpers -----
 
     public static formatTimestamp(): string {
-        const now = new Date();
+        const now = new Date(); // Exact date+timestamp at the moment the method was called
 
         const datePart = new Intl.DateTimeFormat("en-US", {
             month: "short",
@@ -125,33 +125,5 @@ export class ScreenplayLogger {
         const label = detail ? `${interactionName} [${detail}]` : interactionName;
         console.log(chalk.bgWhite(`${ts}: ...Ending [${label}]`));
         test.info().annotations.push({ type: `${ts} 🟠🟠 ...Ending [${label}]` });
-    }
-
-    // ----- Utility helpers (kept from TestUtilities) -----
-
-    public static formatCurrency(value: number): string {
-        return new Intl.NumberFormat("en-US", {
-            style: "currency",
-            currency: "USD",
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        }).format(value);
-    }
-
-    public static getTextAfter(fullText: string, marker: string): string {
-        if (typeof fullText !== "string" || typeof marker !== "string") return "";
-        const index = fullText.indexOf(marker);
-        if (index === -1) return "";
-        return fullText.substring(index + marker.length);
-    }
-
-    public static isNullOrEmpty(text: string | undefined): boolean {
-        return text === undefined || text.length === 0 || text === "";
-    }
-
-    public static getNumericValue(str: string): number {
-        const parsed = parseFloat(str);
-        if (isNaN(parsed)) throw new Error(`Cannot parse '${str}' as a number`);
-        return parsed;
     }
 }

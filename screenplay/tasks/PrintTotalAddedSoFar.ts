@@ -2,6 +2,7 @@ import type { Actor } from "../core/Actor";
 import type { Performable } from "../core/Performable";
 import { SwagConstants } from "../constants/SwagConstants";
 import { ScreenplayLogger } from "../logger/ScreenplayLogger";
+import * as utils from "../utils/utils";
 
 /**
  * High-level Task: print the accumulated cart total from the actor's memory.
@@ -21,7 +22,7 @@ export class PrintTotalAddedSoFar implements Performable {
         ScreenplayLogger.taskStart("PrintTotalAddedSoFar");
 
         const total = actor.recallOrDefault<number>(SwagConstants.memoryKeys.cartTotal, 0);
-        ScreenplayLogger.logImportant("Total $ so far: " + ScreenplayLogger.formatCurrency(total));
+        ScreenplayLogger.logImportant("Total $ so far: " + utils.formatCurrency(total));
 
         ScreenplayLogger.taskEnd("PrintTotalAddedSoFar");
     }
