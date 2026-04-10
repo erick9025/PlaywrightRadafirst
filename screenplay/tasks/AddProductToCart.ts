@@ -4,6 +4,8 @@ import { BrowseTheWeb } from "../abilities/BrowseTheWeb";
 import { SwagProductsElements } from "../elements/SwagProductsElements";
 import { SwagConstants } from "../constants/SwagConstants";
 import { ScreenplayLogger } from "../logger/ScreenplayLogger";
+import { Page } from "@playwright/test";
+//import type Page  from "@playwright/test";
 import * as utils from "../utils/utils";
 
 /**
@@ -26,20 +28,20 @@ export class AddProductToCart implements Performable {
     public async performAs(actor: Actor): Promise<void> {
         ScreenplayLogger.taskStart("AddProductToCart", this.productName);
 
-        const page = BrowseTheWeb.as(actor).page;
+        const page: Page = BrowseTheWeb.as(actor).page;
 
         ScreenplayLogger.log("Current existing products for sale:");
         SwagConstants.existingProducts.forEach(p => ScreenplayLogger.log("..." + p));
         ScreenplayLogger.log("Adding to the cart the product: " + this.productName);
 
-        const labelLocator  = utils.resolveLocator(SwagProductsElements.itemFromCatalogDescriptionCssPW, this.productName);
-        const buttonLocator = utils.resolveLocator(SwagProductsElements.buttonAddToCartItemFromCatalog, this.productName);
+        const labelLocator: string  = utils.resolveLocator(SwagProductsElements.itemFromCatalogDescriptionCssPW, this.productName);
+        const buttonLocator: string = utils.resolveLocator(SwagProductsElements.buttonAddToCartItemFromCatalog, this.productName);
 
         // Verify the product label is visible
         await page.locator(labelLocator).waitFor({ state: "visible" });
 
         // Check current button state
-        const btnText = await page.locator(buttonLocator).innerText();
+        const btnText: string = await page.locator(buttonLocator).innerText();
 
         if (btnText.trim() === "Remove") {
             ScreenplayLogger.log(`Item was already added: ${this.productName} — skipping`);
@@ -52,16 +54,16 @@ export class AddProductToCart implements Performable {
         ScreenplayLogger.log(`Clicked 'Add to cart' for: ${this.productName}`);
 
         // Read product price and accumulate in actor memory
-        const priceLocator = utils.resolveLocator(SwagProductsElements.itemPriceLocator, this.productName);
-        const priceText    = await page.locator(priceLocator).innerText();
-        const price        = utils.getNumericValue(
+        const priceLocator: string = utils.resolveLocator(SwagProductsElements.itemPriceLocator, this.productName);
+        const priceText: string    = await page.locator(priceLocator).innerText();
+        const price: number        = utils.getNumericValue(
             utils.getTextAfter(priceText, "$")
         );
 
         ScreenplayLogger.logBold(`'${this.productName}' price: $${price}`);
 
-        const currentTotal = actor.recallOrDefault<number>(SwagConstants.memoryKeys.cartTotal, 0);
-        actor.remember(SwagConstants.memoryKeys.cartTotal, currentTotal + price);
+        const currentTotal = actor.recallOrDefault<number>(SwagConstants.memoryKeys.cartTotal, 0); // tengo 20 pesos
+        actor.remember(SwagConstants.memoryKeys.cartTotal, currentTotal + price); // agrego los 5 pesos que me encontré a is 20 pesos, y termino teniendo 25
 
         // Verify button changed to "Remove"
         const btnTextAfter = await page.locator(buttonLocator).innerText();

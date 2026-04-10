@@ -13,7 +13,7 @@ import type { Actor } from "../core/Actor";
 export class BrowseTheWeb implements Ability {
     private readonly _page: Page;
 
-    private constructor(page: Page) {
+    constructor(page: Page) {
         this._page = page;
     }
 

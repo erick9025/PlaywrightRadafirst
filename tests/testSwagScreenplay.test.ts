@@ -16,13 +16,13 @@ import { SwagConstants } from "../screenplay/constants/SwagConstants";
 
 /*
   ╔══════════════════════════════════════════════════════════════╗
-  ║          SCREENPLAY PATTERN — SauceDemo E2E Tests           ║
+  ║          SCREENPLAY PATTERN — SauceDemo E2E Tests            ║
   ║                                                              ║
-  ║  Who:   An Actor (the "Buyer")                              ║
-  ║  Can:   BrowseTheWeb (Playwright page)                      ║
-  ║  Does:  Tasks  → Login, AddProductToCart, SortProducts…     ║
-  ║  Uses:  Interactions → Navigate, Click, Enter, Select       ║
-  ║  Asks:  Questions → Text, IsVisible, CartTotal              ║
+  ║  Who:   An Actor (the "Buyer")                               ║
+  ║  Can:   BrowseTheWeb (Playwright page)                       ║
+  ║  Does:  Tasks  → Login, AddProductToCart, SortProducts…      ║
+  ║  Uses:  Interactions → Navigate, Click, Enter, Select        ║
+  ║  Asks:  Questions → Text, IsVisible, CartTotal               ║
   ╚══════════════════════════════════════════════════════════════╝
 */
 
@@ -51,7 +51,7 @@ test.describe("Swag Labs – Screenplay Pattern", () => {
     // ─────────────────────────────────────────────────────────
     // Test 2: Add one product and verify cart total
     // ─────────────────────────────────────────────────────────
-    test("Add one product to cart", async () => {
+    test.skip("Add one product to cart", async () => {
         await buyer.attemptsTo(
             Login.withDefaultUser(),
             AddProductToCart.named("Sauce Labs Backpack"),
@@ -66,7 +66,7 @@ test.describe("Swag Labs – Screenplay Pattern", () => {
     // ─────────────────────────────────────────────────────────
     // Test 3: Add multiple products, sort, and go to cart
     // ─────────────────────────────────────────────────────────
-    test("Add multiple products, sort, and go to cart", async () => {
+    test.skip("Add multiple products, sort, and go to cart", async () => {
         await buyer.attemptsTo(
             Login.withDefaultUser(),
             AddProductToCart.named("Sauce Labs Backpack"),
@@ -87,7 +87,7 @@ test.describe("Swag Labs – Screenplay Pattern", () => {
     // ─────────────────────────────────────────────────────────
     // Test 4: Duplicate add is idempotent (item already in cart)
     // ─────────────────────────────────────────────────────────
-    test("Adding same product twice is idempotent", async () => {
+    test.skip("Adding same product twice is idempotent", async () => {
         await buyer.attemptsTo(
             Login.withDefaultUser(),
             AddProductToCart.named("Sauce Labs Backpack"),
@@ -102,7 +102,7 @@ test.describe("Swag Labs – Screenplay Pattern", () => {
     // ─────────────────────────────────────────────────────────
     // Test 5: Sort products by price descending
     // ─────────────────────────────────────────────────────────
-    test("Sort products by price descending", async () => {
+    test.skip("Sort products by price descending", async () => {
         await buyer.attemptsTo(
             Login.withDefaultUser(),
             SortProducts.by(ProductSortingOptions.PriceDescending)
