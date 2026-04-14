@@ -28,6 +28,7 @@ export const SwagConstants = {
 
     // Memory keys used by Tasks to share state through the Actor
     memoryKeys: {
-        cartTotal: "cartTotal"
+        cartTotal: "cartTotal",
+        allTextsMemory: "allTextsMemory"
     } as const
 } as const;
