@@ -1,6 +1,7 @@
 import type { Actor } from "../core/Actor";
 import type { Performable } from "../core/Performable";
 import { Select } from "../interactions/Select";
+import { StoreListText } from "../interactions/StoreListText";
 import { SwagProductsElements } from "../elements/SwagProductsElements";
 import { ProductSortingOptions } from "../../utils/productSortingOptions";
 import { ScreenplayLogger } from "../logger/ScreenplayLogger";
@@ -29,12 +30,28 @@ export class SortProducts implements Performable {
         };
 
         const value = sortingMap[this.orderBy];
+        let locatorTexts: string;
+        let description: string;
+
+        switch (this.orderBy) {
+            case ProductSortingOptions.NameAscending:
+            case ProductSortingOptions.NameDescending:
+                locatorTexts = SwagProductsElements.listAllProductsNames;
+                description = "Product Names";
+                break;
+            case ProductSortingOptions.PriceAscending:
+            case ProductSortingOptions.PriceDescending:
+                locatorTexts = SwagProductsElements.listAllProductsPrices;
+                description = "Product Prices";
+                break;
+        }
 
         await actor.attemptsTo(
             Select.theOption(value).from(
                 SwagProductsElements.ddlProductsSort,
                 "Sort Products [Dropdown]"
-            )
+            ),
+            StoreListText.from(locatorTexts, description)
         );
 
         ScreenplayLogger.taskEnd("SortProducts", this.orderBy.toString());

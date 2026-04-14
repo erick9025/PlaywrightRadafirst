@@ -4,6 +4,7 @@ import { BrowseTheWeb } from "../screenplay/abilities/BrowseTheWeb";
 import { Login } from "../screenplay/tasks/Login";
 import { AddProductToCart } from "../screenplay/tasks/AddProductToCart";
 import { SortProducts } from "../screenplay/tasks/SortProducts";
+import { VerifyProductsSortedCorrectly } from "../screenplay/tasks/VerifyProductsSortedCorrectly";
 import { GoToCart } from "../screenplay/tasks/GoToCart";
 import { PrintTotalAddedSoFar } from "../screenplay/tasks/PrintTotalAddedSoFar";
 import { ProductSortingOptions } from "../utils/productSortingOptions";
@@ -108,7 +109,8 @@ test.describe("Swag Labs – Screenplay Pattern", () => {
     test("Sort products by price descending", async () => {
         await buyer.attemptsTo(
             Login.withDefaultUser(),
-            SortProducts.by(ProductSortingOptions.PriceDescending)
+            SortProducts.by(ProductSortingOptions.PriceDescending),
+            VerifyProductsSortedCorrectly.by(ProductSortingOptions.PriceDescending)
         );
 
         const titleVisible = await buyer.asks(IsVisible.of(SwagProductsElements.titleProducts));
