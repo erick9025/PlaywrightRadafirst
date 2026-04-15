@@ -1,3 +1,6 @@
+import chalk from "chalk";
+import { test } from "@playwright/test";
+
 /**
  * Resolves dynamic locator templates by replacing the {{key}} placeholder
  * with a concrete value.
@@ -34,4 +37,42 @@ export function getNumericValue(str: string): number {
     const parsed = parseFloat(str);
     if (isNaN(parsed)) throw new Error(`Cannot parse '${str}' as a number`);
     return parsed;
+}
+
+export function convertStringToDoubleNumber(text : string) : number {
+    return parseFloat(text.replace(/[^0-9.]/g, "").replace(/,/g, ""));
+}
+
+export function padZero(value: number) : string {
+    return value.toString().padStart(2, '0');
+}
+
+export function getCurrentFormattedTimestamp() : string {
+    let currentDate : Date;
+    currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = padZero(currentDate.getMonth() + 1); // Months are zero-based
+    const day = padZero(currentDate.getDate());
+    const hours = padZero(currentDate.getHours());
+    const minutes = padZero(currentDate.getMinutes());
+    const seconds = padZero(currentDate.getSeconds());
+    const milliseconds = currentDate.getMilliseconds().toFixed();
+    
+    return `${year}/${month}/${day} @ ${hours}:${minutes}:${seconds}.${milliseconds}`;
+}
+
+// LOGGING
+
+export function logToConsole(message: string): void {
+    const timestamp : string = getCurrentFormattedTimestamp();
+    console.log(chalk.bgWhite(timestamp + ": " + message));
+    test.info().annotations.push({
+        type: `${timestamp}`,
+        description: `${message}`
+    });
+}
+
+export function logErrorToConsole(errorMessage : string) : void{
+    let timestamp = getCurrentFormattedTimestamp();
+    console.error(chalk.bgRed(timestamp + ": " + errorMessage));
 }

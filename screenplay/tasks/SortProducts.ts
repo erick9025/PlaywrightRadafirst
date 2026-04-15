@@ -3,7 +3,7 @@ import type { Performable } from "../core/Performable";
 import { Select } from "../interactions/Select";
 import { StoreListText } from "../interactions/StoreListText";
 import { SwagProductsElements } from "../elements/SwagProductsElements";
-import { ProductSortingOptions } from "../../utils/productSortingOptions";
+import { ProductSortingOptions } from "../../enums/productSortingOptions";
 import { ScreenplayLogger } from "../logger/ScreenplayLogger";
 
 /**

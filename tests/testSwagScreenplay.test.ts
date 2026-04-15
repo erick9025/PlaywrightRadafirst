@@ -4,10 +4,10 @@ import { BrowseTheWeb } from "../screenplay/abilities/BrowseTheWeb";
 import { Login } from "../screenplay/tasks/Login";
 import { AddProductToCart } from "../screenplay/tasks/AddProductToCart";
 import { SortProducts } from "../screenplay/tasks/SortProducts";
-import { VerifyProductsSortedCorrectly } from "../screenplay/tasks/VerifyProductsSortedCorrectly";
+import { IsListSortedCorrectly } from "../screenplay/questions/IsListSortedCorrectly";
 import { GoToCart } from "../screenplay/tasks/GoToCart";
 import { PrintTotalAddedSoFar } from "../screenplay/tasks/PrintTotalAddedSoFar";
-import { ProductSortingOptions } from "../utils/productSortingOptions";
+import { ProductSortingOptions } from "../enums/productSortingOptions";
 import { CartTotal } from "../screenplay/questions/CartTotal";
 import { Text } from "../screenplay/questions/Text";
 import { IsVisible } from "../screenplay/questions/IsVisible";
@@ -23,7 +23,7 @@ import { SwagConstants } from "../screenplay/constants/SwagConstants";
   ║  Can:   BrowseTheWeb (Playwright page)                       ║
   ║  Does:  Tasks  → Login, AddProductToCart, SortProducts…      ║
   ║  Uses:  Interactions → Navigate, Click, Enter, Select        ║
-  ║  Asks:  Questions → Text, IsVisible, CartTotal               ║
+  ║  Asks:  Questions → Text, IsVisible, CartTotal, IsListSortedCorrectly ║
   ╚══════════════════════════════════════════════════════════════╝
 */
 
@@ -109,12 +109,20 @@ test.describe("Swag Labs – Screenplay Pattern", () => {
     test("Sort products by price descending", async () => {
         await buyer.attemptsTo(
             Login.withDefaultUser(),
-            SortProducts.by(ProductSortingOptions.PriceDescending),
-            VerifyProductsSortedCorrectly.by(ProductSortingOptions.PriceDescending)
+            SortProducts.by(ProductSortingOptions.PriceDescending)
         );
 
         const titleVisible = await buyer.asks(IsVisible.of(SwagProductsElements.titleProducts));
         expect(titleVisible).toBe(true);
+
+        // Replace strings with value '49.99' with '29.98' to generate a failing scenario and verify that the assertion returns false without throwing an error and continues checking the rest of the items in the list
+        const allTextsMemory = buyer.recallOrDefault<string[]>(SwagConstants.memoryKeys.allTextsMemory, [])
+            .map(text => text === "$49.99" ? "$29.98" : text);
+        const isListSortedCorrectly = await buyer.asks(IsListSortedCorrectly.by(ProductSortingOptions.PriceDescending, allTextsMemory));
+
+        console.log(`Is the products list sorted correctly by price descending? ${isListSortedCorrectly}`);
+
+        expect(isListSortedCorrectly).toBe(true);
     });
 });
 
