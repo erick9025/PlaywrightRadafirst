@@ -3,7 +3,6 @@ import type { Question } from "../core/Question";
 import * as utils from "../utils/utils";
 import { ProductSortingOptions } from "../../enums/productSortingOptions";
 import { SortingOptions } from "../../enums/sortingOptions";
-import { Asserts } from "../../asserts/asserts";
 import { ScreenplayLogger } from "../logger/ScreenplayLogger";
 
 /**
@@ -63,7 +62,7 @@ export class IsListSortedCorrectly implements Question<boolean> {
                 }
                 break;
             default:
-                Asserts.assertFail("Invalid sorting option provided: " + orderByOptionSelected);
+                throw new Error("Invalid sorting option provided: " + orderByOptionSelected);
         }
 
         answer = answersList.every(item => item === true);
