@@ -14,17 +14,30 @@ import { IsVisible } from "../screenplay/questions/IsVisible";
 import { SwagCartElements } from "../screenplay/elements/SwagCartElements";
 import { SwagProductsElements } from "../screenplay/elements/SwagProductsElements";
 import { SwagConstants } from "../screenplay/constants/SwagConstants";
+import { ScreenplayLogger } from "../screenplay/logger/ScreenplayLogger";
+
+const ddtScenarios : Map<boolean, string> = new Map([
+    [true, "List is sorted correctly"],
+    [false, "List is NOT sorted correctly because of a TRICKED item in the list MANUALLY set to '29.98' instead of '49.99'"]
+]);
+
+const ddtScenariosAllEnums : Map<ProductSortingOptions, string> = new Map([
+    [ProductSortingOptions.NameAscending, "Name Ascending"],
+    [ProductSortingOptions.NameDescending, "Name Descending"],
+    [ProductSortingOptions.PriceAscending, "Price Ascending"],
+    [ProductSortingOptions.PriceDescending, "Price Descending"]
+]);
 
 /*
-  ╔══════════════════════════════════════════════════════════════╗
-  ║          SCREENPLAY PATTERN — SauceDemo E2E Tests            ║
-  ║                                                              ║
-  ║  Who:   An Actor (the "Buyer")                               ║
-  ║  Can:   BrowseTheWeb (Playwright page)                       ║
-  ║  Does:  Tasks  → Login, AddProductToCart, SortProducts…      ║
-  ║  Uses:  Interactions → Navigate, Click, Enter, Select        ║
+  ╔═══════════════════════════════════════════════════════════════════════╗
+  ║          SCREENPLAY PATTERN — SauceDemo E2E Tests                     ║
+  ║                                                                       ║
+  ║  Who:   An Actor (the "Buyer")                                        ║
+  ║  Can:   BrowseTheWeb (Playwright page)                                ║
+  ║  Does:  Tasks  → Login, AddProductToCart, SortProducts…               ║
+  ║  Uses:  Interactions → Navigate, Click, Enter, Select                 ║
   ║  Asks:  Questions → Text, IsVisible, CartTotal, IsListSortedCorrectly ║
-  ╚══════════════════════════════════════════════════════════════╝
+  ╚═══════════════════════════════════════════════════════════════════════╝
 */
 
 test.describe("Swag Labs – Screenplay Pattern", () => {
@@ -103,26 +116,69 @@ test.describe("Swag Labs – Screenplay Pattern", () => {
         expect(total).toContain("$");
     });
 
-    // ─────────────────────────────────────────────────────────
-    // Test 5: Sort products by price descending
-    // ─────────────────────────────────────────────────────────
-    test("Sort products by price descending", async () => {
-        await buyer.attemptsTo(
-            Login.withDefaultUser(),
-            SortProducts.by(ProductSortingOptions.PriceDescending)
-        );
+    // ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+    // Test 5: Sort products by price descending with DDT to verify the IsListSortedCorrectly question with a TRICKED item in the list
+    // ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
-        const titleVisible = await buyer.asks(IsVisible.of(SwagProductsElements.titleProducts));
-        expect(titleVisible).toBe(true);
+    for (const [isCorrectlySorted, scenarioDescription] of ddtScenarios) {
+        test(`Sort products by price descending - ${scenarioDescription}`, async () => {
+            await buyer.attemptsTo(
+                Login.withDefaultUser(),
+                SortProducts.by(ProductSortingOptions.PriceDescending)
+            );
 
-        // Replace strings with value '49.99' with '29.98' to generate a failing scenario and verify that the assertion returns false without throwing an error and continues checking the rest of the items in the list
-        const allTextsMemory = buyer.recallOrDefault<string[]>(SwagConstants.memoryKeys.allTextsMemory, [])
-            .map(text => text === "$49.99" ? "$29.98" : text);
-        const isListSortedCorrectly = await buyer.asks(IsListSortedCorrectly.by(ProductSortingOptions.PriceDescending, allTextsMemory));
+            const titleVisible = await buyer.asks(IsVisible.of(SwagProductsElements.titleProducts));
+            expect(titleVisible).toBe(true);
 
-        console.log(`Is the products list sorted correctly by price descending? ${isListSortedCorrectly}`);
+            let allTextsMemory: string[] = [];
 
-        expect(isListSortedCorrectly).toBe(true);
-    });
+            if (isCorrectlySorted) {
+                allTextsMemory = buyer.recallOrDefault<string[]>(SwagConstants.memoryKeys.allTextsMemory, []);
+            }
+            else {
+                allTextsMemory = buyer.recallOrDefault<string[]>(SwagConstants.memoryKeys.allTextsMemory, [])
+                    .map(text => text === "$49.99" ? "$29.98" : text); // e.g. 29.98, 29.99, 19.99
+            }
+
+            // Before asking the question print the list TRICKED MANUALLY
+            ScreenplayLogger.log(`Items in the list ${isCorrectlySorted ? ':' : '(tricked):'}`);
+            allTextsMemory.forEach((text, index) => {
+                ScreenplayLogger.log(`${index + 1}. ${text}`);
+            });
+
+            const isListSortedCorrectly = await buyer.asks(IsListSortedCorrectly.by(ProductSortingOptions.PriceDescending, allTextsMemory));
+
+            ScreenplayLogger.log(`Is the products list sorted correctly by price descending? ${isListSortedCorrectly}`);
+            expect(isListSortedCorrectly).toBe(true);
+        });
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+    // Test 6: Sort products by price descending with DDT with all possible sorting options to verify the IsListSortedCorrectly question
+    // ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+    for (const [sortingScenario, scenarioDescription] of ddtScenariosAllEnums) {
+        test(`Sort products by ${scenarioDescription}`, async () => {
+            await buyer.attemptsTo(
+                Login.withDefaultUser(),
+                SortProducts.by(sortingScenario)
+            );
+
+            const titleVisible = await buyer.asks(IsVisible.of(SwagProductsElements.titleProducts));
+            expect(titleVisible).toBe(true);
+
+            const allTextsMemory: string[] = buyer.recallOrDefault<string[]>(SwagConstants.memoryKeys.allTextsMemory, []);
+
+            // Before asking the question print the list TRICKED MANUALLY
+            ScreenplayLogger.log(`Items in the list:`);
+            allTextsMemory.forEach((text, index) => {
+                ScreenplayLogger.log(`${index + 1}. ${text}`);
+            });
+
+            const isListSortedCorrectly = await buyer.asks(IsListSortedCorrectly.by(sortingScenario, allTextsMemory));
+
+            ScreenplayLogger.log(`Is the products list sorted correctly by ${scenarioDescription}? ${isListSortedCorrectly}`);
+            expect(isListSortedCorrectly).toBe(true);
+        });
+    }
 });
-

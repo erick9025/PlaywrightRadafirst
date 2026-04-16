@@ -4,6 +4,7 @@ import * as utils from "../utils/utils";
 import { ProductSortingOptions } from "../../enums/productSortingOptions";
 import { SortingOptions } from "../../enums/sortingOptions";
 import { Asserts } from "../../asserts/asserts";
+import { ScreenplayLogger } from "../logger/ScreenplayLogger";
 
 /**
  * Question: check whether a list of products is sorted correctly.
@@ -32,7 +33,6 @@ export class IsListSortedCorrectly implements Question<boolean> {
 
         const orderByOptionSelected: SortingOptions = mapSwagEnumToGenericEnum[this.sortingOption];
 
-        // ToDo
         switch (orderByOptionSelected) {
             case SortingOptions.AlphabeticAsc:
             case SortingOptions.AlphabeticDesc:
@@ -40,9 +40,11 @@ export class IsListSortedCorrectly implements Question<boolean> {
                     const itemBefore: string = this.allTexts[index];
                     const itemAfter: string = this.allTexts[index + 1];
 
-                    const individualAnswer = orderByOptionSelected == SortingOptions.AlphabeticAsc
-                        ? Asserts.assertTextLessThanOrEqual(itemBefore, itemAfter, orderByOptionSelected, false) // false to make it SOFT assertion and continue checking the rest of the items in the list
-                        : Asserts.assertTextGreaterThanOrEqual(itemBefore, itemAfter, orderByOptionSelected, false); // false to make it SOFT assertion and continue checking the rest of the items in the list
+                    ScreenplayLogger.log(`Comparing alphabetic items: before '${itemBefore}' and after '${itemAfter}' when checking for order ${orderByOptionSelected}'`);
+
+                    const individualAnswer = orderByOptionSelected === SortingOptions.AlphabeticAsc
+                        ? itemBefore.localeCompare(itemAfter) <= 0
+                        : itemAfter.localeCompare(itemBefore) <= 0;
                     answersList.push(individualAnswer);
                 }
                 break;
@@ -52,9 +54,11 @@ export class IsListSortedCorrectly implements Question<boolean> {
                     const itemBefore: number = utils.convertStringToDoubleNumber(this.allTexts[index]);
                     const itemAfter: number = utils.convertStringToDoubleNumber(this.allTexts[index + 1]);
 
-                    const individualAnswer = orderByOptionSelected == SortingOptions.NumericAsc
-                        ? Asserts.assertNumberLessThanOrEqual(itemBefore, itemAfter, orderByOptionSelected, false) // false to make it SOFT assertion and continue checking the rest of the items in the list
-                        : Asserts.assertNumberGreaterThanOrEqual(itemBefore, itemAfter, orderByOptionSelected, false); // false to make it SOFT assertion and continue checking the rest of the items in the list
+                    ScreenplayLogger.log(`Comparing numeric items: before '${itemBefore}' and after '${itemAfter}' when checking for order ${orderByOptionSelected}'`);
+
+                    const individualAnswer = orderByOptionSelected === SortingOptions.NumericAsc
+                        ? itemBefore <= itemAfter
+                        : itemAfter <= itemBefore;
                     answersList.push(individualAnswer);
                 }
                 break;
