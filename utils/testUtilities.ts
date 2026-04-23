@@ -1,9 +1,5 @@
 import { Browser, BrowserContext, Page, Locator, test, expect } from '@playwright/test';
 import { Asserts } from './asserts';
-import chalk from 'chalk';
-import * as XLSX from 'xlsx';
-
-export type ChalkColorStyle = 'red' | 'green' | 'blue' | 'yellow' | 'cyan' | 'magenta' | 'white' | 'gray' | 'bgRed' | 'bgGreen' | 'bgBlue' | 'bgYellow' | 'bgCyan' | 'bgMagenta' | 'bgWhite' | 'bold' | 'italic' | 'underline';
 
 export class TestUtilities {
 
@@ -39,7 +35,7 @@ export class TestUtilities {
 
     public static logMessage(message: string): void {
         const timestamp : string = TestUtilities.formatTimestamp();
-        console.log(chalk.bgWhite(timestamp + ": " + message));
+        console.log(timestamp + ": " + message);
         test.info().annotations.push({
             type: `${timestamp}`,
             description: `${message}`
@@ -48,7 +44,7 @@ export class TestUtilities {
     
     public static logErrorToConsole(errorMessage: string): void {
         const timestamp = TestUtilities.getCurrentFormattedTimestamp();
-        console.error(chalk.bgRed(timestamp + ": " + errorMessage));
+        console.error(timestamp + ": " + errorMessage);
         test.info().annotations.push({
             type: `ERROR ${timestamp}`,
             description: `${errorMessage}`
@@ -173,7 +169,7 @@ export class TestUtilities {
         const charL: string = "⚡⚡⚡";
         const charR: string = "⚡⚡⚡";
         const timestamp: string = TestUtilities.getCurrentFormattedTimestamp();
-        console.log(chalk.bgWhite(timestamp + ": " + message));
+        console.log(timestamp + ": " + message);
         test.info().annotations.push({ //BLANK LINE
             type: ' '
         });
@@ -191,7 +187,7 @@ export class TestUtilities {
         const charL: string = "🚨🚨🚨";
         const charR: string = "⚠️⚠️⚠️";
         const timestamp: string = TestUtilities.getCurrentFormattedTimestamp();
-        console.log(chalk.bgWhite(timestamp + ": " + message));
+        console.log(timestamp + ": " + message);
         test.info().annotations.push({ //BLANK LINE
             type: ' '
         });
@@ -207,7 +203,7 @@ export class TestUtilities {
 
     public static logMessageBold(message: string): void {
         const timestamp: string = TestUtilities.getCurrentFormattedTimestamp();
-        console.log(chalk.bgWhite(timestamp + ": " + message));
+        console.log(timestamp + ": " + message);
         test.info().annotations.push({
             type: `${timestamp} ${message}`
         });
@@ -230,7 +226,7 @@ export class TestUtilities {
         const charL: string = "🔵🔵";
         const charR: string = "🔵🔵";
         const timestamp: string = TestUtilities.getCurrentFormattedTimestamp();
-        console.log(chalk.bgWhite(timestamp + ": " + message));
+        console.log(timestamp + ": " + message);
         test.info().annotations.push({ //BLANK LINE
             type: ' '
         });
@@ -243,7 +239,7 @@ export class TestUtilities {
         const charL: string = "🟠🟠";
         const charR: string = "🟠🟠";
         const timestamp: string = TestUtilities.getCurrentFormattedTimestamp();
-        console.log(chalk.bgWhite(timestamp + ": " + message));
+        console.log(timestamp + ": " + message);
         test.info().annotations.push({
             type: `${timestamp} ${charL}${message}${charR}`
         }); 
@@ -256,7 +252,7 @@ export class TestUtilities {
         const charL: string = "🟩🟩🟩";
         const charR: string = "🟩🟩🟩";
         const timestamp: string = TestUtilities.getCurrentFormattedTimestamp();
-        console.log(chalk.bgWhite(timestamp + ": " + message));
+        console.log(timestamp + ": " + message);
         test.info().annotations.push({ //BLANK LINE
             type: ' '
         });
@@ -269,7 +265,7 @@ export class TestUtilities {
         const charL: string = "🟥🟥🟥";
         const charR: string = "🟥🟥🟥";
         const timestamp: string = TestUtilities.getCurrentFormattedTimestamp();
-        console.log(chalk.bgWhite(timestamp + ": " + message));
+        console.log(timestamp + ": " + message);
         test.info().annotations.push({
             type: `${timestamp} ${charL}${message}${charR}`
         }); 
@@ -278,17 +274,8 @@ export class TestUtilities {
         });
     }
 
-    public static logMessageWithColor(message: string, style: ChalkColorStyle): void {
-        const timestamp: string = TestUtilities.getCurrentFormattedTimestamp();
-        const styleFn = (chalk as any)[style];
-        const output = typeof styleFn === 'function'
-            ? styleFn(`${timestamp}: ${message}`)
-            : `${timestamp}: ${message}`;
-        console.log(output);
-    }
-
     public static logMessageNoTimestamp(message: string): void {
-        console.log(chalk.bgWhite(message));
+        console.log(message);
         test.info().annotations.push({
             type: ``,
             description: `${message}`
@@ -336,7 +323,7 @@ export class TestUtilities {
         return num;
     }
 
-    public static async returnBrowserContextWithVideo(browser: Browser): Promise<BrowserContext> {
+    /*public static async returnBrowserContextWithVideo(browser: Browser): Promise<BrowserContext> {
         if (!process.env.CI) { // Enable video only when running locally (not in CI) and when boolean is true in config file
             TestUtilities.logMessageBold("Video recording is ENABLED for these scripts/tests.");
             console.log("Video recording is ENABLED for these scripts/tests.");
@@ -351,13 +338,13 @@ export class TestUtilities {
             TestUtilities.logMessageBold("Video recording is DISABLED for these scripts/tests.");
             return await browser.newContext();
         }
-    }
+    }*/
 
-    public static getTestData(filePath: string): any[] {
+    /*public static getTestData(filePath: string): any[] {
         const workbook = XLSX.readFile(filePath);
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
 
         return XLSX.utils.sheet_to_json(sheet);
-    }
+    }*/
 }
