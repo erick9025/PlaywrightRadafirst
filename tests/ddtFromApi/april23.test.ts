@@ -12,7 +12,11 @@ async function getSearchTerms(): Promise<string[]> {
 
 test.describe('Products DDT', async () => {
 
-  const searchTerms: string[] = await getSearchTerms();
+  let searchTerms: string[] = [];
+
+  test.beforeAll(async () => {
+    searchTerms = await getSearchTerms();
+  });
 
   for (const product of searchTerms) {
     test("ERICK Search all products:" + product, async ({page}) => {
