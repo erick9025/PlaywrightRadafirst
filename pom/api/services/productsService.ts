@@ -9,7 +9,7 @@ export class ProductsService extends BaseApiService {
     public responseGetAllProducts!: ResponseGetAllProducts[];
 
     // Static items
-    public static listAllProducts: string[] = [];
+    public static listAllProducts: string[] = [ "erick "];
 
     public async getAllProducts(): Promise<void> {
         this.mainMethodStart("getAllProducts");
