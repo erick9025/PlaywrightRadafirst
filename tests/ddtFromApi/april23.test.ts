@@ -12,14 +12,18 @@ async function getSearchTerms(): Promise<string[]> {
 
 test.describe('Products DDT', async () => {
 
-  let searchTerms: string[] = [];
+  let searchTerms: string[] = [ "erick "];
 
   test.beforeAll(async () => {
-    searchTerms = await getSearchTerms();
+    const newItems: string[] = await getSearchTerms();
+    searchTerms = [...searchTerms, ...newItems];
+
+    console.log("Search terms COMBINED:");
+    console.log(searchTerms.join(","));
   });
 
   for (const product of searchTerms) {
-    test("ERICK Search all products:" + product, async ({page}) => {
+    test("ERICK Search all products: " + product, async ({page}) => {
       await page.goto("https://www.amazon.com.mx/");
       await page.locator(`input#twotabsearchtextbox`).fill(product);
       await page.locator(`#nav-search-submit-button`).click();
