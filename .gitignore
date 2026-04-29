@@ -3,3 +3,4 @@ test-results/
 playwright-report/
 videos/
 *.png
+allure-results/
