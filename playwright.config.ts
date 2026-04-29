@@ -20,7 +20,8 @@ export const config: ProjectTestConfigRadafirst = {
   reporter: [
     ['html', { open: 'always' }],
     ['list'],
-    ['json']
+    ['json'],
+    ['allure', { outputFolder: 'allure-results' }]
   ],
   use: {
     // OUR CUSTOM Variables from root

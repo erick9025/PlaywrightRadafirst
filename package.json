@@ -6,7 +6,7 @@
   "scripts": {
     "regen": "npx playwright show-report",
     "erick": "echo Erick Jimenez",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npx playwright test",
     "NOTREADYtestMapsServiceWithAllure": "npm run clean:allure && npx playwright test mapsServiceTest.spec.ts",
     "testMapsService": "npx playwright test testMapsApi",
     "testSwag": "npx playwright test testSwagPro",
@@ -30,6 +30,7 @@
     "@types/proxymise": "^1.0.3"
   },
   "dependencies": {
+    "allure": "^3.6.2",
     "chalk": "^5.6.2",
     "dotenv": "^17.3.1",
     "proxymise": "^1.0.2",
