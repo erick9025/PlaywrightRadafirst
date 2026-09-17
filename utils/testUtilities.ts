@@ -324,7 +324,7 @@ export class TestUtilities {
         return num;
     }
 
-    /*public static async returnBrowserContextWithVideo(browser: Browser): Promise<BrowserContext> {
+    public static async returnBrowserContextWithVideo(browser: Browser): Promise<BrowserContext> {
         if (!process.env.CI) { // Enable video only when running locally (not in CI) and when boolean is true in config file
             TestUtilities.logMessageBold("Video recording is ENABLED for these scripts/tests.");
             console.log("Video recording is ENABLED for these scripts/tests.");
@@ -339,11 +339,11 @@ export class TestUtilities {
             TestUtilities.logMessageBold("Video recording is DISABLED for these scripts/tests.");
             return await browser.newContext();
         }
-    }*/
+    }
 
-    public static getTestData(filePath: string): any[] {
+    public static getTestData(filePath: string, fromSheetIndex = 0): any[] {
         const workbook = XLSX.readFile(filePath);
-        const sheetName = workbook.SheetNames[0];
+        const sheetName = workbook.SheetNames[fromSheetIndex];
         const sheet = workbook.Sheets[sheetName];
 
         return XLSX.utils.sheet_to_json(sheet);

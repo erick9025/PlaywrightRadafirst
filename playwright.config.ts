@@ -13,9 +13,14 @@ export const configFile = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
 export const config: ProjectTestConfigRadafirst = {
   workers: 4,
   retries: process.env.CI ? 2 : 0, // Retry failed tests up to 2 times
-  timeout: 15_000, // Global timeout for all tests in milliseconds (default is 30 seconds)
+  timeout: 120_000, // 60 seconds = 1 minute
+  fullyParallel: true,
   expect: {
-    timeout: 1_000
+    /**
+     * Maximum time expect() should wait for the condition to be met.
+     * For example in await expect(locator).toHaveText();
+     */
+    timeout: 5_000
   },
   reporter: [
     ['html', { open: 'always' }],

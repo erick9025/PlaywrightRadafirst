@@ -23,7 +23,6 @@ test.describe('Tests for Swag pages', () => {
         await AllPages.SwagCartPage.verifyCartTotalIsCorrect();
     });
 
-
     test.skip("Swag Add products and go to cart with hooks 2", async ({ AllPages, browser }) => {  
         
         await AllPages.SwagLoginPage.login();
