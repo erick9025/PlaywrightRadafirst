@@ -38,7 +38,7 @@ export class SwagLoginPage extends SwagParentPage {
     // Moved to ElementsSwagLogin class  
 
     // ******************************************** METHODS (3) *****************************************************
-    public async login(user: string = "", password: string = "") : Promise<SwagLoginPage> {
+    public async login(user: string = "", password: string = "") : Promise<void> {
 
         this.mainMethodStart("login");
         await this.goToURL("https://www.saucedemo.com/");
@@ -61,7 +61,6 @@ export class SwagLoginPage extends SwagParentPage {
         await this.click(this.ElementsSwagLogin.buttonLogin, "Login [Button]");
 
         this.mainMethodEnd("login");
-        return this;
     }
 
 
