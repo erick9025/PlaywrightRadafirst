@@ -1,5 +1,6 @@
 import { Browser, BrowserContext, Page, Locator, test, expect } from '@playwright/test';
 import { Asserts } from './asserts';
+import XLSX from 'xlsx';
 
 export class TestUtilities {
 
@@ -340,11 +341,11 @@ export class TestUtilities {
         }
     }*/
 
-    /*public static getTestData(filePath: string): any[] {
+    public static getTestData(filePath: string): any[] {
         const workbook = XLSX.readFile(filePath);
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
 
         return XLSX.utils.sheet_to_json(sheet);
-    }*/
+    }
 }

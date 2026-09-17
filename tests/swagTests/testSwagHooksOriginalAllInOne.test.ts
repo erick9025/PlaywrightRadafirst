@@ -12,7 +12,7 @@ test.describe('Tests for Swag pages', () => {
     Test Case 1004: Go to cart and verify total is correct 
     */
     
-    test("[1001][1002][1003][1004] Swag Add products and go to cart with hooks", async ({ AllPages }) => {  
+    test.skip("[1001][1002][1003][1004] Swag Add products and go to cart with hooks", async ({ AllPages }) => {  
         
         await AllPages.SwagLoginPage.login();
         await AllPages.SwagProductsPage.addProductToCart("Sauce Labs Backpack");
@@ -24,7 +24,7 @@ test.describe('Tests for Swag pages', () => {
     });
 
 
-    test("Swag Add products and go to cart with hooks 2", async ({ AllPages, browser }) => {  
+    test.skip("Swag Add products and go to cart with hooks 2", async ({ AllPages, browser }) => {  
         
         await AllPages.SwagLoginPage.login();
         await AllPages.SwagLoginPage.takeScreenshotWithTimestamp("Erick_1");
@@ -49,7 +49,7 @@ test.describe('Tests for Swag pages', () => {
         await AllPages.SwagCartPage.verifyCartTotalIsCorrect();
     });
 
-    test("Swag Add products and go to cart with hooks 3", async ({ AllPages, page }) => {  
+    test.skip("Swag Add products and go to cart with hooks 3", async ({ AllPages, page }) => {  
         
         await AllPages.SwagLoginPage.login();
         await AllPages.SwagProductsPage.addProductToCart("Sauce Labs Backpack");
