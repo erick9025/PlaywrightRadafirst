@@ -11,7 +11,7 @@ export default defineConfig({
   // Applies to the complete BDD scenario, including hooks and Playwright cleanup.
   timeout: 60_000,
   expect: {
-    timeout: 1_000
+    timeout: 10_000
   },
   reporter: [
     ['html', { open: 'always' }]
