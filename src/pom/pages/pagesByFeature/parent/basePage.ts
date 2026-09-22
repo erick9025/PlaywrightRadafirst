@@ -70,7 +70,9 @@ export abstract class BasePage {
     }
 
     protected async goToURL(url: string): Promise<void> { 
-        await this.page.goto(url);
+        // Waiting for the full load event can be held up by non-essential
+        // third-party resources. The UI is ready once its DOM is available.
+        await this.page.goto(url, { waitUntil: 'domcontentloaded', timeout: 10_000 });
         this.logMessage("Sucessfully opened URL: " + url);
     }
 

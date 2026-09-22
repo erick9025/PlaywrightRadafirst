@@ -51,7 +51,6 @@ export class SwagLoginPage extends SwagParentPage {
     public async login(user: string = "", password: string = "") : Promise<SwagLoginPage> {
 
         this.mainMethodStart("login");
-        await this.goToURL("https://www.saucedemo.com/");
 
         // If user not provided, take default, same for password
         if(TestUtilities.isNullOrEmpty(user)) {
@@ -69,6 +68,7 @@ export class SwagLoginPage extends SwagParentPage {
         await this.enterText(this.ElementsSwagLogin.inputUser, "Username [Input]", user);
         await this.enterText(this.ElementsSwagLogin.inputPassword, "Password [Input]", password);
         await this.click(this.ElementsSwagLogin.buttonLogin, "Login [Button]");
+        await this.page.waitForURL('**/inventory.html', { timeout: 5_000 });
 
         this.mainMethodEnd("login");
         return this;

@@ -9,7 +9,7 @@ const testDir = defineBddConfig({
 export default defineConfig({
   testDir,
   // Applies to the complete BDD scenario, including hooks and Playwright cleanup.
-  timeout: 60_000,
+  timeout: 15_000,
   expect: {
     timeout: 10_000
   },
@@ -17,9 +17,15 @@ export default defineConfig({
     ['html', { open: 'always' }]
   ],
   use: {
-    trace: 'on',
+    actionTimeout: 5_000,
+    navigationTimeout: 10_000,
+    // Trace finalization hangs during fixture teardown in this environment.
+    // Failure screenshots remain available without extending the test lifetime.
+    trace: 'off',
     screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
+    // Video recording requires Playwright's optional FFmpeg download. Keep the
+    // lightweight diagnostics enabled so a missing FFmpeg binary cannot stop a run.
+    video: 'off',
   },
   projects: [
     {
