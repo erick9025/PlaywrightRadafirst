@@ -10,12 +10,23 @@ BeforeAll(async function () {
   console.log("BeforeAll ERICK MENTORSHIP");
 });
 
-Before(async function ({ page: _page }) {
+Before(async function ({ page }) {
   console.log("Before each ERICK MENTORSHIP");
+  await page.context().tracing.start({
+    screenshots: true,
+    snapshots: true,
+    sources: true,
+  });
 });
 
-After(async function ({ page: _page }) {
+After(async function ({ page, $testInfo }) {
   console.log("After each ERICK MENTORSHIP");
+  const tracePath = $testInfo.outputPath("trace.zip");
+  await page.context().tracing.stop({ path: tracePath });
+  await $testInfo.attach("trace", {
+    path: tracePath,
+    contentType: "application/zip",
+  });
 });
 
 AfterAll(async function () {
