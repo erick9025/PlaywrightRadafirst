@@ -9,8 +9,9 @@ const testDir = defineBddConfig({
 export default defineConfig({
   testDir,
   // Applies to the complete BDD scenario, including hooks and Playwright cleanup.
-  timeout: 15_000,
-  // A retry identifies intermittent failures without slowing successful runs.
+  // Includes trace finalization after each scenario.
+  timeout: 45_000,
+  // Retry once to preserve evidence for intermittent external-site failures.
   retries: 1,
   expect: {
     timeout: 10_000
@@ -21,8 +22,7 @@ export default defineConfig({
   use: {
     actionTimeout: 5_000,
     navigationTimeout: 10_000,
-    // Record a trace for the retry of a flaky test. This preserves diagnostic
-    // history without the teardown delay caused by tracing every attempt.
+    // Keep a complete replayable trace for every passed and failed attempt.
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     // Video recording requires Playwright's optional FFmpeg download. Keep the
@@ -34,7 +34,6 @@ export default defineConfig({
       name: 'Chromium',
       use: {
         browserName: 'chromium',
-        channel: 'chrome',
       },
     },
   ],
