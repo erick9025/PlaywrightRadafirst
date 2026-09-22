@@ -8,6 +8,8 @@ const testDir = defineBddConfig({
 
 export default defineConfig({
   testDir,
+  fullyParallel: true,
+  workers: 8,
   // Applies to the complete BDD scenario, including hooks and Playwright cleanup.
   timeout: 15_000,
   // Retry once to preserve evidence for intermittent external-site failures.
