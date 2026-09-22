@@ -2,9 +2,9 @@ import { setWorldConstructor, World, IWorldOptions } from "@cucumber/cucumber";
 import { Browser, BrowserContext, Page } from "@playwright/test";
 
 export class PlaywrightWorld extends World {
-  browser!: Browser;
-  context!: BrowserContext;
-  page!: Page;
+  browser!: Browser; // firefox, chrome or safari
+  context!: BrowserContext; // session or windown
+  page!: Page; // page or tab
 
   constructor(options: IWorldOptions) {
     super(options);

@@ -27,14 +27,6 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     // Video recording requires Playwright's optional FFmpeg download. Keep the
     // lightweight diagnostics enabled so a missing FFmpeg binary cannot stop a run.
-    video: 'off',
-  },
-  projects: [
-    {
-      name: 'Chromium',
-      use: {
-        browserName: 'chromium',
-      },
-    },
-  ],
+    video: 'off'
+  }
 });
