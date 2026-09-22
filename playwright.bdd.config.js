@@ -10,6 +10,8 @@ export default defineConfig({
   testDir,
   // Applies to the complete BDD scenario, including hooks and Playwright cleanup.
   timeout: 15_000,
+  // A retry identifies intermittent failures without slowing successful runs.
+  retries: 1,
   expect: {
     timeout: 10_000
   },
@@ -19,9 +21,9 @@ export default defineConfig({
   use: {
     actionTimeout: 5_000,
     navigationTimeout: 10_000,
-    // Trace finalization hangs during fixture teardown in this environment.
-    // Failure screenshots remain available without extending the test lifetime.
-    trace: 'off',
+    // Record a trace for the retry of a flaky test. This preserves diagnostic
+    // history without the teardown delay caused by tracing every attempt.
+    trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     // Video recording requires Playwright's optional FFmpeg download. Keep the
     // lightweight diagnostics enabled so a missing FFmpeg binary cannot stop a run.
