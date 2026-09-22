@@ -8,7 +8,8 @@ const testDir = defineBddConfig({
 
 export default defineConfig({
   testDir,
-  timeout: 15_000,
+  // Applies to the complete BDD scenario, including hooks and Playwright cleanup.
+  timeout: 60_000,
   expect: {
     timeout: 1_000
   },
