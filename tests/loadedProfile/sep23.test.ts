@@ -1,6 +1,6 @@
 import { test, chromium, firefox } from '@playwright/test';
 
-/*test.skip('Dummy test case CHROME', async () => {
+test('Dummy test case CHROME', async () => {
     const contextChrome = await chromium.launchPersistentContext(
         'C:\\Users\\erick.jimenez\\AppData\\Local\\Google\\Chrome\\User Data',
         {
@@ -14,7 +14,7 @@ import { test, chromium, firefox } from '@playwright/test';
     await page.goto('https://facebook.com');
     await page.waitForTimeout(5_000);
     await contextChrome.close();
-});*/
+});
 
 test('Dummy test case FIREFOX', async () => {
     const contextFirefox = await firefox.launchPersistentContext(
