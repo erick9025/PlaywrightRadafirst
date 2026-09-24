@@ -1,9 +1,9 @@
 import { test, Browser, BrowserContext, Page, Locator, expect } from '@playwright/test';
 import { ProductSortingOptions } from '../../utils/productSortingOptions';
 import { ExecutionParameters } from '../../utils/executionParameters';
-import { SwagLoginPage } from '../../pom/pages/pagesByFeature/swagLoginPage';
-import { SwagProductsPage } from '../../pom/pages/pagesByFeature/swagProductsPage';
-import { SwagCartPage } from '../../pom/pages/pagesByFeature/swagCartPage';
+import { SwagLoginPage } from '../../pom/web/pages/pagesByFeature/swagLoginPage';
+import { SwagProductsPage } from '../../pom/web/pages/pagesByFeature/swagProductsPage';
+import { SwagCartPage } from '../../pom/web/pages/pagesByFeature/swagCartPage';
 
 test.describe('Tests for Swag pages', () => {
 

@@ -37,7 +37,7 @@ test.describe('Tests for Swag pages', () => {
         await PagesSauceLabs.SwagLoginPage.takeScreenshotWithTimestamp("Erick_3");
 
         // Clean
-        await PagesSauceLabs.resetPagesSauceLabsWithFreshContext(browser);
+        await PagesSauceLabs.resetAllPagesWithFreshContext(browser);
 
         await PagesSauceLabs.SwagLoginPage.login();
         await PagesSauceLabs.SwagProductsPage.addProductToCart("Sauce Labs Backpack");

@@ -2,9 +2,9 @@ import { test } from '../testHooks/baseTestSauceLabs';
 import { ProductSortingOptions } from '../../utils/productSortingOptions';
 import { Asserts } from '../../utils/asserts';
 
-test.describe('Tests for Swag pages SEQUENTIAL/SERIAL (Simulated with 1 thread)', () => {
-    test.use({ createContextBeforeEachTest: false, browserName: 'webkit' }); // Set to false to create a single context for all tests (faster but less isolated)
+test.use({ createContextBeforeEachTest: false, browserName: 'webkit', channel: undefined });
 
+test.describe('Tests for Swag pages SEQUENTIAL/SERIAL (Simulated with 1 thread)', () => {
     /* Test Case 1001: Login to page
     Test Case 1002: Add products to cart
     Test Case 1003: Sort products and print total added so far

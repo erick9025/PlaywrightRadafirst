@@ -1,9 +1,7 @@
 import { test, Browser, BrowserContext, Page } from '@playwright/test';
 import { ProductSortingOptions } from '../../utils/productSortingOptions';
 import { ExecutionParameters } from '../../utils/executionParameters';
-import { SwagPages } from '../../pom/web/pages/swagPages';
-import { TestUtilities } from '../../utils/testUtilities';
-import { configParameters } from '../../configs/loadedConfig';
+import { PagesSauceLabs } from '../../pom/web/pages/pagesSauceLabs';
 
 test.describe('Tests for Swag pages', () => {
     test.describe.configure({ mode: 'serial' });
@@ -11,7 +9,7 @@ test.describe('Tests for Swag pages', () => {
     let browser: Browser;
     let context: BrowserContext;
     let page: Page;
-    let PagesSwag: SwagPages;
+    let PagesSwag: PagesSauceLabs;
 
     ////////////////////////////////////////////////////////// BEFORE/AFTER SETUP //////////////////////////////////////////////////////////
     test.beforeAll(async ({ playwright }, testInfo) => {
@@ -33,9 +31,9 @@ test.describe('Tests for Swag pages', () => {
         // Create a Page inside the context
         page = await context.newPage();
 
-        PagesSwag = new SwagPages(page);
+        PagesSwag = new PagesSauceLabs(page);
 
-        await PagesSwag.swagLoginPage.login();
+        await PagesSwag.SwagLoginPage.login();
     });
 
     test.afterEach(async () => {
@@ -50,31 +48,16 @@ test.describe('Tests for Swag pages', () => {
     /////////////////////////////////////////////////////////// TESTS START HERE ///////////////////////////////////////////////////////////
 
     test("Testing playwright special locators", async () => {     
-        await PagesSwag.swagProductsPage.clickOnButton(".inventory_list .inventory_item:has-text('Fleece') button");
+        await PagesSwag.SwagProductsPage.clickOnButton(".inventory_list .inventory_item:has-text('Fleece') button");
     });
 
     test.skip("Swag Add products and go to cart", async () => {  
 
-        TestUtilities.logMessage("baseURL: " + configParameters.baseURL);
-        TestUtilities.logMessage("erickVar: " + configParameters.erickVar);
-        TestUtilities.logMessage("erickVarString: " + configParameters.erickVarString);
-        TestUtilities.logMessage("erickVarInt: " + configParameters.erickVarInt);
-        TestUtilities.logMessage("erickVarFloat: " + configParameters.erickVarFloat);
-        TestUtilities.logMessage("erickVarBoolean: " + configParameters.erickVarBoolean);
-        TestUtilities.logMessage("...............................");
-        TestUtilities.logMessage("credentials.myUsername: " + configParameters.credentials.myUsername);
-        TestUtilities.logMessage("credentials.myPassword: " + configParameters.credentials.myPassword);
-
-        configParameters.browsers.forEach( browser => {
-            TestUtilities.logMessage("....name: " + browser.name);
-            TestUtilities.logMessage("....description: " + browser.description);
-        });
-
-        await PagesSwag.swagProductsPage.addProductToCart("Sauce Labs Backpack");
-        await PagesSwag.swagProductsPage.addProductToCart("Sauce Labs Fleece Jacket");
-        await PagesSwag.swagProductsPage.sortProducts(ProductSortingOptions.NameAscending);
-        await PagesSwag.swagProductsPage.printTotalAddedSoFar();
-        await PagesSwag.swagCartPage.goToCart();        
-        await PagesSwag.swagCartPage.verifyCartTotalIsCorrect();
+        await PagesSwag.SwagProductsPage.addProductToCart("Sauce Labs Backpack");
+        await PagesSwag.SwagProductsPage.addProductToCart("Sauce Labs Fleece Jacket");
+        await PagesSwag.SwagProductsPage.sortProducts(ProductSortingOptions.NameAscending);
+        await PagesSwag.SwagProductsPage.printTotalAddedSoFar();
+        await PagesSwag.SwagCartPage.goToCart();        
+        await PagesSwag.SwagCartPage.verifyCartTotalIsCorrect();
     });
 });
