@@ -1,8 +1,8 @@
 import { test, expect, Page } from '@playwright/test';
 import { SwagProductsPage } from '../../pom/web/pages/pagesByFeature/swagProductsPage';
-import path from 'path';
+import * as path from 'node:path';
 import os from 'os';
-const testData = require('../testData/herokuCombinations.json');
+import testData from '../testData/herokuCombinations.json';
 
 test.describe('Dummy test suite', () => {
 

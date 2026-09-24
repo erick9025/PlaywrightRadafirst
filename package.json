@@ -13,7 +13,8 @@
     "testSwag": "npx playwright test testSwag",
     "testSwagAll": "npx playwright test testSwag",
     "testExcelDDT": "npx playwright test testSwagHooksOriginalAllInOne.test.ts --workers=8 --headed",
-    "testDummyApi": "npx playwright test dummyApi.test.ts --workers=8"
+    "testDummyApi": "npx playwright test dummyApi.test.ts --workers=8",
+    "testSep23": "npx playwright test sep23.test.ts --workers=8"
   },
   "repository": {
     "type": "git",
@@ -29,7 +30,7 @@
   "homepage": "https://github.com/erick9025/PlaywrightRadafirst#readme",
   "devDependencies": {
     "@playwright/test": "^1.63.0",
-    "@types/node": "^25.9.6"
+    "@types/node": "^25.9.8"
   },
   "dependencies": {
     "chalk": "^5.6.2",

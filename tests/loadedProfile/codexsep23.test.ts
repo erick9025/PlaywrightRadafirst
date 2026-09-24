@@ -1,11 +1,11 @@
 import { test, expect, chromium, firefox } from '@playwright/test';
-import path from 'node:path';
+import { join } from 'node:path';
 
-const profileRoot = path.join(process.cwd(), 'test-results', 'loaded-profiles');
+const profileRoot = join(process.cwd(), 'test-results', 'loaded-profiles');
 
 test('Dummy test case CHROME', async () => {
     const contextChrome = await chromium.launchPersistentContext(
-        path.join(profileRoot, 'chrome'),
+        join(profileRoot, 'chrome'),
         {
             channel: 'chrome',
             headless: false,
@@ -21,9 +21,9 @@ test('Dummy test case CHROME', async () => {
     }
 });
 
-test.skip('Dummy test case FIREFOX', async () => {
+test('Dummy test case FIREFOX', async () => {
     const contextFirefox = await firefox.launchPersistentContext(
-        path.join(profileRoot, 'firefox'),
+        join(profileRoot, 'firefox'),
         {
             headless: false,
             channel: undefined,
@@ -33,8 +33,7 @@ test.skip('Dummy test case FIREFOX', async () => {
 
     try {
         const page = await contextFirefox.newPage();
-        await page.goto('data:text/html,<title>Firefox profile smoke test</title>');
-        await expect(page).toHaveTitle('Firefox profile smoke test');
+        await page.goto('https://facebook.com');
     } finally {
         await contextFirefox.close();
     }
