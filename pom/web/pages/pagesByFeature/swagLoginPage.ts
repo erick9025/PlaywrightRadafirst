@@ -2,7 +2,6 @@ import { Page } from '@playwright/test';
 import { SwagParentPage } from "./parent/swagParentPage";
 import { TestUtilities } from "../../../../utils/testUtilities";
 import { Asserts } from "../../../../utils/asserts";
-import proxymise from "proxymise";
 
 /*
 On POM, the application will be splitted into multiples pages (one per screen/functionality/feature)
@@ -19,8 +18,6 @@ Current responsibilites: 4
 
 export class SwagLoginPage extends SwagParentPage {
 
-    // ******************************************** STATIC PROXYMISE CONSTRUCTOR (0) *****************************************************
-    // This method is static now. Necessary for proxymise correct work
     public static initPage(page: Page): SwagLoginPage {
         return new SwagLoginPage(page);
     }
@@ -69,4 +66,4 @@ export class SwagLoginPage extends SwagParentPage {
     // Moved to ConstantsLoginPage class
 }
 
-export default proxymise(SwagLoginPage);
+export default SwagLoginPage;

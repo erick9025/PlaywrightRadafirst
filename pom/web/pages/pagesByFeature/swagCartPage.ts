@@ -1,7 +1,6 @@
 import { Page } from '@playwright/test';
 import { SwagParentPage } from "./parent/swagParentPage";
 import { ExecutionParameters } from "../../../../utils/executionParameters";
-import proxymise from "proxymise";
 
 /*
 On POM, the application will be splitted into multiples pages (one per screen/functionality/feature)
@@ -18,8 +17,6 @@ Current responsibilites: 4
 
 export class SwagCartPage extends SwagParentPage {
 
-    // ******************************************** STATIC PROXYMISE CONSTRUCTOR (0) *****************************************************
-    // This method is static now. Necessary for proxymise correct work
     public static initPage(page: Page): SwagCartPage {
         return new SwagCartPage(page);
     }
@@ -59,4 +56,4 @@ export class SwagCartPage extends SwagParentPage {
     // ******************************************** CONSTANTS (4) *****************************************************
 }
 
-export default proxymise(SwagCartPage);
+export default SwagCartPage;

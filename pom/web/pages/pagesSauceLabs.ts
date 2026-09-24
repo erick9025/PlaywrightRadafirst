@@ -4,7 +4,7 @@ import { SwagProductsPage } from './pagesByFeature/swagProductsPage';
 import { SwagCartPage } from './pagesByFeature/swagCartPage';
 import { Asserts } from '../../../utils/asserts';
 
-export class SwagPages {
+export class PagesSauceLabs {
     // 3 available page objects for the Swag application, but you can have as many as you need, just add them here and initialize them in the instancePages method at the end of this class
     private _swagLoginPage!: SwagLoginPage;
     private _swagProductsPage!: SwagProductsPage;

@@ -4,7 +4,6 @@ import { TestUtilities } from "../../../../utils/testUtilities";
 import { Asserts } from "../../../../utils/asserts";
 import { ExecutionParameters } from "../../../../utils/executionParameters";
 import { ProductSortingOptions } from "../../../../utils/productSortingOptions";
-import proxymise from "proxymise";
 
 /*
 On POM, the application will be splitted into multiples pages (one per screen/functionality/feature)
@@ -21,8 +20,6 @@ Current responsibilites: 2
 
 export class SwagProductsPage extends SwagParentPage {
 
-    // ******************************************** STATIC PROXYMISE CONSTRUCTOR (0) *****************************************************
-     // This method is static now. Necessary for proxymise correct work
     public static initPage(page: Page): SwagProductsPage {
         return new SwagProductsPage(page);
     }
@@ -102,7 +99,6 @@ export class SwagProductsPage extends SwagParentPage {
         return this;
     }
     
-    // ToDo HOMEWORK fix below method (from repo 'PlaywrightProxymise' > SwagDashboardPage to 'PlaywrightRadafirst' > SwagProductsPage)
     public async sortProducts(orderBy : ProductSortingOptions) : Promise<SwagProductsPage> {
         let valueAsStr : string = "";
         this.methodStart("sortProducts", orderBy.toString());
@@ -143,4 +139,4 @@ export class SwagProductsPage extends SwagParentPage {
     // calls are here but logic is performed on Asserts.ts class
 }
 
-export default proxymise(SwagProductsPage);
+export default SwagProductsPage;
