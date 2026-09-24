@@ -7,7 +7,7 @@ test("Testing REST API GET maps directly", async ({ request }) => {
         {
         params: {
             key: 'qaclick123',
-            place_id: '7d4e3875cb641a63048d8bfa0faffe47'
+            place_id: '7a4370e97b863083fb0b3922aee29dc1'
         }
         }
     );
@@ -18,7 +18,7 @@ test("Testing REST API GET maps directly", async ({ request }) => {
     const body = await response.json();
 
     // Validate response fields
-    expect(body.name).toBe('Cafe Unosquare');
+    expect(body.name).toBe('Cafe Unosquare Mentorship');
     expect(body.address).toBe('Constitucion 1990');
     expect(body.language).toBe('United States-SP');
 
@@ -41,7 +41,7 @@ test('POST create place', async ({ request }) => {
           lng: 33.427362
         },
         accuracy: 2,
-        name: 'Cafe Unosquare',
+        name: 'Cafe Unosquare Mentorship',
         phone_number: '(52) 55 4000 4000',
         address: 'Patria 123',
         types: [

@@ -3,27 +3,10 @@ import { ProductSortingOptions } from '../../utils/productSortingOptions';
 import { SwagLoginPage } from '../../pom/web/pages/pagesByFeature/swagLoginPage';
 import { TestUtilities } from '../../utils/testUtilities';
 
-test.describe('Tests for Swag pages', () => {
-    
-    /* Linked test cases from AZURE DEVOPS:
-    Test Case 1001: Login to page
-    Test Case 1002: Add products to cart
-    Test Case 1003: Sort products and print total added so far
-    Test Case 1004: Go to cart and verify total is correct 
-    */
-    
-    test.skip("[1001][1002][1003][1004] Swag Add products and go to cart with hooks", async ({ PagesSauceLabs }) => {  
-        
-        await PagesSauceLabs.SwagLoginPage.login();
-        await PagesSauceLabs.SwagProductsPage.addProductToCart("Sauce Labs Backpack");
-        await PagesSauceLabs.SwagProductsPage.addProductToCart("Sauce Labs Fleece Jacket");
-        await PagesSauceLabs.SwagProductsPage.sortProducts(ProductSortingOptions.NameAscending);
-        await PagesSauceLabs.SwagProductsPage.printTotalAddedSoFar();
-        await PagesSauceLabs.SwagCartPage.goToCart();        
-        await PagesSauceLabs.SwagCartPage.verifyCartTotalIsCorrect();
-    });
+test.describe('Tests for Swag pages REGULAR/MULTI THREAD', () => {
+    test.use({ createContextBeforeEachTest: true }); // DEFAULT VALUE
 
-    test.skip("Swag Add products and go to cart with hooks 2", async ({ PagesSauceLabs, browser }) => {  
+    test("Swag Add products and go to cart with hooks 2", async ({ PagesSauceLabs }) => {  
         
         await PagesSauceLabs.SwagLoginPage.login();
         await PagesSauceLabs.SwagLoginPage.takeScreenshotWithTimestamp("Erick_1");
@@ -35,20 +18,9 @@ test.describe('Tests for Swag pages', () => {
         await PagesSauceLabs.SwagCartPage.goToCart();        
         await PagesSauceLabs.SwagCartPage.verifyCartTotalIsCorrect();
         await PagesSauceLabs.SwagLoginPage.takeScreenshotWithTimestamp("Erick_3");
-
-        // Clean
-        await PagesSauceLabs.resetPagesSauceLabsWithFreshContext(browser);
-
-        await PagesSauceLabs.SwagLoginPage.login();
-        await PagesSauceLabs.SwagProductsPage.addProductToCart("Sauce Labs Backpack");
-        await PagesSauceLabs.SwagProductsPage.addProductToCart("Sauce Labs Fleece Jacket");
-        await PagesSauceLabs.SwagProductsPage.sortProducts(ProductSortingOptions.NameAscending);
-        await PagesSauceLabs.SwagProductsPage.printTotalAddedSoFar();
-        await PagesSauceLabs.SwagCartPage.goToCart();        
-        await PagesSauceLabs.SwagCartPage.verifyCartTotalIsCorrect();
     });
 
-    test.skip("Swag Add products and go to cart with hooks 3", async ({ PagesSauceLabs, page }) => {  
+    test("Swag Add products and go to cart with hooks 3", async ({ PagesSauceLabs, page }) => {  
         
         await PagesSauceLabs.SwagLoginPage.login();
         await PagesSauceLabs.SwagProductsPage.addProductToCart("Sauce Labs Backpack");
@@ -70,9 +42,6 @@ test.describe('Tests for Swag pages', () => {
     //............................... DDT EXCEL ...............................
 
     const testData = TestUtilities.getTestData("tests/testData/excelSwag.xlsx");
-
-    //C:\Users\erick.jimenez\Documents\GitHub\PlaywrightRadafirst\tests\testData\excelSwag.xlsx
-    //C:\Users\erick.jimenez\Documents\GitHub\testData\excelSwag.xlsx
 
     testData.forEach((data: any) => {
         test(`Swag Login multiple users ${data.username}`, async ({ PagesSauceLabs }) => {
