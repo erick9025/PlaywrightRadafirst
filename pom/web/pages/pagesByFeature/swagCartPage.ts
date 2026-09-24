@@ -55,5 +55,3 @@ export class SwagCartPage extends SwagParentPage {
 
     // ******************************************** CONSTANTS (4) *****************************************************
 }
-
-export default SwagCartPage;

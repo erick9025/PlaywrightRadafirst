@@ -60,10 +60,21 @@ export class SwagLoginPage extends SwagParentPage {
         this.mainMethodEnd("login");
     }
 
+    public doSomething(): SwagLoginPage {
+        return this;
+    }
+
+    public doSomething2(): SwagLoginPage {
+        return this;
+    }
+
+    public doSomething3(): SwagLoginPage {
+        return this;
+    }
+
+
 
     // ******************************************** CONSTANTS (4) *****************************************************
     
     // Moved to ConstantsLoginPage class
 }
-
-export default SwagLoginPage;

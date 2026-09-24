@@ -138,5 +138,3 @@ export class SwagProductsPage extends SwagParentPage {
     
     // calls are here but logic is performed on Asserts.ts class
 }
-
-export default SwagProductsPage;
