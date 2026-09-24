@@ -45,7 +45,7 @@ export class SwagCartPage extends SwagParentPage {
     public async verifyCartTotalIsCorrect(): Promise<SwagCartPage> {        
         this.mainMethodStart("verifyCartTotalIsCorrect");
 
-        this.logMessage("Total added so far: " + ExecutionParameters.expectedTotal);
+        this.logToConsole("Total added so far: " + ExecutionParameters.expectedTotal);
 
         await this.verifyElementIsVisible("button.checkout_button", "Checkout button");
     

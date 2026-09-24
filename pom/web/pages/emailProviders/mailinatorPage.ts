@@ -1,6 +1,6 @@
 import { IEmailProvider } from "./interfaces/iEmailProvider";
 import { BasePage } from "../pagesByFeature/parent/basePage";
-import { TestUtilities } from "../../../utils/testUtilities";
+import { TestUtilities } from "../../../../utils/testUtilities";
 
 export class MailinatorPage extends BasePage implements IEmailProvider {
 
@@ -20,13 +20,13 @@ export class MailinatorPage extends BasePage implements IEmailProvider {
     }
 
     public async openEmail(subject: string, fromEmail: string) : Promise<void> {
-        this.logMessage("Will search for an email inside Mailinator with partial subject: " + subject);
+        this.logToConsole("Will search for an email inside Mailinator with partial subject: " + subject);
 
         if(!TestUtilities.isNullOrEmpty(fromEmail)) {
-            this.logMessage("Email also have to come from: " + fromEmail);
+            this.logToConsole("Email also have to come from: " + fromEmail);
         }
         else {
-            this.logMessage("Email can come from anyone");
+            this.logToConsole("Email can come from anyone");
         }
     }
 }

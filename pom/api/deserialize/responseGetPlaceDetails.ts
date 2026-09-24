@@ -12,17 +12,17 @@ export class ResponseGetPlaceDetails implements IPrintableObject {
   language!: string;
 
   public printObjectDetails(): void {
-    TestUtilities.logMessage("Response for getPlaceDetails:");
-    TestUtilities.logMessage("Location:");
-    TestUtilities.logMessage("...Latitude: " + this.location.latitude);
-    TestUtilities.logMessage("...Longitude: " + this.location.longitude);
-    TestUtilities.logMessage("Accuracy: " + this.accuracy);
-    TestUtilities.logMessage("Name: " + this.name);
-    TestUtilities.logMessage("Phone Number: " + this.phone_number);
-    TestUtilities.logMessage("Address: " + this.address);
-    TestUtilities.logMessage("Types: " + this.types);
-    TestUtilities.logMessage("Website: " + this.website);
-    TestUtilities.logMessage("Language: " + this.language);
+    TestUtilities.logToConsole("Response for getPlaceDetails:");
+    TestUtilities.logToConsole("Location:");
+    TestUtilities.logToConsole("...Latitude: " + this.location.latitude);
+    TestUtilities.logToConsole("...Longitude: " + this.location.longitude);
+    TestUtilities.logToConsole("Accuracy: " + this.accuracy);
+    TestUtilities.logToConsole("Name: " + this.name);
+    TestUtilities.logToConsole("Phone Number: " + this.phone_number);
+    TestUtilities.logToConsole("Address: " + this.address);
+    TestUtilities.logToConsole("Types: " + this.types);
+    TestUtilities.logToConsole("Website: " + this.website);
+    TestUtilities.logToConsole("Language: " + this.language);
   }
 
   public static returnSampleObject(): ResponseGetPlaceDetails {

@@ -26,8 +26,8 @@ export class MapsService extends BaseApiService {
         this.mainMethodStart("getPlaceDetails :: " + placeId);
 
         // Implementation for fetching place details
-        let urlFinal: string = TestUtilities.replaceKeyName(this._constants.endpointGetPlaceDetails, "placeId", placeId);
-        urlFinal = TestUtilities.replaceKeyName(urlFinal, "nickname", "qaclick123");
+        let urlFinal: string = TestUtilities.replaceCustomKey(this._constants.endpointGetPlaceDetails, "placeId", placeId);
+        urlFinal = TestUtilities.replaceCustomKey(urlFinal, "nickname", "qaclick123");
 
         await this.executeGetRequest(urlFinal);
 
@@ -71,7 +71,7 @@ export class MapsService extends BaseApiService {
         }
 
         // Implementation for fetching place details
-        let urlFinal: string = TestUtilities.replaceKeyName(this._constants.endpointPostCreatePlace, "nickname", "qaclick123");
+        let urlFinal: string = TestUtilities.replaceCustomKey(this._constants.endpointPostCreatePlace, "nickname", "qaclick123");
 
         await this.executePostRequest(urlFinal, payload);
 

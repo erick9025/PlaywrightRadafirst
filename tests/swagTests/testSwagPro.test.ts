@@ -55,19 +55,19 @@ test.describe('Tests for Swag pages', () => {
 
     test.skip("Swag Add products and go to cart", async () => {  
 
-        TestUtilities.logMessage("baseURL: " + configParameters.baseURL);
-        TestUtilities.logMessage("erickVar: " + configParameters.erickVar);
-        TestUtilities.logMessage("erickVarString: " + configParameters.erickVarString);
-        TestUtilities.logMessage("erickVarInt: " + configParameters.erickVarInt);
-        TestUtilities.logMessage("erickVarFloat: " + configParameters.erickVarFloat);
-        TestUtilities.logMessage("erickVarBoolean: " + configParameters.erickVarBoolean);
-        TestUtilities.logMessage("...............................");
-        TestUtilities.logMessage("credentials.myUsername: " + configParameters.credentials.myUsername);
-        TestUtilities.logMessage("credentials.myPassword: " + configParameters.credentials.myPassword);
+        TestUtilities.logToConsole("baseURL: " + configParameters.baseURL);
+        TestUtilities.logToConsole("erickVar: " + configParameters.erickVar);
+        TestUtilities.logToConsole("erickVarString: " + configParameters.erickVarString);
+        TestUtilities.logToConsole("erickVarInt: " + configParameters.erickVarInt);
+        TestUtilities.logToConsole("erickVarFloat: " + configParameters.erickVarFloat);
+        TestUtilities.logToConsole("erickVarBoolean: " + configParameters.erickVarBoolean);
+        TestUtilities.logToConsole("...............................");
+        TestUtilities.logToConsole("credentials.myUsername: " + configParameters.credentials.myUsername);
+        TestUtilities.logToConsole("credentials.myPassword: " + configParameters.credentials.myPassword);
 
         configParameters.browsers.forEach(browser => {
-            TestUtilities.logMessage("....name: " + browser.name);
-            TestUtilities.logMessage("....description: " + browser.description);
+            TestUtilities.logToConsole("....name: " + browser.name);
+            TestUtilities.logToConsole("....description: " + browser.description);
         });
 
         await PagesSwag.SwagProductsPage.addProductToCart("Sauce Labs Backpack");

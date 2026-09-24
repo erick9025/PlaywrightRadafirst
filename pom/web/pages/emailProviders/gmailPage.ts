@@ -15,10 +15,10 @@ export class GmailPage extends BasePage implements IEmailProvider {
         await this.enterText(this._inputEmail, "Email [Input]", user);
         await this.click(this._buttonNext, "Next [Button]");
         
-        this.logMessage("Password that will be entered: " + password);        
+        this.logToConsole("Password that will be entered: " + password);        
     }
 
     public async openEmail(subject: string, fromEmail: string) : Promise<void> {
-        this.logMessage("Will search for an email inside Gmail with partial subject: " + subject + " and email coming from: " + fromEmail);
+        this.logToConsole("Will search for an email inside Gmail with partial subject: " + subject + " and email coming from: " + fromEmail);
     }
 }

@@ -44,16 +44,16 @@ export class SwagProductsPage extends SwagParentPage {
         
         this.mainMethodStart("addProductToCart", wantedProduct);
 
-        this.logMessage("Current existing products for sale:");
+        this.logToConsole("Current existing products for sale:");
         this.ConstantsProductsPage.existingProducts.forEach(product => {
-            this.logMessage("..." + product);
+            this.logToConsole("..." + product);
         });
 
         await this.verifyElementIsNotFound("fake.element", "Fake [Dummy Element]", 5); // POC not existing locators is not found
 
-        this.logMessage("Adding to the cart the product: " + wantedProduct);
-        const dynamicLocatorLabel : string = TestUtilities.replaceKey(this.ElementsSwagProducts.ItemFromCatalogDescriptionCssPW, wantedProduct);
-        const dynamicLocatorButton : string = TestUtilities.replaceKey(this.ElementsSwagProducts.ButtonAddToCartItemFromCatalog, wantedProduct);
+        this.logToConsole("Adding to the cart the product: " + wantedProduct);
+        const dynamicLocatorLabel : string = TestUtilities.replaceFixedKey(this.ElementsSwagProducts.ItemFromCatalogDescriptionCssPW, wantedProduct);
+        const dynamicLocatorButton : string = TestUtilities.replaceFixedKey(this.ElementsSwagProducts.ButtonAddToCartItemFromCatalog, wantedProduct);
 
         await this.islistNotEmpty(this.ElementsSwagProducts.ListAllAddToCardButtons).then((listIsNotEmpty : boolean) => {
             Asserts.assertTrue(listIsNotEmpty, "List of buttons is not empty");
@@ -65,7 +65,7 @@ export class SwagProductsPage extends SwagParentPage {
         let btnTextBefore = await this.returnTextFromElement(dynamicLocatorButton, "Add to cart [Button from " + wantedProduct + "]");
 
         if(btnTextBefore === "Remove") {
-            this.logMessage("Item was already added: " + wantedProduct);
+            this.logToConsole("Item was already added: " + wantedProduct);
             this.methodEnd("addProductToCart", "Was already added: " + wantedProduct);
             return this;;
         }
@@ -76,11 +76,11 @@ export class SwagProductsPage extends SwagParentPage {
         this.howManyItemsAlreadyAdded++;
         this.itemsAlreadyAdded.push(wantedProduct);
 
-        const priceLocator : string = TestUtilities.replaceKeyName("//div[@class='inventory_item' and contains(.,'{{itemName}}')]//child::*[@class='inventory_item_price']", "itemName", wantedProduct);
+        const priceLocator : string = TestUtilities.replaceCustomKey("//div[@class='inventory_item' and contains(.,'{{itemName}}')]//child::*[@class='inventory_item_price']", "itemName", wantedProduct);
         const correspondingPriceStr : string = await this.returnTextFromElement(priceLocator, `'${wantedProduct}' price [Dynamic $ value]`);
         const correspondingPrice : number = TestUtilities.getNumericValue(TestUtilities.getTextAfter(correspondingPriceStr, "$"));
 
-        this.logMessageBold(`'${wantedProduct}' price: $${correspondingPrice}`);
+        this.logToConsoleBold(`'${wantedProduct}' price: $${correspondingPrice}`);
         ExecutionParameters.expectedTotal += correspondingPrice;
 
         let btnTextAfter = await this.returnTextFromElement(dynamicLocatorButton, "Add to cart [Button from " + wantedProduct + "]");
@@ -93,7 +93,7 @@ export class SwagProductsPage extends SwagParentPage {
     public async printTotalAddedSoFar(): Promise<SwagProductsPage> {        
         this.mainMethodStart("printTotalAddedSoFar");
 
-        this.logMessageImportant("Total $ so far: " + TestUtilities.formatCurrency(ExecutionParameters.expectedTotal));
+        this.logToConsoleImportant("Total $ so far: " + TestUtilities.numberToCurrency(ExecutionParameters.expectedTotal));
 
         this.methodEnd("printTotalAddedSoFar");
         return this;

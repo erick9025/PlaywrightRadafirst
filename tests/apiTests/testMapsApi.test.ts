@@ -55,7 +55,7 @@ test.describe('Tests for Apis with POM', () => {
   test("POM with POST create new place", async () => {    
     const generatedPlaceId: string = await mapsService.postCreatePlace(BodyPostNewPlace.returnSampleObject());
 
-    TestUtilities.logMessage("Generated place id: " + generatedPlaceId);
+    TestUtilities.logToConsole("Generated place id: " + generatedPlaceId);
   });
 
   test("POM with PUT update place", async () => {    

@@ -49,11 +49,11 @@ export class ProductsService extends BaseApiService {
         ProductsService.listAllProducts = [];
 
         for (const product of this.responseGetAllProducts) {
-            this.logMessage("......................");
-            this.logMessageBold(`Title: ${product.title}`);
-            this.logMessage(`Product ID: ${product.id}`);            
-            this.logMessage(`Price: $${product.price}`);
-            this.logMessage("");
+            this.info("......................");
+            this.infoBold(`Title: ${product.title}`);
+            this.info(`Product ID: ${product.id}`);            
+            this.info(`Price: $${product.price}`);
+            this.info("");
             ProductsService.listAllProducts.push(product.title);
         }
 

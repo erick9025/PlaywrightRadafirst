@@ -11,97 +11,97 @@ export abstract class BasePage {
     }
 
     //------------------------------------ LOGGING INTERACTIONS ------------------------------------
-    protected logMessage(message: string) : void {
-        TestUtilities.logMessage(message);
+    protected logToConsole(message: string) : void {
+        TestUtilities.logToConsole(message);
     }
     
-    protected logMessageIssue(messageForMinorIssue: string) : void {
+    protected logToConsoleIssue(messageForMinorIssue: string) : void {
         TestUtilities.logIssue(messageForMinorIssue);
     }
 
-    protected logMessageImportant(message: string, printBlankLineAfter: boolean = true) : void {
-        TestUtilities.logMessageImportant(message, printBlankLineAfter);
+    protected logToConsoleImportant(message: string, printBlankLineAfter: boolean = true) : void {
+        TestUtilities.logToConsoleImportant(message, printBlankLineAfter);
     }
 
-    protected logMessageWarning(message: string, printBlankLineAfter: boolean = true) : void {
-        TestUtilities.logMessageWarning(message, printBlankLineAfter);
+    protected logToConsoleWarning(message: string, printBlankLineAfter: boolean = true) : void {
+        TestUtilities.logToConsoleWarning(message, printBlankLineAfter);
     }
 
-    protected logMessageBold(message: string) : void {
-        TestUtilities.logMessageBold(message);
+    protected logToConsoleBold(message: string) : void {
+        TestUtilities.logToConsoleBold(message);
     }
 
-    /*protected logMessageColor(message: string, color: ChalkColorStyle) : void {
-        TestUtilities.logMessageWithColor(message, color);
+    /*protected logToConsoleColor(message: string, color: ChalkColorStyle) : void {
+        TestUtilities.logToConsoleWithColor(message, color);
     }*/
 
     protected newEmptyLine() : void {
-        TestUtilities.logMessageNoTimestamp(""); 
+        TestUtilities.logToConsoleNoTimestamp(""); 
     }
 
-    protected methodStart(methodName: string, additionallogMessage: string = "") : void {
-        const haslogMessage: boolean = !TestUtilities.isNullOrEmpty(additionallogMessage);
+    protected methodStart(methodName: string, additionallogToConsole: string = "") : void {
+        const haslogToConsole: boolean = !TestUtilities.isNullOrEmpty(additionallogToConsole);
         console.log("");        
-        TestUtilities.logMethodStart(haslogMessage ? "...Starting method [" + methodName + "] " + additionallogMessage : "...Starting method [" + methodName + "]");
+        TestUtilities.logMethodStart(haslogToConsole ? "...Starting method [" + methodName + "] " + additionallogToConsole : "...Starting method [" + methodName + "]");
     }
 
-    protected methodEnd(methodName: string, additionallogMessage: string = "") : void {
-        const haslogMessage: boolean = !TestUtilities.isNullOrEmpty(additionallogMessage);
-        TestUtilities.logMethodEnd(haslogMessage ? "...Ending method [" + methodName + "] " + additionallogMessage : "...Ending method [" + methodName + "]");
+    protected methodEnd(methodName: string, additionallogToConsole: string = "") : void {
+        const haslogToConsole: boolean = !TestUtilities.isNullOrEmpty(additionallogToConsole);
+        TestUtilities.logMethodEnd(haslogToConsole ? "...Ending method [" + methodName + "] " + additionallogToConsole : "...Ending method [" + methodName + "]");
         console.log(""); 
     }
 
-    protected mainMethodStart(mainMethodName : string, additionallogMessage : string = "") : void {
-        const haslogMessage: boolean = !TestUtilities.isNullOrEmpty(additionallogMessage);
+    protected mainMethodStart(mainMethodName : string, additionallogToConsole : string = "") : void {
+        const haslogToConsole: boolean = !TestUtilities.isNullOrEmpty(additionallogToConsole);
         console.log("");        
-        TestUtilities.logMainMethodStart(haslogMessage ? "...Starting method [" + mainMethodName + "] " + additionallogMessage : "...Starting method [" + mainMethodName + "]");
+        TestUtilities.logMainMethodStart(haslogToConsole ? "...Starting method [" + mainMethodName + "] " + additionallogToConsole : "...Starting method [" + mainMethodName + "]");
     }
 
-    protected mainMethodEnd(mainMethodName : string, additionallogMessage : string = "") : void {
-        const haslogMessage: boolean = !TestUtilities.isNullOrEmpty(additionallogMessage);
-        TestUtilities.logMainMethodEnd(haslogMessage ? "...Ending method [" + mainMethodName + "] " + additionallogMessage : "...Ending method [" + mainMethodName + "]");
+    protected mainMethodEnd(mainMethodName : string, additionallogToConsole : string = "") : void {
+        const haslogToConsole: boolean = !TestUtilities.isNullOrEmpty(additionallogToConsole);
+        TestUtilities.logMainMethodEnd(haslogToConsole ? "...Ending method [" + mainMethodName + "] " + additionallogToConsole : "...Ending method [" + mainMethodName + "]");
         console.log("");
     }
 
     // ................................................. REGULAR METHODS .................................................
 
     public async waitNSeconds(seconds: number): Promise<void> {
-        this.logMessage(`Waiting for ${seconds} seconds...`);
+        this.logToConsole(`Waiting for ${seconds} seconds...`);
         await this.page.waitForTimeout(seconds * 1_000);
     }
 
     protected async goToURL(url: string): Promise<void> { 
         await this.page.goto(url);
-        this.logMessage("Sucessfully opened URL: " + url);
+        this.logToConsole("Sucessfully opened URL: " + url);
     }
 
     protected async click(locator: string, description: string, timeoutMs: number = 5_000): Promise<void> { 
         await this.page.locator(locator).click({timeout : timeoutMs});
-        this.logMessage("Clicked on element: " + description);
+        this.logToConsole("Clicked on element: " + description);
     }
 
     protected async enterText(locator: string, description: string, enterText: string, timeoutMs : number = 5_000): Promise<void> { 
         await this.page.locator(locator).fill(enterText, {timeout : timeoutMs});
-        this.logMessage(`Entered text '${enterText}' into input element: ${description}`);
+        this.logToConsole(`Entered text '${enterText}' into input element: ${description}`);
     }
 
     protected async checkCheckbox(checkboxLocator: string, checkboxDescription: string, verifyAfterCheck: boolean = false): Promise<void>{
         await this.page.locator(checkboxLocator).check();
-        this.logMessage("Checkbox is checked: " + checkboxDescription);
+        this.logToConsole("Checkbox is checked: " + checkboxDescription);
 
         if(verifyAfterCheck) {
             await expect(this.page.locator(checkboxLocator)).toBeChecked();
-            this.logMessage("Validation passed! Checkbox is checked after click: " + checkboxDescription);
+            this.logToConsole("Validation passed! Checkbox is checked after click: " + checkboxDescription);
         }
     }
 
     protected async uncheckCheckbox(checkboxLocator: string, checkboxDescription: string, verifyAfterUncheck: boolean = false): Promise<void>{
         await this.page.locator(checkboxLocator).uncheck();
-        this.logMessage("Checkbox is unchecked: " + checkboxDescription);
+        this.logToConsole("Checkbox is unchecked: " + checkboxDescription);
 
         if(verifyAfterUncheck) {
             await expect(this.page.locator(checkboxLocator)).not.toBeChecked();
-            this.logMessage("Validation passed! Checkbox is unchecked after click: " + checkboxDescription);
+            this.logToConsole("Validation passed! Checkbox is unchecked after click: " + checkboxDescription);
         }
     }
 
@@ -109,11 +109,11 @@ export abstract class BasePage {
         const isChecked: boolean = await this.page.locator(checkboxLocator).isChecked()
 
         if(isChecked) {
-            this.logMessageBold(`Checkbox '${checkboxDescription}' is checked`);
+            this.logToConsoleBold(`Checkbox '${checkboxDescription}' is checked`);
             return true;
         }
         else {
-            this.logMessageBold(`Checkbox '${checkboxDescription}' is NOT checked`);
+            this.logToConsoleBold(`Checkbox '${checkboxDescription}' is NOT checked`);
             return false;
         }
     }
@@ -143,7 +143,7 @@ export abstract class BasePage {
         const timeoutMsForApi: number = 15_000; // 15 seconds (ToDo reduce)
         const timeoutString: string = timeoutMsForApi > 1_000 ? "Seconds: " + (timeoutMsForApi / 1000).toString() : "Miliseconds:" + (timeoutMsForApi).toString();
 
-        this.logMessage(`Will click '${elementDescription}' and wait (for a max of ${timeoutString}) for its triggered API call with partial URL '${apiEndpointOrPartialUrl}'`);
+        this.logToConsole(`Will click '${elementDescription}' and wait (for a max of ${timeoutString}) for its triggered API call with partial URL '${apiEndpointOrPartialUrl}'`);
 
         const startTime: number = Date.now(); // Record start time
         
@@ -161,7 +161,7 @@ export abstract class BasePage {
         const durationMs: number = endTime - startTime; // Calculate elapsed milliseconds
         const durationString: string = durationMs > 1_000 ? (durationMs /1000).toString() + " seconds" : (durationMs).toString() + " ms";
 
-        this.logMessage(`Clicked on element: ${elementDescription} and waited for its triggered parallel API call with endpoint: ${apiEndpointOrPartialUrl} that took ${durationString} to run`);        
+        this.logToConsole(`Clicked on element: ${elementDescription} and waited for its triggered parallel API call with endpoint: ${apiEndpointOrPartialUrl} that took ${durationString} to run`);        
     }
 
     protected async clickAndWaitCustomApi(
@@ -174,7 +174,7 @@ export abstract class BasePage {
             expectedStatusCode: number = 200) // Sucessful API = OK
         : Promise<void> {
 
-        this.logMessageImportant(`Will click '${elementDescription}' and wait for its triggered API call with partial URL '${apiEndpointOrPartialUrl}'`);
+        this.logToConsoleImportant(`Will click '${elementDescription}' and wait for its triggered API call with partial URL '${apiEndpointOrPartialUrl}'`);
         
         const [response] = await Promise.all([
             //Parallel step 1
@@ -186,7 +186,7 @@ export abstract class BasePage {
             this.page.locator(elementLocator).click({ timeout: timeoutMsForClick }) // Click directly with Playwright by using locator as object
         ]);
 
-        this.logMessage(`Clicked on element: ${elementDescription} and waited for its triggered ${httpMethod} API call with endpoint: ${apiEndpointOrPartialUrl} and response code ${expectedStatusCode}`);
+        this.logToConsole(`Clicked on element: ${elementDescription} and waited for its triggered ${httpMethod} API call with endpoint: ${apiEndpointOrPartialUrl} and response code ${expectedStatusCode}`);
     }
 
         protected async clickAndWaitMultipleSuccessfulApis(
@@ -210,7 +210,7 @@ export abstract class BasePage {
             ? `Seconds: ${(timeoutMsForApi / 1000).toString()}`
             : `Milliseconds: ${timeoutMsForApi.toString()}`;
 
-        this.logMessageImportant(
+        this.logToConsoleImportant(
             `Will click '${elementDescription}' and wait (max ${timeoutString}) for its triggered API call(s) with partial URL(s): ${endpoints
             .map((e) => `'${e}'`)
             .join(", ")}`
@@ -269,12 +269,12 @@ export abstract class BasePage {
         for (const r of results) {
             if (r.ok) {
             const d = r.durationMs >= 1_000 ? `${(r.durationMs / 1000).toFixed(2)} s` : `${r.durationMs} ms`;
-            this.logMessageBold(
+            this.logToConsoleBold(
                 `✓ API '${r.partial}' matched URL: ${r.url}, status: ${r.status}, in ${d}`
             );
             } else {
             const d = r.durationMs >= 1_000 ? `${(r.durationMs / 1000).toFixed(2)} s` : `${r.durationMs} ms`;
-            this.logMessageBold(
+            this.logToConsoleBold(
                 `✗ API '${r.partial}' failed: ${r.error} (waited ${d})`
             );
             }
@@ -284,12 +284,12 @@ export abstract class BasePage {
 
         if (failed.length > 0) {
             const summary = failed.map((f) => `'${f.partial}': ${f.error}`).join("; ");
-            this.logMessageImportant(`Clicked '${elementDescription}' but one or more API calls failed: ${summary}`);
+            this.logToConsoleImportant(`Clicked '${elementDescription}' but one or more API calls failed: ${summary}`);
             Asserts.assertFail(`Validation failed for ${failed.length}/${endpoints.length} API endpoint(s): ${summary}`);
         }
 
         // Success path
-        this.logMessageImportant(`Clicked on element: ${elementDescription} and all ${endpoints.length} API call(s) succeeded in ${overallDurationString}`);
+        this.logToConsoleImportant(`Clicked on element: ${elementDescription} and all ${endpoints.length} API call(s) succeeded in ${overallDurationString}`);
         
 
         this.mainMethodEnd("clickAndWaitMultipleSuccessfulApis");
@@ -301,7 +301,7 @@ export abstract class BasePage {
         await this.page.locator(ddlLocator).selectOption({ value: valueStr });
         var selectedValue = await this.page.locator(ddlLocator).inputValue();
         expect(selectedValue).toBe(valueStr);
-        this.logMessage("Selected by value: " + valueStr);
+        this.logToConsole("Selected by value: " + valueStr);
     }
 
     protected async verifyElementIsVisible(elementLocator: string, elementDescription: string, timeoutMs: number = 5_000): Promise<void> {
@@ -309,15 +309,15 @@ export abstract class BasePage {
 
         try{
             await expect(this.page.locator(elementLocator).first()).toBeVisible({ timeout: timeoutMs });
-            this.logMessage("Element is visible: " + elementDescription);
+            this.logToConsole("Element is visible: " + elementDescription);
         }
         catch(error) {
-            this.logMessage("verifyElementIsVisible Failed. Element is NOT visible: " + elementDescription);
+            this.logToConsole("verifyElementIsVisible Failed. Element is NOT visible: " + elementDescription);
         }
     }
 
     protected async verifyElementIsVisibleAndContainsText(elementLocator: string, elementDescription: string, expectedText: string, timeoutMs: number = 5_000, partialMatch: boolean = true): Promise<void>{
-        this.logMessage(`Verifying that element '${elementDescription}' contains text: '${expectedText}' | Partial match: ${partialMatch}`);
+        this.logToConsole(`Verifying that element '${elementDescription}' contains text: '${expectedText}' | Partial match: ${partialMatch}`);
         await this.verifyElementIsVisible(elementLocator, elementDescription, timeoutMs);
         let visibleElementText: string = await this.returnTextFromElement(elementLocator, elementDescription);
         
@@ -327,7 +327,7 @@ export abstract class BasePage {
     }
 
     private async waitForFirstElement(elementLocator: string, elementDescription: string, timeoutMs: number): Promise<void> {
-        this.logMessage("Waiting for first element: " + elementDescription);
+        this.logToConsole("Waiting for first element: " + elementDescription);
 
         try{
             await this.page.locator(elementLocator).first().waitFor({ timeout: timeoutMs});
@@ -336,7 +336,7 @@ export abstract class BasePage {
             Asserts.assertFail("waitForFirstElement Failed: Element not found: '" + elementDescription + "' after waiting for " + timeoutMs);
         }
 
-        this.logMessage("First element is found: " + elementDescription)
+        this.logToConsole("First element is found: " + elementDescription)
     }
 
     // Element has to be visible (obviously is on DOM)
@@ -352,11 +352,11 @@ export abstract class BasePage {
         try {
             await locator.waitFor({ state: 'visible', timeout: timeoutMs });
 
-            this.logMessage(`Wanted element is visible: ${elementDescription} after ${timeSeconds} seconds.`);
+            this.logToConsole(`Wanted element is visible: ${elementDescription} after ${timeSeconds} seconds.`);
             return true;
         } 
         catch {
-            this.logMessage(`Wanted element is NOT visible: ${elementDescription} after ${timeSeconds} seconds.`);
+            this.logToConsole(`Wanted element is NOT visible: ${elementDescription} after ${timeSeconds} seconds.`);
             return false;
         }
     }
@@ -372,15 +372,15 @@ export abstract class BasePage {
         try {
             isVisible = await this.page.locator(elementLocator).isVisible({ timeout: timeoutMs });
             if(isVisible) {
-                this.logMessage("Wanted element is visible: '" + elementDescription + "' after " + timeSeconds + " seconds.");
+                this.logToConsole("Wanted element is visible: '" + elementDescription + "' after " + timeSeconds + " seconds.");
                 return true;
             } 
             else {
-                this.logMessage("Wanted element is NOT visible: '" + elementDescription + "' after " + timeSeconds + " seconds.");
+                this.logToConsole("Wanted element is NOT visible: '" + elementDescription + "' after " + timeSeconds + " seconds.");
             }
         }
         catch {
-            this.logMessage("Wanted element is NOT visible: '" + elementDescription + "' after " + timeSeconds + " seconds.");
+            this.logToConsole("Wanted element is NOT visible: '" + elementDescription + "' after " + timeSeconds + " seconds.");
             isVisible = false;
         }
 
@@ -390,12 +390,12 @@ export abstract class BasePage {
                 await this.page.locator(elementLocator).waitFor({ timeout: timeoutMs }); // Original implementation: By default, waitFor on a locator waits for the element to be attached and visible. If you just want existence in the DOM (not necessarily visible), you should pass { state: "attached" }.
                 //await this.page.locator(elementLocator).waitFor({ state: "attached", timeout: timeoutMs }); // New implementation: Still not proven to be better (both this and above line returning false for page counters, still haven't figure out why)
                 isNoErrorOrException = true;
-                this.logMessage("Element is found: " + elementDescription + "' after " + timeSeconds + " seconds.");
+                this.logToConsole("Element is found: " + elementDescription + "' after " + timeSeconds + " seconds.");
                 return true;
             }
             catch {
                 isNoErrorOrException = false;
-                this.logMessage("Element is NOT found: " + elementDescription + "' after " + timeSeconds + " seconds.");
+                this.logToConsole("Element is NOT found: " + elementDescription + "' after " + timeSeconds + " seconds.");
             }
         }
 
@@ -406,7 +406,7 @@ export abstract class BasePage {
         await this.verifyElementIsVisible(elementLocator, elementDescription, timeoutMs);
         let text: string = "";
         text = await this.page.locator(elementLocator).first().innerText();
-        if(printText) this.logMessage("Text from '" + elementDescription + "': " + text);
+        if(printText) this.logToConsole("Text from '" + elementDescription + "': " + text);
         return text.trim();        
     }
 
@@ -423,11 +423,11 @@ export abstract class BasePage {
         try {
             await this.page.locator(locator).waitFor({ state: 'detached', timeout: timeoutMs });
             isDetached = true;
-            TestUtilities.logMessage("Element is detached: " + elementDescription);
+            TestUtilities.logToConsole("Element is detached: " + elementDescription);
         } 
         catch {
             isDetached = false;
-            TestUtilities.logMessage("Element is NOT detached: " + elementDescription);
+            TestUtilities.logToConsole("Element is NOT detached: " + elementDescription);
         }
 
         return isDetached;
@@ -439,11 +439,11 @@ export abstract class BasePage {
         try {
             await this.page.locator(locator).waitFor({ state: 'hidden', timeout: timeoutMs });
             isHidden = true;
-            TestUtilities.logMessage("Element is hidden: " + elementDescription);
+            TestUtilities.logToConsole("Element is hidden: " + elementDescription);
         } 
         catch {
             isHidden = false;
-            TestUtilities.logMessage("Element is NOT hidden: " + elementDescription);
+            TestUtilities.logToConsole("Element is NOT hidden: " + elementDescription);
         }
 
         return isHidden;
@@ -455,11 +455,11 @@ export abstract class BasePage {
         try {
             await this.page.locator(locator).waitFor({ state: 'visible', timeout: timeoutMs });
             isVisible = true;
-            TestUtilities.logMessage("Element is visible: " + elementDescription);
+            TestUtilities.logToConsole("Element is visible: " + elementDescription);
         } 
         catch {
             isVisible = false;
-            TestUtilities.logMessage("Element is NOT visible: " + elementDescription);
+            TestUtilities.logToConsole("Element is NOT visible: " + elementDescription);
         }
 
         return isVisible;
@@ -474,7 +474,7 @@ export abstract class BasePage {
     protected async getCountFromList(locator : string) : Promise<number> {
         let allElements = await this.page.locator(locator);
         let count : number = await allElements.count();
-        await this.logMessage("List has " + count  + " elements");
+        await this.logToConsole("List has " + count  + " elements");
 
         return count;
     }
@@ -483,6 +483,6 @@ export abstract class BasePage {
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
         const fileName = `${description}_${timestamp}.png`;
         await this.page.screenshot({ path: fileName });
-        this.logMessage("Screenshot taken: " + fileName);
+        this.logToConsole("Screenshot taken: " + fileName);
     }
 }
