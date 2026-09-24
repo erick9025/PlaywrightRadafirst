@@ -46,55 +46,7 @@ export const config: ProjectTestConfigRadafirst = {
     launchOptions: {
       slowMo: 1
     }
-  },
-  projects: [
-    /*{
-      name: 'Chromium Sequential',
-      workers: 1,
-      testMatch: '*Sequential.test.ts',
-      use: {
-        browserName: 'chromium',
-        channel: 'chrome', // Real Google Chrome
-      },
-    },
-        {
-      name: 'Firefox Sequential',
-      workers: 1,
-      testMatch: '*Sequential.test.ts',
-      use: {
-        browserName: 'firefox',
-        channel: 'firefox', // Real Firefox
-      },
-    },
-    {
-      name: 'Chromium Standard',
-      workers: 8,
-      testMatch: '*Standard.test.ts',
-      use: {
-        browserName: 'chromium',
-        channel: 'chrome', // Real Google Chrome
-      },
-    },*/
-    {
-      name: 'Chromium',
-      use: {
-        browserName: 'chromium',
-        channel: 'chrome',
-      },
-    },
-    /*{
-      name: 'Firefox',
-      use: {
-        browserName: 'firefox',
-      },
-    },
-    {
-      name: 'WebKit',
-      use: {
-        browserName: 'webkit',
-      },
-    },*/
-  ],
+  }
 };
 
 export default config;
