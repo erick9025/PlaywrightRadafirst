@@ -41,7 +41,7 @@ export class AssertionsHandler {
         }
 
         // Timestamp is local when running locally, is eastern when running on CI.
-        const timestamp: string = process.env.CI ? TestUtilities.getCurrentTimestampTransformedToUSEasternTime() : TestUtilities.getCurrentFormattedTimestamp();
+        const timestamp: string = TestUtilities.getCurrentFormattedTimestamp();
         const logSuffixRight = suffixes.length ? suffixes.join(" ") + " " : "";
         console.log(`${timestamp}${logSuffixRight}: ${message}`);
         TestUtilities.safeAnnotationsPush({

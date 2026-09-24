@@ -1,8 +1,17 @@
 import { expect, test, Browser, BrowserContext } from '@playwright/test';
 import { Asserts } from './asserts';
 import { env } from '../playwright.config'; // adjust path as needed
+import * as XLSX from 'xlsx';
 
 export class TestUtilities {
+
+    public static getTestData(filePath: string): any[] {
+        const workbook = XLSX.readFile(filePath);
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+
+        return XLSX.utils.sheet_to_json(sheet);
+    }
 
     public static readonly TRANSFERS_WAIT_TIME: number = 10_000;
 
@@ -167,6 +176,40 @@ export class TestUtilities {
         test.info().annotations.push({ //BLANK LINE
             type: ' '
         });
+    }
+
+    //--------------------------------------------------------- SAFE ANNOTATION HELPER ---------------------------------------------------------
+    /**
+     * Safely push annotations to test info. Only works within an active test context.
+     * Silently fails if no test context is available (e.g., during module initialization).
+     */
+    public static safeAnnotationsPush(annotation: any): void {
+        try {
+            // Skip annotations in CI to prevent JUnit XML entity expansion limit (>1000)
+            // from breaking the PublishTestPlanResults pipeline task.
+            // Traces and console output are still captured on CI.
+            if (process.env.CI) return;
+            test.info().annotations.push(annotation);
+        }
+        catch (e) {
+            // test.info() is only available during active test execution
+            // Silently skip annotation if not in a test context
+        }
+    }
+ 
+    /**
+     * Safely attach data to test info. Only works within an active test context.
+     */
+    private static safeAttach(name: string, body: string, contentType: string): void {
+        try {
+            test.info().attach(name, {
+                body: body,
+                contentType: contentType,
+            });
+        } catch (e) {
+            // test.info() is only available during active test execution
+            // Silently skip attachment if not in a test context
+        }
     }
 
     public static newEmptyLine(): void {
