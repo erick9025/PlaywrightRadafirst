@@ -31,13 +31,13 @@ export abstract class BaseApiService {
 
     // We want these 2 exposed in case we want to use them directly in tests
     private _statusCode : number = -1;
-    private _responseJson! : string; //can be 'any' instead of 'string'
+    private _responseJson! : any;
  
     public get statusCode() : number { return this._statusCode; }
     private set statusCode(value: number) { this._statusCode = value; }
  
-    public get responseJson() : string { return this._responseJson; }
-    private set responseJson(value: string) { this._responseJson = value; }
+    public get responseJson() : any { return this._responseJson; }
+    private set responseJson(value: any) { this._responseJson = value; }
     
     private async init() : Promise<void> {
         if(this.requestContext) {
@@ -224,13 +224,18 @@ export abstract class BaseApiService {
     }
 
     // We can do 2 things and deserialization will not fail, 1ST : Remove/Comment a field, 2nd: Add a field that is not in the api response (public fake: string;)
-    protected deserializeResponseWithoutSchema<T>(): T { // Way #1 - without schema checking (SIMPLER)
+    protected deserializeResponseWithoutSchema<T extends object>(target: T): T { // Way #1 - without schema checking (SIMPLER)
         this.info("Standardly deserializing response to the specified Class model.");
 
         let deserializedObjectFromClassT: T;
 
         try{
-            deserializedObjectFromClassT = this.responseJson as unknown as T; // Must be explicit 'DESERIALIZE': Transform a JSON into an object of a CLASS
+            const response = this.responseJson;
+            if (response === null || typeof response !== "object" || Array.isArray(response)) {
+                throw new TypeError("Response JSON must be an object to deserialize into the target class.");
+            }
+
+            deserializedObjectFromClassT = Object.assign(target, response) as T; // Must be explicit 'DESERIALIZE': Transform a JSON into an object of a CLASS
         }
         catch(error) { // HEADS UP: This catch never actually happen because JavaScript is so flexible, so we can't really validate unless we add endless methods to validate typeof (see below commented function)
             throw error;
@@ -252,10 +257,9 @@ export abstract class BaseApiService {
     // We can
     // ...1 : Declare a field that does NOT exist on the response JSON (--> ¿?)
     // ...2 : Do not declare a field (or comment) that EXISTS on the response JSON (--> still passes)
-    protected deserializeResponse<T>(): T { // Way #2 - with schema checking (SAFER & MORE COMPLEX)
-        this.info("Deserializing schema: " + JSON.stringify(this.deserializingSchema, null, 2));
-
-        return this.deserializeResponseWithExplicitSchema<T>(this.deserializingSchema as z.ZodType<T>);
+    protected deserializeResponse<T>(target: T): T { // Way #2 - with schema checking (SAFER & MORE COMPLEX)
+        //this.info("Deserializing schema: " + JSON.stringify(this.deserializingSchema, null, 2));
+        return Object.assign(target as object, this.deserializeResponseWithExplicitSchema<T>(this.deserializingSchema as z.ZodType<T>)) as T;
     }
 
     // Declare Schema for later deserialization

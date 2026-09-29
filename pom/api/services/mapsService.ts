@@ -44,21 +44,15 @@ export class MapsService extends BaseApiService {
             phone_number: z.string(),
             address: z.string(),
             types: z.string(),
-            website: z.string(),
+            website: z.string().url(),
             language: z.string(),
         });
 
         // Deserialize response WITHOUT SCHEMA (NOT RECOMMENDED)
-        this.responseGetPlaceDetails = Object.assign(
-            new ResponseGetPlaceDetails(),
-            this.deserializeResponseWithoutSchema<ResponseGetPlaceDetails>()
-        );
+        this.responseGetPlaceDetails = this.deserializeResponseWithoutSchema<ResponseGetPlaceDetails>(new ResponseGetPlaceDetails());
         
         // Deserialize response WITH SCHEMA (Best practice) applying GENERICS
-        this.responseGetPlaceDetails = Object.assign(
-            new ResponseGetPlaceDetails(),
-            this.deserializeResponse<ResponseGetPlaceDetails>()
-        );
+        this.responseGetPlaceDetails = this.deserializeResponse<ResponseGetPlaceDetails>(new ResponseGetPlaceDetails());
 
         // Optional print the object
         this.responseGetPlaceDetails.printObjectDetails(); // Print details of the object using the method from the interface           
@@ -99,7 +93,7 @@ export class MapsService extends BaseApiService {
         });
 
         // Deserialize response
-        this.responsePostNewPlace = this.deserializeResponse<ResponsePostNewPlace>(); // With schema: RECOMMENDED
+        this.responsePostNewPlace = this.deserializeResponse<ResponsePostNewPlace>(new ResponsePostNewPlace()); // With schema: RECOMMENDED
 
         Asserts.assertEquals("OK", this.responsePostNewPlace.status, "Status in response should be OK");
 
@@ -123,7 +117,7 @@ export class MapsService extends BaseApiService {
         });
 
         // Deserialize response
-        this.responsePutUpdatePlace = this.deserializeResponse<ResponsePutUpdatePlace>(); // With schema: RECOMMENDED
+        this.responsePutUpdatePlace = this.deserializeResponse<ResponsePutUpdatePlace>(new ResponsePutUpdatePlace()); // With schema: RECOMMENDED
 
         Asserts.assertEquals("Address successfully updated", this.responsePutUpdatePlace.msg, "Message in response should be correct");
 
