@@ -43,7 +43,7 @@ export class ProductsService extends BaseApiService {
         this.deserializingSchema = ProductsSchema;
 
         // Deserialize response
-        this.responseGetAllProducts = this.deserializeResponse<ResponseGetAllProducts[]>(); // With schema: RECOMMENDED
+        this.responseGetAllProducts = this.deserializeResponseWithSavedSchema<ResponseGetAllProducts[]>([]); // With schema: RECOMMENDED
 
         // Empty list
         ProductsService.listAllProducts = [];

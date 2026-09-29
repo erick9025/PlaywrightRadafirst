@@ -257,16 +257,16 @@ export abstract class BaseApiService {
     // We can
     // ...1 : Declare a field that does NOT exist on the response JSON (--> ¿?)
     // ...2 : Do not declare a field (or comment) that EXISTS on the response JSON (--> still passes)
-    protected deserializeResponse<T>(target: T): T { // Way #2 - with schema checking (SAFER & MORE COMPLEX)
-        //this.info("Deserializing schema: " + JSON.stringify(this.deserializingSchema, null, 2));
-        return Object.assign(target as object, this.deserializeResponseWithExplicitSchema<T>(this.deserializingSchema as z.ZodType<T>)) as T;
+    protected deserializeResponseWithSavedSchema<T>(target: T): T { // Way #2 - with schema checking (SAFER & MORE COMPLEX)        
+        return this.deserializeResponseWithExplicitSchema<T>(target, this.deserializingSchema as z.ZodType<T>);
     }
 
     // Declare Schema for later deserialization
     // We can
     // ...1 : Declare a field that does NOT exist on the response JSON (--> ¿?)
     // ...2 : Do not declare a field (or comment) that EXISTS on the response JSON (--> still passes)
-    protected deserializeResponseWithExplicitSchema<T>(schema: z.ZodType<T>): T { // Way #2 - with schema checking (SAFER & MORE COMPLEX)
+
+    protected deserializeResponseWithExplicitSchema<T>(target: T, schema: z.ZodType<T>): T { // Way #2 - with schema checking (SAFER & MORE COMPLEX)
         this.infoBold("Safely deserializing response to the specified Zod Schema.");
         let result;
 
@@ -280,7 +280,7 @@ export abstract class BaseApiService {
         Asserts.assertCorrectZodSchema(this.responseJson, schema!, "Attempting to deserialize using Zod Schema");
         
         // If your assertion guarantees success, you can use non-null assertion
-        return result.data!;
+        return Object.assign(target as object, result.data!) as T;
     }
 
     private printHeaders(headers?: Record<string, string>): void {

@@ -52,7 +52,10 @@ export class MapsService extends BaseApiService {
         this.responseGetPlaceDetails = this.deserializeResponseWithoutSchema<ResponseGetPlaceDetails>(new ResponseGetPlaceDetails());
         
         // Deserialize response WITH SCHEMA (Best practice) applying GENERICS
-        this.responseGetPlaceDetails = this.deserializeResponse<ResponseGetPlaceDetails>(new ResponseGetPlaceDetails());
+        this.responseGetPlaceDetails = this.deserializeResponseWithSavedSchema<ResponseGetPlaceDetails>(new ResponseGetPlaceDetails());
+
+        // Deserialize response WITH SCHEMA (Best practice) applying GENERICS
+        this.responseGetPlaceDetails = this.deserializeResponseWithExplicitSchema<ResponseGetPlaceDetails>(new ResponseGetPlaceDetails(), this.deserializingSchema);
 
         // Optional print the object
         this.responseGetPlaceDetails.printObjectDetails(); // Print details of the object using the method from the interface           
@@ -93,7 +96,7 @@ export class MapsService extends BaseApiService {
         });
 
         // Deserialize response
-        this.responsePostNewPlace = this.deserializeResponse<ResponsePostNewPlace>(new ResponsePostNewPlace()); // With schema: RECOMMENDED
+        this.responsePostNewPlace = this.deserializeResponseWithSavedSchema<ResponsePostNewPlace>(new ResponsePostNewPlace()); // With schema: RECOMMENDED
 
         Asserts.assertEquals("OK", this.responsePostNewPlace.status, "Status in response should be OK");
 
@@ -117,7 +120,7 @@ export class MapsService extends BaseApiService {
         });
 
         // Deserialize response
-        this.responsePutUpdatePlace = this.deserializeResponse<ResponsePutUpdatePlace>(new ResponsePutUpdatePlace()); // With schema: RECOMMENDED
+        this.responsePutUpdatePlace = this.deserializeResponseWithSavedSchema<ResponsePutUpdatePlace>(new ResponsePutUpdatePlace()); // With schema: RECOMMENDED
 
         Asserts.assertEquals("Address successfully updated", this.responsePutUpdatePlace.msg, "Message in response should be correct");
 
