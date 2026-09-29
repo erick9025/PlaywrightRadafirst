@@ -33,7 +33,7 @@ export class MapsService extends BaseApiService {
 
         Asserts.assertEquals(expectedResponseCode, this.statusCode, "Status code should be the expected one");
 
-        // Assign schema
+        // Assign schema stored in the memory (inside a variable declared in parent)
         this.deserializingSchema = z.object({
             location: z.object({
                 latitude: z.string(),
@@ -48,15 +48,21 @@ export class MapsService extends BaseApiService {
             language: z.string(),
         });
 
-        // Deserialize response
-        //this.responseGetPlaceDetails = this.deserializeResponseWithoutSchema<ResponseGetPlaceDetails>(); // No schema: NOT RECOMMENDED
-        this.responseGetPlaceDetails = this.deserializeResponse<ResponseGetPlaceDetails>(); // With schema: RECOMMENDED
-        //this.responseGetPlaceDetails.printObjectDetails(); // Print details of the object using the method from the interface           
+        // Deserialize response WITHOUT SCHEMA (NOT RECOMMENDED)
+        this.responseGetPlaceDetails = this.deserializeResponseWithoutSchema<ResponseGetPlaceDetails>(new ResponseGetPlaceDetails());
+        
+        // Deserialize response WITH SCHEMA (Best practice) applying GENERICS
+        this.responseGetPlaceDetails = this.deserializeResponse<ResponseGetPlaceDetails>(new ResponseGetPlaceDetails());
+
+        // Optional print the object
+        this.responseGetPlaceDetails.printObjectDetails(); // Print details of the object using the method from the interface           
 
         // Only assert when the object was provided
         if(expectedInfo) {
             Asserts.assertObjectsEqual(expectedInfo, this.responseGetPlaceDetails, "The place details should match the expected info");
         }
+
+        Asserts.assertStringContains(this.responseGetPlaceDetails.website, "unosquare", "Unosquare");
 
         this.mainMethodEnd("getPlaceDetails :: " + placeId);
     }
@@ -87,7 +93,7 @@ export class MapsService extends BaseApiService {
         });
 
         // Deserialize response
-        this.responsePostNewPlace = this.deserializeResponse<ResponsePostNewPlace>(); // With schema: RECOMMENDED
+        this.responsePostNewPlace = this.deserializeResponse<ResponsePostNewPlace>(new ResponsePostNewPlace()); // With schema: RECOMMENDED
 
         Asserts.assertEquals("OK", this.responsePostNewPlace.status, "Status in response should be OK");
 
@@ -111,7 +117,7 @@ export class MapsService extends BaseApiService {
         });
 
         // Deserialize response
-        this.responsePutUpdatePlace = this.deserializeResponse<ResponsePutUpdatePlace>(); // With schema: RECOMMENDED
+        this.responsePutUpdatePlace = this.deserializeResponse<ResponsePutUpdatePlace>(new ResponsePutUpdatePlace()); // With schema: RECOMMENDED
 
         Asserts.assertEquals("Address successfully updated", this.responsePutUpdatePlace.msg, "Message in response should be correct");
 

@@ -345,26 +345,35 @@ export class Asserts {
         }
     }
 
-    public static assertCorrectZodSchema(jsonResponseFromApi: string, schema: z.ZodType, message: string, doHardAssertion: boolean = true): void {
+    
+    public static assertCorrectZodSchema(jsonResponseFromApi: unknown, schema: z.ZodType, message: string, doHardAssertion: boolean = true): void {
         let isValid = false;
+        let problemDetails = "";
         try {
-            const result = schema.safeParse(JSON.parse(jsonResponseFromApi));
+            // The response may already be parsed or may still be JSON text.
+            const response = typeof jsonResponseFromApi === "string"
+                ? JSON.parse(jsonResponseFromApi)
+                : jsonResponseFromApi;
+            const result = schema.safeParse(response);
             isValid = result.success;
             if (!result.success) {
-                result.error.issues.forEach((issue) => {
-                    console.error(`Path: ${issue.path.join('.')} — ${issue.message}`);
-                });
+                problemDetails = result.error.issues
+                    .map((issue) => `  - ${issue.path.length ? issue.path.join(".") : "<root>"}: ${issue.message}`)
+                    .join("\n");
             }
         } catch (error) {
             const detail = error instanceof Error ? error.message : String(error);
-            console.error(`Invalid JSON response: ${detail}`);
+            problemDetails = `Invalid JSON response: ${detail}`;
         }
 
+        const assertionMessage = problemDetails
+            ? `Result should match the provided Zod schema. Problems:\n${problemDetails}`
+            : "Result should be valid when JSON corresponds to the provided Zod schema.";
         try {
-            if (!this.runAssertion(doHardAssertion, () => expect(isValid).toBe(true), () => expect.soft(isValid).toBe(true), "assertCorrectZodSchema", message, "Result should be valid when JSON corresponds to the provided Zod schema.")) return;
+            if (!this.runAssertion(doHardAssertion, () => expect(isValid).toBe(true), () => expect.soft(isValid).toBe(true), "assertCorrectZodSchema", message, assertionMessage)) return;
             AssertionsHandler.logAssertMessage("Assert PASSED! Result is valid when JSON corresponds to correct Zod schema: " + message);
         } catch (error) {
-            AssertionsHandler.throwError("assertCorrectZodSchema", AssertionsHandler.ensureError(error), message, "Result should be valid when JSON corresponds to the provided Zod schema.");
+            AssertionsHandler.throwError("assertCorrectZodSchema", AssertionsHandler.ensureError(error), message, assertionMessage);
         }
     }
 }
