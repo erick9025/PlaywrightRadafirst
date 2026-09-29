@@ -32,14 +32,15 @@ test.describe('Tests for Apis with POM', () => {
     await mapsService.getPlaceDetails("7d4e3875cb641a63048d8bfa0faffe47", 200, myJson); // Alternatively, we can work with a JSON file (NOT RECOMMENDED)
   });*/
 
+  const knownPlaceId: string = "91e58adcb36efb1bf536cc3bcb43f6cb";
+
   test("POM with GET place location simpler", async () => {    
-    await mapsService.getPlaceDetails("35b30a78484f1710288873d7bc757bd8");
+    await mapsService.getPlaceDetails(knownPlaceId);
   });
 
-  test.skip("POM with GET place location", async () => {    
-    const object: ResponseGetPlaceDetails = ResponseGetPlaceDetails.returnSampleObject();
-
-    await mapsService.getPlaceDetails("7d4e3875cb641a63048d8bfa0faffe47", 200, object); // Better to work with an object, since we can reuse it in multiple places and it's more readable than a JSON file. However, both approaches are valid.
+  test("POM with GET place location", async () => {    
+    const objectKnownPlace: ResponseGetPlaceDetails = ResponseGetPlaceDetails.returnSampleObject();
+    await mapsService.getPlaceDetails(knownPlaceId, 200, objectKnownPlace); // Better to work with an object, since we can reuse it in multiple places and it's more readable than a JSON file. However, both approaches are valid.
   });
 
   test.skip("POM with GET place location FAIL", async () => {    

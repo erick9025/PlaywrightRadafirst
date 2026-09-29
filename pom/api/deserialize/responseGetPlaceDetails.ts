@@ -34,9 +34,9 @@ export class ResponseGetPlaceDetails implements IPrintableObject {
         longitude: "33.427362"
       };
     object.accuracy = "2";
-    object.name = "Cafe Unosquare";
+    object.name = "Cafe Unosquare Mentorship";
     object.phone_number = "(52) 55 4000 4000";
-    object.address = "Constitucion 1990";
+    object.address = "Patria 123";
     object.types = "coffe,restaurant,bar,brunch";
     object.website = "https://unosquare.com"; // Intentional Error with .mx
     object.language = "United States-SP";
