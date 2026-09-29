@@ -4,7 +4,6 @@ import { ResponseGetPlaceDetails } from '../../pom/api/deserialize/responseGetPl
 import { BodyPostNewPlace } from '../../pom/api/serialize/bodyPostNewPlace';
 import { BodyPutUpdatePlace } from '../../pom/api/serialize/bodyPutUpdatePlace';
 import { TestUtilities } from '../../utils/testUtilities';
-import myJson from '../testData/samplePlaceInfo.json';
 
 test.describe('Tests for Apis with POM', () => {
 

@@ -48,15 +48,27 @@ export class MapsService extends BaseApiService {
             language: z.string(),
         });
 
-        // Deserialize response
-        this.responseGetPlaceDetails = this.deserializeResponseWithoutSchema<ResponseGetPlaceDetails>(); // No schema: NOT RECOMMENDED
-        this.responseGetPlaceDetails = this.deserializeResponse<ResponseGetPlaceDetails>(); // With schema: RECOMMENDED (applying GENERICS)
+        // Deserialize response WITHOUT SCHEMA (NOT RECOMMENDED)
+        this.responseGetPlaceDetails = Object.assign(
+            new ResponseGetPlaceDetails(),
+            this.deserializeResponseWithoutSchema<ResponseGetPlaceDetails>()
+        );
+        
+        // Deserialize response WITH SCHEMA (Best practice) applying GENERICS
+        this.responseGetPlaceDetails = Object.assign(
+            new ResponseGetPlaceDetails(),
+            this.deserializeResponse<ResponseGetPlaceDetails>()
+        );
+
+        // Optional print the object
         this.responseGetPlaceDetails.printObjectDetails(); // Print details of the object using the method from the interface           
 
         // Only assert when the object was provided
         if(expectedInfo) {
             Asserts.assertObjectsEqual(expectedInfo, this.responseGetPlaceDetails, "The place details should match the expected info");
         }
+
+        Asserts.assertStringContains(this.responseGetPlaceDetails.website, "unosquare", "Unosquare");
 
         this.mainMethodEnd("getPlaceDetails :: " + placeId);
     }
