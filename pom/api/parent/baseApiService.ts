@@ -8,7 +8,7 @@ export abstract class BaseApiService {
 
     private readonly CLOSE_CONNECTION : boolean = false; //close after each call, or close ONCE at the end of all tests using hooks
 
-    private doingHybridTests: boolean = false;
+    /*private doingHybridTests: boolean = false;
 
     protected getDoingHybridTests(): boolean { 
         return this.doingHybridTests;
@@ -16,7 +16,7 @@ export abstract class BaseApiService {
 
     protected setDoingHybridTests(value: boolean): void {
         this.doingHybridTests = value;
-    }
+    }*/
 
     // These 4 are NOT exposed
 
@@ -38,9 +38,6 @@ export abstract class BaseApiService {
  
     public get responseJson() : string { return this._responseJson; }
     private set responseJson(value: string) { this._responseJson = value; }
-
-    constructor() {
-    }
     
     private async init() : Promise<void> {
         if(this.requestContext) {
@@ -132,6 +129,18 @@ export abstract class BaseApiService {
 
         await this.init();
         this.responseObject = await this.requestContext.get(url, { headers });
+
+        await this.assignReturnValues();
+        await this.closeConnectionInternally(HttpMethod.GET);
+    }
+
+    protected async executeGetRequestWithQueryParams(url: string, queryParams: Record<string, string>, headers?: Record<string, string>): Promise<void> {
+        this.printRequestURL(url, HttpMethod.GET);
+
+        this.printHeaders(headers);
+
+        await this.init();
+        this.responseObject = await this.requestContext.get(url, { headers, params: queryParams });
 
         await this.assignReturnValues();
         await this.closeConnectionInternally(HttpMethod.GET);
@@ -244,6 +253,8 @@ export abstract class BaseApiService {
     // ...1 : Declare a field that does NOT exist on the response JSON (--> ¿?)
     // ...2 : Do not declare a field (or comment) that EXISTS on the response JSON (--> still passes)
     protected deserializeResponse<T>(): T { // Way #2 - with schema checking (SAFER & MORE COMPLEX)
+        this.info("Deserializing schema: " + JSON.stringify(this.deserializingSchema, null, 2));
+
         return this.deserializeResponseWithExplicitSchema<T>(this.deserializingSchema as z.ZodType<T>);
     }
 
@@ -251,13 +262,15 @@ export abstract class BaseApiService {
     // We can
     // ...1 : Declare a field that does NOT exist on the response JSON (--> ¿?)
     // ...2 : Do not declare a field (or comment) that EXISTS on the response JSON (--> still passes)
-    protected deserializeResponseWithExplicitSchema<T>(schema?: z.ZodType<T>): T { // Way #2 - with schema checking (SAFER & MORE COMPLEX)
+    protected deserializeResponseWithExplicitSchema<T>(schema: z.ZodType<T>): T { // Way #2 - with schema checking (SAFER & MORE COMPLEX)
         this.infoBold("Safely deserializing response to the specified Zod Schema.");
         let result;
 
         if (!schema) {
             Asserts.assertFail("Schema is required for safe deserialization. Please provide one (you can ask ChatGPT how to do it by giving him a JSON)");
         }
+
+        this.info("Response JSON: " + JSON.stringify(this.responseJson, null, 2));
 
         result = schema!.safeParse(this.responseJson);
         Asserts.assertCorrectZodSchema(this.responseJson, schema!, "Attempting to deserialize using Zod Schema");
@@ -280,24 +293,28 @@ export abstract class BaseApiService {
 
     // ************************************************** Logs **************************************************
 
+    // Blue
     protected methodStart(methodName: string, additionalInfo: string = ""): void {
         const hasInfo: boolean = !TestUtilities.isNullOrEmpty(additionalInfo);
         console.log("");        
         TestUtilities.logMethodStart(hasInfo ? "...Starting method [" + methodName + "] " + additionalInfo : "...Starting method [" + methodName + "]");
     }
 
+    // Orange
     protected methodEnd(methodName: string, additionalInfo: string = ""): void {
         const hasInfo: boolean = !TestUtilities.isNullOrEmpty(additionalInfo);
         TestUtilities.logMethodEnd(hasInfo ? "...Ending method [" + methodName + "] " + additionalInfo : "...Ending method [" + methodName + "]");
         console.log(""); 
     }
 
+    // Green
     protected mainMethodStart(mainMethodName : string, additionalInfo : string = ""): void {
         const hasInfo: boolean = !TestUtilities.isNullOrEmpty(additionalInfo);
         console.log("");        
         TestUtilities.logMainMethodStart(hasInfo ? "...Starting method [" + mainMethodName + "] " + additionalInfo : "...Starting method [" + mainMethodName + "]");
     }
 
+    // Red
     protected mainMethodEnd(mainMethodName : string, additionalInfo : string = ""): void {
         const hasInfo: boolean = !TestUtilities.isNullOrEmpty(additionalInfo);
         TestUtilities.logMainMethodEnd(hasInfo ? "...Ending method [" + mainMethodName + "] " + additionalInfo : "...Ending method [" + mainMethodName + "]");

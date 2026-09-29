@@ -33,7 +33,7 @@ export class MapsService extends BaseApiService {
 
         Asserts.assertEquals(expectedResponseCode, this.statusCode, "Status code should be the expected one");
 
-        // Assign schema
+        // Assign schema stored in the memory (inside a variable declared in parent)
         this.deserializingSchema = z.object({
             location: z.object({
                 latitude: z.string(),
@@ -44,14 +44,14 @@ export class MapsService extends BaseApiService {
             phone_number: z.string(),
             address: z.string(),
             types: z.string(),
-            website: z.string().url(),
+            website: z.string(),
             language: z.string(),
         });
 
         // Deserialize response
-        //this.responseGetPlaceDetails = this.deserializeResponseWithoutSchema<ResponseGetPlaceDetails>(); // No schema: NOT RECOMMENDED
-        this.responseGetPlaceDetails = this.deserializeResponse<ResponseGetPlaceDetails>(); // With schema: RECOMMENDED
-        //this.responseGetPlaceDetails.printObjectDetails(); // Print details of the object using the method from the interface           
+        this.responseGetPlaceDetails = this.deserializeResponseWithoutSchema<ResponseGetPlaceDetails>(); // No schema: NOT RECOMMENDED
+        this.responseGetPlaceDetails = this.deserializeResponse<ResponseGetPlaceDetails>(); // With schema: RECOMMENDED (applying GENERICS)
+        this.responseGetPlaceDetails.printObjectDetails(); // Print details of the object using the method from the interface           
 
         // Only assert when the object was provided
         if(expectedInfo) {

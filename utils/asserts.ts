@@ -345,6 +345,7 @@ export class Asserts {
         }
     }
 
+    // 
     public static assertCorrectZodSchema(jsonResponseFromApi: string, schema: z.ZodType, message: string, doHardAssertion: boolean = true): void {
         let isValid = false;
         try {
@@ -352,7 +353,7 @@ export class Asserts {
             isValid = result.success;
             if (!result.success) {
                 result.error.issues.forEach((issue) => {
-                    console.error(`Path: ${issue.path.join('.')} — ${issue.message}`);
+                    console.error(`Path: ${issue.path.join('.')} ï¿½ ${issue.message}`);
                 });
             }
         } catch (error) {

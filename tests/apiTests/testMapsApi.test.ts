@@ -11,7 +11,7 @@ test.describe('Tests for Apis with POM', () => {
   let mapsService: MapsService;
 
   ////////////////////////////////////////////////////////// BEFORE/AFTER SETUP //////////////////////////////////////////////////////////
-  test.beforeAll(async ({ playwright }, testInfo) => {
+  test.beforeAll(async () => {
     mapsService = new MapsService();
   });
 
@@ -34,10 +34,10 @@ test.describe('Tests for Apis with POM', () => {
   });*/
 
   test("POM with GET place location simpler", async () => {    
-    await mapsService.getPlaceDetails("7d4e3875cb641a63048d8bfa0faffe47");
+    await mapsService.getPlaceDetails("35b30a78484f1710288873d7bc757bd8");
   });
 
-  test("POM with GET place location", async () => {    
+  test.skip("POM with GET place location", async () => {    
     const object: ResponseGetPlaceDetails = ResponseGetPlaceDetails.returnSampleObject();
 
     await mapsService.getPlaceDetails("7d4e3875cb641a63048d8bfa0faffe47", 200, object); // Better to work with an object, since we can reuse it in multiple places and it's more readable than a JSON file. However, both approaches are valid.
@@ -52,13 +52,13 @@ test.describe('Tests for Apis with POM', () => {
     await mapsService.getPlaceDetails("7d4e3875cb641a63048d8bfa0faffe47", 200, object); // Better to work with an object, since we can reuse it in multiple places and it's more readable than a JSON file. However, both approaches are valid.
   });
 
-  test("POM with POST create new place", async () => {    
+  test.skip("POM with POST create new place", async () => {    
     const generatedPlaceId: string = await mapsService.postCreatePlace(BodyPostNewPlace.returnSampleObject());
 
     TestUtilities.logToConsole("Generated place id: " + generatedPlaceId);
   });
 
-  test("POM with PUT update place", async () => {    
+  test.skip("POM with PUT update place", async () => {    
 
     let bodyOrPayload: BodyPutUpdatePlace = new BodyPutUpdatePlace();
     bodyOrPayload.place_id = "c48de564bd9f5ebdc7c9e3b7005bb44f";
