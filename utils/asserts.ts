@@ -93,6 +93,20 @@ export class Asserts {
         }
     }
 
+    public static assertNumberWithinRange(value: number, minimum: number, maximum: number, message: string, doHardAssertion : boolean = true): void {
+        let assertionMessage: string = `The provided number '${value}' should be a valid integer within range [${minimum}-${maximum}].`;
+        //assertionMessage = this.addPrefixIfApplicable(message);
+
+        const condition: boolean = value !== undefined && value !== null && value >= minimum && value <= maximum;
+
+        try {
+            if (!this.runAssertion(doHardAssertion, () => expect(condition).toBe(true), () => expect.soft(condition).toBe(true), "assertNumberWithinRange", message, assertionMessage)) return;
+            AssertionsHandler.logAssertMessage(`Assert PASSED! The provided number '${value}' is a valid number within range [${minimum}, ${maximum}]. ${message}`);
+        } catch (error) {
+            AssertionsHandler.throwError("assertNumberWithinRange", AssertionsHandler.ensureError(error), message, assertionMessage);
+        }
+    }
+
     public static assertIntegerWithinRange(value: number, minimum: number, maximum: number, message: string, doHardAssertion : boolean = true): void {
         let assertionMessage: string = `The provided number '${value}' should be a valid integer within range [${minimum}-${maximum}].`;
         //assertionMessage = this.addPrefixIfApplicable(message);
@@ -101,7 +115,7 @@ export class Asserts {
 
         try {
             if (!this.runAssertion(doHardAssertion, () => expect(condition).toBe(true), () => expect.soft(condition).toBe(true), "assertIntegerWithinRange", message, assertionMessage)) return;
-            AssertionsHandler.logAssertMessage(`Assert PASSED! The provided number '${value}' is a valid integer within range [${minimum}-${maximum}]. ${message}`);
+            AssertionsHandler.logAssertMessage(`Assert PASSED! The provided number '${value}' is a valid integer within range [${minimum}, ${maximum}]. ${message}`);
         } catch (error) {
             AssertionsHandler.throwError("assertIntegerWithinRange", AssertionsHandler.ensureError(error), message, assertionMessage);
         }

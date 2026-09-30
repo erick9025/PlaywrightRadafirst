@@ -16,7 +16,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "NOTREADYtestMapsServiceWithAllure": "npm run clean:allure && npx playwright test mapsServiceTest.spec.ts",
     "testLoadedProfile": "npx playwright test sep23.test.ts --headed --retries=0 --workers=2",
-    "testMapsService": "npx playwright test testMapsApi",
+    "testMapsService": "npx playwright test testMapsApi --workers=1",
     "testSwag": "npx playwright test testSwag",
     "testSwagAll": "npx playwright test testSwag",
     "testExcelDDT": "npx playwright test testSwagHooksOriginalAllInOne.test.ts --workers=8 --headed",

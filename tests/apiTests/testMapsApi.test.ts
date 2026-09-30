@@ -43,25 +43,33 @@ test.describe('Tests for Apis with POM', () => {
     await mapsService.getPlaceDetails(knownPlaceId, 200, objectKnownPlace); // Better to work with an object, since we can reuse it in multiple places and it's more readable than a JSON file. However, both approaches are valid.
   });
 
-  test.skip("POM with GET place location FAIL", async () => {    
+  test("POM with GET place location with non-existing place id 404", async () => {    
+    await mapsService.getPlaceDetails("erickJimenez", 404);
+  });
+
+  test("POM with GET place location with non-existing place id 403", async () => {    
+    await mapsService.getPlaceDetails("erickJimenez", 403);
+  });
+
+  test("POM with GET place location FAIL", async () => {    
     let object: ResponseGetPlaceDetails = ResponseGetPlaceDetails.returnSampleObject();
 
     // Object can be changed
     object.accuracy = "78"; // Intentional error to see the assertion fail
 
-    await mapsService.getPlaceDetails("7d4e3875cb641a63048d8bfa0faffe47", 200, object); // Better to work with an object, since we can reuse it in multiple places and it's more readable than a JSON file. However, both approaches are valid.
+    await mapsService.getPlaceDetails(knownPlaceId, 200, object); // Better to work with an object, since we can reuse it in multiple places and it's more readable than a JSON file. However, both approaches are valid.
   });
 
-  test.skip("POM with POST create new place", async () => {    
+  test("POM with POST create new place", async () => {    
     const generatedPlaceId: string = await mapsService.postCreatePlace(BodyPostNewPlace.returnSampleObject());
 
     TestUtilities.logToConsole("Generated place id: " + generatedPlaceId);
   });
 
-  test.skip("POM with PUT update place", async () => {    
+  test("POM with PUT update place", async () => {    
 
     let bodyOrPayload: BodyPutUpdatePlace = new BodyPutUpdatePlace();
-    bodyOrPayload.place_id = "c48de564bd9f5ebdc7c9e3b7005bb44f";
+    bodyOrPayload.place_id = knownPlaceId;
     bodyOrPayload.address = "Calle Falsa 123, Springfield";
     bodyOrPayload.key = "qaclick123";
 

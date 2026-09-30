@@ -3,6 +3,7 @@ import { MapsConstants } from "../constants/mapsConstants";
 import { TestUtilities } from "../../../utils/testUtilities";
 import { Asserts } from "../../../utils/asserts";
 import { ResponseGetPlaceDetails } from "../deserialize/responseGetPlaceDetails";
+import { ResponseGetPlaceDetails404 } from "../deserialize/responseGetPlaceDetails404";
 import { ResponsePostNewPlace } from "../deserialize/responsePostNewPlace";
 import { ResponsePutUpdatePlace } from "../deserialize/responsePutUpdatePlace";
 import { BodyPostNewPlace } from "../serialize/bodyPostNewPlace";
@@ -16,6 +17,7 @@ export class MapsService extends BaseApiService {
 
     // Responses
     public responseGetPlaceDetails!: ResponseGetPlaceDetails;
+    public responseGetPlaceDetails404!: ResponseGetPlaceDetails404;
     public responsePostNewPlace!: ResponsePostNewPlace;
     public responsePutUpdatePlace!: ResponsePutUpdatePlace;
 
@@ -32,6 +34,29 @@ export class MapsService extends BaseApiService {
         await this.executeGetRequest(urlFinal);
 
         Asserts.assertEquals(expectedResponseCode, this.statusCode, "Status code should be the expected one");
+
+        if(expectedResponseCode !== 200) {
+            
+            switch(expectedResponseCode) {
+                case 404:
+                    const localSchema: any = z.object({
+                        msg: z.string()
+                    });
+
+                    this.deserializingSchema = localSchema;
+                    this.responseGetPlaceDetails404 = this.deserializeResponseWithSavedSchema<ResponseGetPlaceDetails404>(new ResponseGetPlaceDetails404());
+
+                    Asserts.assertEquals("Get operation failed, looks like place_id  doesn't exists", this.responseGetPlaceDetails404.msg, "Message should be correct")
+                    break;
+                
+                default:
+                    Asserts.assertFail("Unhandled negative scenario: " + expectedResponseCode);                
+            }
+
+            this.mainMethodEnd("getPlaceDetails :: " + placeId);
+
+            return;
+        }
 
         // Assign schema stored in the memory (inside a variable declared in parent)
         const localSchema: any = z.object({
@@ -51,13 +76,13 @@ export class MapsService extends BaseApiService {
         this.deserializingSchema = localSchema;
 
         // Deserialize response WITHOUT SCHEMA (NOT RECOMMENDED)
-        this.responseGetPlaceDetails = this.deserializeResponseWithoutSchema<ResponseGetPlaceDetails>(new ResponseGetPlaceDetails());
+        //this.responseGetPlaceDetails = this.deserializeResponseWithoutSchema<ResponseGetPlaceDetails>(new ResponseGetPlaceDetails());
         
         // Deserialize response WITH SCHEMA (Best practice) applying GENERICS
         this.responseGetPlaceDetails = this.deserializeResponseWithSavedSchema<ResponseGetPlaceDetails>(new ResponseGetPlaceDetails());
 
-        // Deserialize response WITH SCHEMA (Best practice) applying GENERICS
-        this.responseGetPlaceDetails = this.deserializeResponseWithExplicitSchema<ResponseGetPlaceDetails>(new ResponseGetPlaceDetails(), localSchema);
+        // Deserialize response WITH SCHEMA (Good practice but have to pass schema explicitely between parentheses) applying GENERICS
+        //this.responseGetPlaceDetails = this.deserializeResponseWithExplicitSchema<ResponseGetPlaceDetails>(new ResponseGetPlaceDetails(), localSchema);
 
         // Optional print the object
         this.responseGetPlaceDetails.printObjectDetails(); // Print details of the object using the method from the interface           
@@ -67,7 +92,11 @@ export class MapsService extends BaseApiService {
             Asserts.assertObjectsEqual(expectedInfo, this.responseGetPlaceDetails, "The place details should match the expected info");
         }
 
-        Asserts.assertStringContains(this.responseGetPlaceDetails.website, "unosquare", "Unosquare");
+        // Coordinate	Minimum	Maximum
+        //Latitude	    -90°	+90°
+        //Longitude	    -180°	+180°
+        Asserts.assertNumberWithinRange(Number(this.responseGetPlaceDetails.location.latitude), -90, 90, "Latitude range");
+        Asserts.assertNumberWithinRange(Number(this.responseGetPlaceDetails.location.longitude), -180, 180, "Longitude range");
 
         this.mainMethodEnd("getPlaceDetails :: " + placeId);
     }
