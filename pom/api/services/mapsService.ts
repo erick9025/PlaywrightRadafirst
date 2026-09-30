@@ -34,7 +34,7 @@ export class MapsService extends BaseApiService {
         Asserts.assertEquals(expectedResponseCode, this.statusCode, "Status code should be the expected one");
 
         // Assign schema stored in the memory (inside a variable declared in parent)
-        this.deserializingSchema = z.object({
+        const localSchema: any = z.object({
             location: z.object({
                 latitude: z.string(),
                 longitude: z.string(),
@@ -45,8 +45,10 @@ export class MapsService extends BaseApiService {
             address: z.string(),
             types: z.string(),
             website: z.string().url(),
-            language: z.string(),
+            language: z.string()
         });
+
+        this.deserializingSchema = localSchema;
 
         // Deserialize response WITHOUT SCHEMA (NOT RECOMMENDED)
         this.responseGetPlaceDetails = this.deserializeResponseWithoutSchema<ResponseGetPlaceDetails>(new ResponseGetPlaceDetails());
@@ -55,7 +57,7 @@ export class MapsService extends BaseApiService {
         this.responseGetPlaceDetails = this.deserializeResponseWithSavedSchema<ResponseGetPlaceDetails>(new ResponseGetPlaceDetails());
 
         // Deserialize response WITH SCHEMA (Best practice) applying GENERICS
-        this.responseGetPlaceDetails = this.deserializeResponseWithExplicitSchema<ResponseGetPlaceDetails>(new ResponseGetPlaceDetails(), this.deserializingSchema);
+        this.responseGetPlaceDetails = this.deserializeResponseWithExplicitSchema<ResponseGetPlaceDetails>(new ResponseGetPlaceDetails(), localSchema);
 
         // Optional print the object
         this.responseGetPlaceDetails.printObjectDetails(); // Print details of the object using the method from the interface           
