@@ -158,6 +158,10 @@ test.describe("Swag Labs – Screenplay Pattern", () => {
                         ? previousName <= currentName
                         : previousName >= currentName;
 
+                    console.log(
+                        `${sortingOption}: "${displayedValues[index - 1]}" ${isAscending ? "<=" : ">="} "${displayedValues[index]}" => ${isInOrder}`
+                    );
+
                     expect(
                         isInOrder,
                         `${sortingOption} is out of order: "${displayedValues[index - 1]}" then "${displayedValues[index]}"`
@@ -178,6 +182,10 @@ test.describe("Swag Labs – Screenplay Pattern", () => {
                     const isInOrder = isAscending
                         ? previousPrice <= currentPrice
                         : previousPrice >= currentPrice;
+
+                    console.log(
+                        `${sortingOption}: ${previousPrice} ${isAscending ? "<=" : ">="} ${currentPrice} => ${isInOrder}`
+                    );
 
                     expect(
                         isInOrder,
