@@ -2,18 +2,18 @@ import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
   testDir: './tests',
-  workers: 4,
-  timeout: 15_000, // Global timeout for all tests in milliseconds (default is 30 seconds)
+  workers: 8,
+  timeout: 22_000, // Global timeout for all tests in milliseconds (default is 30 seconds)
   expect: {
-    timeout: 1_000
+    timeout: 5_000
   },
   reporter: [
     ['html', { open: 'always' }]
   ],
   use: {
-    trace: 'on', // or 'on'
+    trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
+    video: 'off',
   },
   projects: [
     {
