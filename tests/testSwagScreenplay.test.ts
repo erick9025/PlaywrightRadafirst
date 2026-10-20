@@ -10,6 +10,7 @@ import { ProductSortingOptions } from "../utils/productSortingOptions";
 import { CartTotal } from "../screenplay/questions/CartTotal";
 import { Text } from "../screenplay/questions/Text";
 import { IsVisible } from "../screenplay/questions/IsVisible";
+import { WaitFor } from "../screenplay/interactions/WaitFor";
 import { SwagCartElements } from "../screenplay/elements/SwagCartElements";
 import { SwagProductsElements } from "../screenplay/elements/SwagProductsElements";
 import { SwagConstants } from "../screenplay/constants/SwagConstants";
@@ -44,6 +45,7 @@ test.describe("Swag Labs – Screenplay Pattern", () => {
         );
 
         // Verify the products page title is visible after login
+        await buyer.attemptsTo(WaitFor.elementToBeVisible(SwagProductsElements.titleProducts, "Products [Title]"));
         const productsVisible = await buyer.asks(IsVisible.of(SwagProductsElements.titleProducts));
         expect(productsVisible).toBe(true);
     });
@@ -111,6 +113,7 @@ test.describe("Swag Labs – Screenplay Pattern", () => {
             SortProducts.by(ProductSortingOptions.PriceDescending)
         );
 
+        await buyer.attemptsTo(WaitFor.elementToBeVisible(SwagProductsElements.titleProducts, "Products [Title]"));
         const titleVisible = await buyer.asks(IsVisible.of(SwagProductsElements.titleProducts));
         expect(titleVisible).toBe(true);
     });

@@ -11,7 +11,12 @@ export default defineConfig({
     ['html', { open: 'always' }]
   ],
   use: {
-    trace: 'retain-on-failure',
+    trace: {
+      mode: 'on',
+      screenshots: false,
+      snapshots: false,
+      attachments: false,
+    },
     screenshot: 'only-on-failure',
     video: 'off',
   },
