@@ -138,8 +138,9 @@ test.describe("Swag Labs – Screenplay Pattern", () => {
         };
 
         for (let index = 1; index < displayedValues.length; index++) {
-            const previousValue = displayedValues[index - 1];
-            const currentValue = displayedValues[index];
+            // The loop bounds guarantee both adjacent entries exist.
+            const previousValue = displayedValues[index - 1]!;
+            const currentValue = displayedValues[index]!;
             let isInOrder: boolean;
 
             if (isNameSort) {
