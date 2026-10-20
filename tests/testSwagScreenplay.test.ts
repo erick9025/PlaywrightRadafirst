@@ -17,6 +17,13 @@ import { SwagProductsElements } from "../screenplay/elements/SwagProductsElement
 import { SwagConstants } from "../screenplay/constants/SwagConstants";
 import { ScreenplayLogger } from "../screenplay/logger/ScreenplayLogger";
 
+const sortingOptions = [
+    ProductSortingOptions.NameAscending,
+    ProductSortingOptions.NameDescending,
+    ProductSortingOptions.PriceAscending,
+    ProductSortingOptions.PriceDescending
+];
+
 /*
   ╔══════════════════════════════════════════════════════════════╗
   ║          SCREENPLAY PATTERN — SauceDemo E2E Tests            ║
@@ -74,6 +81,7 @@ test.describe("Swag Labs – Screenplay Pattern", () => {
     test("Add multiple products, sort, and go to cart", async () => {
         await buyer.attemptsTo(
             Login.withDefaultUser(),
+            WaitFor.elementToBeVisible(SwagProductsElements.titleProducts, "Products [Title]"),
             AddProductToCart.named("Sauce Labs Backpack"),
             AddProductToCart.named("Sauce Labs Fleece Jacket"),
             SortProducts.by(ProductSortingOptions.NameAscending),
@@ -116,7 +124,27 @@ test.describe("Swag Labs – Screenplay Pattern", () => {
         );
 
         await verifySortingOrder(buyer, ProductSortingOptions.PriceDescending);
+    });       
+
+    // ─────────────────────────────────────────────────────────
+    // Test 6: Verify every available product sort order
+    // ─────────────────────────────────────────────────────────
+    test("Verify all product sorting orders", async () => {
+        await buyer.attemptsTo(
+            Login.withDefaultUser(),
+            WaitFor.elementToBeVisible(SwagProductsElements.titleProducts, "Products [Title]")
+        );        
+
+        for (const sortingOption of sortingOptions) {
+            await buyer.attemptsTo(SortProducts.by(sortingOption));
+            await verifySortingOrder(buyer, sortingOption);
+        }
     });
+
+    // ****************************************************************************************************************
+    // ********************************** SPECIAL LOCAL FUNCTION(S) USED BY TESTS ON THIS FILE ************************
+    // ****************************************************************************************************************
+    // ─────────────────────────────────────────────────────────
 
     async function verifySortingOrder(actor: Actor, sortingOption: ProductSortingOptions): Promise<void> {
         const displayedValues = await actor.asks(ProductSortOrder.for(sortingOption));
@@ -163,27 +191,5 @@ test.describe("Swag Labs – Screenplay Pattern", () => {
             ).toBe(true);
         }
     }
-
-    // ─────────────────────────────────────────────────────────
-    // Test 6: Verify every available product sort order
-    // ─────────────────────────────────────────────────────────
-    test("Verify all product sorting orders", async () => {
-        await buyer.attemptsTo(
-            Login.withDefaultUser(),
-            WaitFor.elementToBeVisible(SwagProductsElements.titleProducts, "Products [Title]")
-        );
-
-        const sortingOptions = [
-            ProductSortingOptions.NameAscending,
-            ProductSortingOptions.NameDescending,
-            ProductSortingOptions.PriceAscending,
-            ProductSortingOptions.PriceDescending
-        ];
-
-        for (const sortingOption of sortingOptions) {
-            await buyer.attemptsTo(SortProducts.by(sortingOption));
-            await verifySortingOrder(buyer, sortingOption);
-        }
-    });
 });
 
