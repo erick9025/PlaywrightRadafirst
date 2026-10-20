@@ -115,10 +115,53 @@ test.describe("Swag Labs – Screenplay Pattern", () => {
             SortProducts.by(ProductSortingOptions.PriceDescending)
         );
 
-        await buyer.attemptsTo(WaitFor.elementToBeVisible(SwagProductsElements.titleProducts, "Products [Title]"));
-        const titleVisible = await buyer.asks(IsVisible.of(SwagProductsElements.titleProducts));
-        expect(titleVisible).toBe(true);
+        await verifySortingOrder(buyer, ProductSortingOptions.PriceDescending);
     });
+
+    async function verifySortingOrder(actor: Actor, sortingOption: ProductSortingOptions): Promise<void> {
+        const displayedValues = await actor.asks(ProductSortOrder.for(sortingOption));
+        expect(displayedValues.length, `${sortingOption} should display products`).toBeGreaterThan(1);
+
+        const isNameSort =
+            sortingOption === ProductSortingOptions.NameAscending ||
+            sortingOption === ProductSortingOptions.NameDescending;
+        const isAscending =
+            sortingOption === ProductSortingOptions.NameAscending ||
+            sortingOption === ProductSortingOptions.PriceAscending;
+
+        const parsePrice = (displayedPrice: string): number => {
+            const price = Number(displayedPrice.replace(/[$,]/g, "").trim());
+            if (!Number.isFinite(price)) {
+                throw new Error(`Could not parse product price from UI value: "${displayedPrice}"`);
+            }
+            return price;
+        };
+
+        for (let index = 1; index < displayedValues.length; index++) {
+            const previousValue = displayedValues[index - 1];
+            const currentValue = displayedValues[index];
+            let isInOrder: boolean;
+
+            if (isNameSort) {
+                const previousName = previousValue.toLocaleLowerCase();
+                const currentName = currentValue.toLocaleLowerCase();
+                isInOrder = isAscending ? previousName <= currentName : previousName >= currentName;
+            } else {
+                const previousPrice = parsePrice(previousValue);
+                const currentPrice = parsePrice(currentValue);
+                isInOrder = isAscending ? previousPrice <= currentPrice : previousPrice >= currentPrice;
+            }
+
+            ScreenplayLogger.log(
+                `${sortingOption}: "${previousValue}" ${isAscending ? "<=" : ">="} "${currentValue}" => ${isInOrder}`
+            );
+
+            expect(
+                isInOrder,
+                `${sortingOption} is out of order: "${previousValue}" then "${currentValue}"`
+            ).toBe(true);
+        }
+    }
 
     // ─────────────────────────────────────────────────────────
     // Test 6: Verify every available product sort order
@@ -138,62 +181,7 @@ test.describe("Swag Labs – Screenplay Pattern", () => {
 
         for (const sortingOption of sortingOptions) {
             await buyer.attemptsTo(SortProducts.by(sortingOption));
-
-            const displayedValues = await buyer.asks(ProductSortOrder.for(sortingOption));
-            expect(displayedValues.length, `${sortingOption} should display products`).toBeGreaterThan(1);
-
-            const isNameSort =
-                sortingOption === ProductSortingOptions.NameAscending ||
-                sortingOption === ProductSortingOptions.NameDescending;
-            const isAscending =
-                sortingOption === ProductSortingOptions.NameAscending ||
-                sortingOption === ProductSortingOptions.PriceAscending;
-
-            if (isNameSort) {
-                const names = displayedValues.map((name) => name.toLocaleLowerCase());
-
-                for (let index = 1; index < names.length; index++) {
-                    const previousName = names[index - 1];
-                    const currentName = names[index];
-                    const isInOrder = isAscending
-                        ? previousName <= currentName
-                        : previousName >= currentName;
-
-                    ScreenplayLogger.log(
-                        `${sortingOption}: "${displayedValues[index - 1]}" ${isAscending ? "<=" : ">="} "${displayedValues[index]}" => ${isInOrder}`
-                    );
-
-                    expect(
-                        isInOrder,
-                        `${sortingOption} is out of order: "${displayedValues[index - 1]}" then "${displayedValues[index]}"`
-                    ).toBe(true);
-                }
-            } else {
-                const prices = displayedValues.map((displayedPrice) => {
-                    const price = Number(displayedPrice.replace(/[$,]/g, "").trim());
-                    if (!Number.isFinite(price)) {
-                        throw new Error(`Could not parse product price from UI value: "${displayedPrice}"`);
-                    }
-                    return price;
-                });
-
-                for (let index = 1; index < prices.length; index++) {
-                    const previousPrice = prices[index - 1];
-                    const currentPrice = prices[index];
-                    const isInOrder = isAscending
-                        ? previousPrice <= currentPrice
-                        : previousPrice >= currentPrice;
-
-                    ScreenplayLogger.log(
-                        `${sortingOption}: ${previousPrice} ${isAscending ? "<=" : ">="} ${currentPrice} => ${isInOrder}`
-                    );
-
-                    expect(
-                        isInOrder,
-                        `${sortingOption} is out of order: "${displayedValues[index - 1]}" then "${displayedValues[index]}"`
-                    ).toBe(true);
-                }
-            }
+            await verifySortingOrder(buyer, sortingOption);
         }
     });
 });
