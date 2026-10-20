@@ -44,7 +44,7 @@ export class ScreenplayLogger {
 
     /** Standard info log — white background, timestamp in annotation type. */
     public static log(message: string): void {
-        const ts = ScreenplayLogger.formatTimestamp();
+        const ts = ScreenplayLogger.getCurrentTimestamp();
         console.log(chalk.bgWhite(`${ts}: ${message}`));
         test.info().annotations.push({ type: ts, description: message });
     }

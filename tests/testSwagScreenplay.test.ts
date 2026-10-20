@@ -8,6 +8,7 @@ import { GoToCart } from "../screenplay/tasks/GoToCart";
 import { PrintTotalAddedSoFar } from "../screenplay/tasks/PrintTotalAddedSoFar";
 import { ProductSortingOptions } from "../utils/productSortingOptions";
 import { CartTotal } from "../screenplay/questions/CartTotal";
+import { ProductSortOrder } from "../screenplay/questions/ProductSortOrder";
 import { Text } from "../screenplay/questions/Text";
 import { IsVisible } from "../screenplay/questions/IsVisible";
 import { WaitFor } from "../screenplay/interactions/WaitFor";
@@ -116,6 +117,75 @@ test.describe("Swag Labs – Screenplay Pattern", () => {
         await buyer.attemptsTo(WaitFor.elementToBeVisible(SwagProductsElements.titleProducts, "Products [Title]"));
         const titleVisible = await buyer.asks(IsVisible.of(SwagProductsElements.titleProducts));
         expect(titleVisible).toBe(true);
+    });
+
+    // ─────────────────────────────────────────────────────────
+    // Test 6: Verify every available product sort order
+    // ─────────────────────────────────────────────────────────
+    test("Verify all product sorting orders", async () => {
+        await buyer.attemptsTo(
+            Login.withDefaultUser(),
+            WaitFor.elementToBeVisible(SwagProductsElements.titleProducts, "Products [Title]")
+        );
+
+        const sortingOptions = [
+            ProductSortingOptions.NameAscending,
+            ProductSortingOptions.NameDescending,
+            ProductSortingOptions.PriceAscending,
+            ProductSortingOptions.PriceDescending
+        ];
+
+        for (const sortingOption of sortingOptions) {
+            await buyer.attemptsTo(SortProducts.by(sortingOption));
+
+            const displayedValues = await buyer.asks(ProductSortOrder.for(sortingOption));
+            expect(displayedValues.length, `${sortingOption} should display products`).toBeGreaterThan(1);
+
+            const isNameSort =
+                sortingOption === ProductSortingOptions.NameAscending ||
+                sortingOption === ProductSortingOptions.NameDescending;
+            const isAscending =
+                sortingOption === ProductSortingOptions.NameAscending ||
+                sortingOption === ProductSortingOptions.PriceAscending;
+
+            if (isNameSort) {
+                const names = displayedValues.map((name) => name.toLocaleLowerCase());
+
+                for (let index = 1; index < names.length; index++) {
+                    const previousName = names[index - 1];
+                    const currentName = names[index];
+                    const isInOrder = isAscending
+                        ? previousName <= currentName
+                        : previousName >= currentName;
+
+                    expect(
+                        isInOrder,
+                        `${sortingOption} is out of order: "${displayedValues[index - 1]}" then "${displayedValues[index]}"`
+                    ).toBe(true);
+                }
+            } else {
+                const prices = displayedValues.map((displayedPrice) => {
+                    const price = Number(displayedPrice.replace(/[$,]/g, "").trim());
+                    if (!Number.isFinite(price)) {
+                        throw new Error(`Could not parse product price from UI value: "${displayedPrice}"`);
+                    }
+                    return price;
+                });
+
+                for (let index = 1; index < prices.length; index++) {
+                    const previousPrice = prices[index - 1];
+                    const currentPrice = prices[index];
+                    const isInOrder = isAscending
+                        ? previousPrice <= currentPrice
+                        : previousPrice >= currentPrice;
+
+                    expect(
+                        isInOrder,
+                        `${sortingOption} is out of order: "${displayedValues[index - 1]}" then "${displayedValues[index]}"`
+                    ).toBe(true);
+                }
+            }
+        }
     });
 });
 
