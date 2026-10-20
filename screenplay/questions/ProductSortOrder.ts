@@ -17,14 +17,14 @@ export class ProductSortOrder implements Question<string[]> {
 
     public async answeredBy(actor: Actor): Promise<string[]> {
         const page = BrowseTheWeb.as(actor).page;
-        const isNameSort =
+        const isNameSort: boolean =
             this.sortingOption === ProductSortingOptions.NameAscending ||
             this.sortingOption === ProductSortingOptions.NameDescending;
-        const referenceLocator = isNameSort
+        const referenceLocator: string = isNameSort
             ? SwagProductsElements.listAllProductsNames
             : SwagProductsElements.listAllProductsPrices;
 
-        const values = await page.locator(referenceLocator).allTextContents();
-        return values.map((value) => value.trim());
+        const values: string[] = await page.locator(referenceLocator).allTextContents();
+        return values.map((value) => value.trim()); // LAMBDA FUNCTION: Trim whitespace from each value before returning
     }
 }

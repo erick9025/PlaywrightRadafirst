@@ -139,25 +139,26 @@ test.describe("Swag Labs – Screenplay Pattern", () => {
         for (const sortingOption of sortingOptions) {
             await buyer.attemptsTo(SortProducts.by(sortingOption));
 
-            const displayedValues = await buyer.asks(ProductSortOrder.for(sortingOption));
-            expect(displayedValues.length, `${sortingOption} should display products`).toBeGreaterThan(1);
+            const displayedValues: string[] = await buyer.asks(ProductSortOrder.for(sortingOption));
+            expect(displayedValues.length, `${sortingOption} should display products`).toBeGreaterThan(5);
 
-            const isNameSort =
+            const isNameSort: boolean =
                 sortingOption === ProductSortingOptions.NameAscending ||
                 sortingOption === ProductSortingOptions.NameDescending;
-            const isAscending =
+            const isAscending: boolean =
                 sortingOption === ProductSortingOptions.NameAscending ||
                 sortingOption === ProductSortingOptions.PriceAscending;
 
             if (isNameSort) {
-                const names = displayedValues.map((name) => name.toLocaleLowerCase());
+                // Lambda function: convert displayed product names to lowercase for case-insensitive comparison (1 line)
+                const names: string[] = displayedValues.map((name) => name.toLocaleLowerCase());
 
                 for (let index = 1; index < names.length; index++) {
-                    const previousName = names[index - 1];
-                    const currentName = names[index];
-                    const isInOrder = isAscending
+                    const previousName: string = names[index - 1];
+                    const currentName: string = names[index];
+                    const isInOrder: boolean = isAscending
                         ? previousName <= currentName
-                        : previousName >= currentName;
+                        : previousName >= currentName; // Descending order check
 
                     ScreenplayLogger.log(
                         `${sortingOption}: "${displayedValues[index - 1]}" ${isAscending ? "<=" : ">="} "${displayedValues[index]}" => ${isInOrder}`
@@ -168,8 +169,11 @@ test.describe("Swag Labs – Screenplay Pattern", () => {
                         `${sortingOption} is out of order: "${displayedValues[index - 1]}" then "${displayedValues[index]}"`
                     ).toBe(true);
                 }
-            } else {
-                const prices = displayedValues.map((displayedPrice) => {
+            } 
+            else {
+                // Price sort: convert displayed prices to numbers for comparison
+                // Below is a lambda function (MULTIPLE lines) that maps displayed price strings to numbers, removing currency symbols and commas
+                const prices: number[] = displayedValues.map((displayedPrice) => {
                     const price = Number(displayedPrice.replace(/[$,]/g, "").trim());
                     if (!Number.isFinite(price)) {
                         throw new Error(`Could not parse product price from UI value: "${displayedPrice}"`);
@@ -178,11 +182,11 @@ test.describe("Swag Labs – Screenplay Pattern", () => {
                 });
 
                 for (let index = 1; index < prices.length; index++) {
-                    const previousPrice = prices[index - 1];
-                    const currentPrice = prices[index];
-                    const isInOrder = isAscending
+                    const previousPrice: number = prices[index - 1];
+                    const currentPrice: number = prices[index];
+                    const isInOrder: boolean = isAscending
                         ? previousPrice <= currentPrice
-                        : previousPrice >= currentPrice;
+                        : previousPrice >= currentPrice; // Descending order check
 
                     ScreenplayLogger.log(
                         `${sortingOption}: ${previousPrice} ${isAscending ? "<=" : ">="} ${currentPrice} => ${isInOrder}`
