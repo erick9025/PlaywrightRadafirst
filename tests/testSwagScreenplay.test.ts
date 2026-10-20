@@ -15,6 +15,7 @@ import { WaitFor } from "../screenplay/interactions/WaitFor";
 import { SwagCartElements } from "../screenplay/elements/SwagCartElements";
 import { SwagProductsElements } from "../screenplay/elements/SwagProductsElements";
 import { SwagConstants } from "../screenplay/constants/SwagConstants";
+import { ScreenplayLogger } from "../screenplay/logger/ScreenplayLogger";
 
 /*
   ╔══════════════════════════════════════════════════════════════╗
@@ -64,7 +65,7 @@ test.describe("Swag Labs – Screenplay Pattern", () => {
         const total = await buyer.asks(CartTotal.accumulated());
         expect(total).toContain("$");
         expect(total).not.toBe("$0.00");
-        console.log(`Total after adding one product: ${total}`);
+        ScreenplayLogger.log(`Total after adding one product: ${total}`);
     });
 
     // ─────────────────────────────────────────────────────────
@@ -158,7 +159,7 @@ test.describe("Swag Labs – Screenplay Pattern", () => {
                         ? previousName <= currentName
                         : previousName >= currentName;
 
-                    console.log(
+                    ScreenplayLogger.log(
                         `${sortingOption}: "${displayedValues[index - 1]}" ${isAscending ? "<=" : ">="} "${displayedValues[index]}" => ${isInOrder}`
                     );
 
@@ -183,7 +184,7 @@ test.describe("Swag Labs – Screenplay Pattern", () => {
                         ? previousPrice <= currentPrice
                         : previousPrice >= currentPrice;
 
-                    console.log(
+                    ScreenplayLogger.log(
                         `${sortingOption}: ${previousPrice} ${isAscending ? "<=" : ">="} ${currentPrice} => ${isInOrder}`
                     );
 
