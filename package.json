@@ -21,6 +21,7 @@
     "testSwagAll": "npx playwright test testSwag",
     "testExcelDDT": "npx playwright test testSwagHooksOriginalAllInOne.test.ts --workers=8 --headed",
     "testDummyApi": "npx playwright test dummyApi.test.ts --workers=8",
+    "testOct22": "npx playwright test dummyTest.test.ts --workers=8 --retries=0 --headed",
     "testSep23": "npx playwright test sep23.test.ts --workers=8"
   },
   "repository": {

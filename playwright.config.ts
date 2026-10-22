@@ -42,6 +42,7 @@ export const config: ProjectTestConfigRadafirst = {
     trace: 'on',
     screenshot: 'on',
     video: 'off',
+    viewport: { width: 1920, height: 1080 },
     // 👇 Add this section
     launchOptions: {
       slowMo: 1
