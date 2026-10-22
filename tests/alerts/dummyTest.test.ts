@@ -10,26 +10,39 @@ test.describe('Dummy test suite', () => {
 
     // ......................... TESTING ALERTS .........................
 
-    test('1 handle alert - SINGLE BUTTON', async ({ page }) => {
-        await page.goto('https://practice.expandtesting.com/js-dialogs');
+    test('LEFT-A 1 handle alert - SINGLE BUTTON', async ({ page }) => {
 
         // Listen for the dialog event and handle it (BEFORE the action that triggers the dialog)
         page.once('dialog', async dialog => {
             console.log(dialog.message());
-            //await page.waitForTimeout(WAIT_TIME); // Just to see the dialog before it closes, not recommended for real tests
+             // Just to see the dialog before it closes, not recommended for real tests
             await dialog.accept();
         });
 
-        await page.click('#js-alert');
+        await page.goto('https://practice.expandtesting.com/js-dialogs');
+        await page.click('#js-alert'); // Trigger the alert
     });
 
-    test.skip('2 handle alert - 2 BUTTONS: Click OK', async ({ page }) => {
+    test('text is ingored but you can pass an accept message', async ({ page }) => {
+
+        // Listen for the dialog event and handle it (BEFORE the action that triggers the dialog)
+        page.once('dialog', async dialog => {
+            console.log(dialog.message());
+             // Just to see the dialog before it closes, not recommended for real tests
+            await dialog.accept("This is a message that will make the test fail because the alert does not have an input field to accept a message.");
+        });
+
+        await page.goto('https://practice.expandtesting.com/js-dialogs');
+        await page.click('#js-alert'); // Trigger the alert
+    });
+
+    test('CENTER-A 2 handle alert - 2 BUTTONS: Click OK', async ({ page }) => {
         await page.goto('https://practice.expandtesting.com/js-dialogs');
 
         // Listen for the dialog event and handle it (BEFORE the action that triggers the dialog)
         page.once('dialog', async dialog => {
             console.log(dialog.message());
-            //await page.waitForTimeout(WAIT_TIME); // Just to see the dialog before it closes, not recommended for real tests
+             // Just to see the dialog before it closes, not recommended for real tests
             console.log(dialog.type());
             await dialog.accept();
         });
@@ -37,39 +50,63 @@ test.describe('Dummy test suite', () => {
         await page.click('#js-confirm');
     });
 
-    test.skip('3 handle alert - 2 BUTTONS: Click CANCEL', async ({ page }) => {
+    test('CENTER-B 3 handle alert - 2 BUTTONS: Click CANCEL', async ({ page }) => {
         await page.goto('https://practice.expandtesting.com/js-dialogs');
 
         // Listen for the dialog event and handle it (BEFORE the action that triggers the dialog)
         page.once('dialog', async dialog => {
             console.log(dialog.message());
-            //await page.waitForTimeout(WAIT_TIME); // Just to see the dialog before it closes, not recommended for real tests
+             // Just to see the dialog before it closes, not recommended for real tests
+            console.log(dialog.type());
             await dialog.dismiss();
         });
 
         await page.click('#js-confirm');
     });
 
-    test.skip('4 handle alert - 2 BUTTONS with INPUT: Click OK', async ({ page } ) => {
+    test('RIGHT-A 4 handle alert - 2 BUTTONS with INPUT: Click OK with message and then expect page displays message', async ({ page } ) => {
         await page.goto('https://practice.expandtesting.com/js-dialogs');
+
+        const inputText = 'October 22 Playwright is awesome!';
 
         // Listen for the dialog event and handle it (BEFORE the action that triggers the dialog)
         page.once('dialog', async dialog => {
             console.log(dialog.message());
-            //await page.waitForTimeout(WAIT_TIME);
-            await dialog.accept('Playwright is awesome!');
+            
+            await dialog.accept(inputText);
+            
         });
 
         await page.click('#js-prompt');
+
+        // Assertion
+        const resultText = await page.locator('#dialog-response').textContent();
+        expect(resultText).toContain(inputText);
     });
 
-    test.skip('5 handle alert - 2 BUTTONS with INPUT: Click CANCEL', async ({ page }) => {
+    test('RIGHT-B 4 handle alert - 2 BUTTONS with INPUT: Click OK without any message', async ({ page } ) => {
+        await page.goto('https://practice.expandtesting.com/js-dialogs');
+
+        // Listen for the dialog event and handle it (BEFORE the action that triggers the dialog)
+        page.once('dialog', async dialog => {
+            console.log(dialog.message());            
+            await dialog.accept();            
+        });
+
+        await page.click('#js-prompt');
+
+        // Assertion
+        const resultText = await page.locator('#dialog-response').textContent();
+        console.log(resultText);
+    });
+
+    test('RIGHT-C 5 handle alert - 2 BUTTONS with INPUT: Click CANCEL', async ({ page }) => {
         await page.goto('https://practice.expandtesting.com/js-dialogs');
 
         // Listen for the dialog event and handle it (BEFORE the action that triggers the dialog)
         page.once('dialog', async dialog => {
             console.log(dialog.message());
-            //await page.waitForTimeout(WAIT_TIME);
+            
             await dialog.dismiss();
         });
 
@@ -78,27 +115,40 @@ test.describe('Dummy test suite', () => {
 
     // ......................... TESTING IFRAMES .........................
 
-    test.skip('TESTING IFRAMES - fail', async ({ page }) => {
+    test('DEAD PAGE TESTING IFRAMES - fail', async ({ page }) => {
         await page.goto('https://elementdir.com/iframes?utm_source=chatgpt.com');
 
         await page.click("a[href*='wiki/HTML']");
     });
 
-    test.skip('TESTING IFRAMES - pass', async ({ page }) => {
+    test('DEAD PAGE TESTING IFRAMES - pass', async ({ page }) => {
         await page.goto('https://elementdir.com/iframes?utm_source=chatgpt.com');
 
         await page.frameLocator("iframe[title='Wikipedia Demo']").locator("a[href*='wiki/HTML']").click();
     });
 
+    test('TESTING IFRAMES - fail because trying to enter text directly', async ({ page }) => {
+        await page.goto('https://the-internet.herokuapp.com/iframe?utm_source=chatgpt.com');
+
+        await page.fill("#tinymce", "This is a test to fill the iframe with some text.");
+    });
+    
+
+    test('TESTING IFRAMES - correct approach', async ({ page }) => {
+        await page.goto('https://the-internet.herokuapp.com/iframe?utm_source=chatgpt.com');
+
+        await page.frameLocator("#mce_0_ifr").locator("#tinymce").fill("This is a test to fill the iframe with some text.");
+    });    
+
     // ......................... TESTING FILE UPLOAD & DOWNLOAD .........................
 
-    test.skip('upload jpg from Downloads folder', async ({ page }) => {
+    test('upload jpg from Downloads folder', async ({ page }) => {
 
         // Build path to Downloads folder (cross-platform)
         const downloadsPath = path.join(os.homedir(), 'Downloads', 'testUPLOAD.png');
 
         await page.goto('https://the-internet.herokuapp.com/upload');
-        //await page.waitForTimeout(WAIT_TIME); // Just to see the page before it interacts, not recommended for real tests
+         // Just to see the page before it interacts, not recommended for real tests
 
         // Upload file
         await page.setInputFiles('input[type="file"]', downloadsPath);
@@ -110,18 +160,18 @@ test.describe('Dummy test suite', () => {
         await expect(page.locator('#uploaded-files')).toHaveText('testUPLOAD.png');
     });
 
-    test.skip('download a file single', async ({ page }) => {
+    test('download a file single', async ({ page }) => {
 
         await page.goto('https://the-internet.herokuapp.com/download');
 
         await page.locator("a[href$='Resume.docx']").first().click() // clicks first file
-        //await page.waitForTimeout(WAIT_TIME); // Just to see the page before it closes, not recommended for real tests
+         // Just to see the page before it closes, not recommended for real tests
 
     })
 
     // DDT with JSON to run N times with different data sets
     for (const dataSet of testData) {
-        test.skip(`${dataSet.tcName}`, async ({ page }) => {
+        test(`${dataSet.tcName}`, async ({ page }) => {
             const myPage: SwagProductsPage = new SwagProductsPage(page);
 
             await page.goto('https://the-internet.herokuapp.com/download');
@@ -129,7 +179,7 @@ test.describe('Dummy test suite', () => {
             //await page.locator("a[href$='Resume.docx']").first().click() // Native click
             await myPage.clickAndWaitSuccessfulApi("a[href$='testing.pdf']", "Resume [Link]", dataSet.endpoint, dataSet.expectedStatusCode); // Our custom click coming from BasePage.ts (POM)
 
-            //await page.waitForTimeout(WAIT_TIME); // Just to see the page before it closes, not recommended for real tests
+             // Just to see the page before it closes, not recommended for real tests
         });
     }
 
@@ -139,7 +189,7 @@ test.describe('Dummy test suite', () => {
     };
 
     for (const [key, value] of Object.entries(testData2)) {
-        test.skip(`${key}`, async ({ page }) => {
+        test(`${key}`, async ({ page }) => {
             const myPage: SwagProductsPage = new SwagProductsPage(page);
 
             await page.goto('https://the-internet.herokuapp.com/download');
@@ -147,14 +197,14 @@ test.describe('Dummy test suite', () => {
             //await page.locator("a[href$='Resume.docx']").first().click() // Native click
             await myPage.clickAndWaitSuccessfulApi("a[href$='testing.pdf']", "Resume [Link]", "/download", value); // Our custom click coming from BasePage.ts (POM)
 
-            //await page.waitForTimeout(WAIT_TIME); // Just to see the page before it closes, not recommended for real tests
+             // Just to see the page before it closes, not recommended for real tests
         });
     }
 
-    test.skip('download a file with promise', async ({ page }) => {
+    test('download a file with promise', async ({ page }) => {
 
         await page.goto('https://the-internet.herokuapp.com/download');
-        //await page.waitForTimeout(WAIT_TIME); // Just to see the page before it interacts, not recommended for real tests
+         // Just to see the page before it interacts, not recommended for real tests
 
         await page.screenshot({ path: 'screenshot1Erick.png' });
 
