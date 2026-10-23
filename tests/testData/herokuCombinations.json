@@ -5,7 +5,7 @@
         "expectedStatusCode" : 200
     },
     {
-        "tcName" : "Download a with pro click from POM 304",
+        "tcName" : "Download a with pro click from POM 304 - wrong status code SHOULD FAIL",
         "endpoint" : "/download",
         "expectedStatusCode" : 304
     }

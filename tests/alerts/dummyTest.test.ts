@@ -2,7 +2,7 @@ import { test, expect, Page } from '@playwright/test';
 import { SwagProductsPage } from '../../pom/web/pages/pagesByFeature/swagProductsPage';
 import * as path from 'node:path';
 import os from 'os';
-import testData from '../testData/herokuCombinations.json';
+import jsonTestData from '../testData/herokuCombinations.json';
 
 test.describe('Dummy test suite', () => {
 
@@ -38,23 +38,23 @@ test.describe('Dummy test suite', () => {
     })
 
     // DDT with JSON to run N times with different data sets
-    for (const dataSet of testData) {
+    for (const dataSet of jsonTestData) {
         test(`${dataSet.tcName}`, async ({ page }) => {
             const myPage: SwagProductsPage = new SwagProductsPage(page);
 
             await page.goto('https://the-internet.herokuapp.com/download');
 
-            await page.locator(locatorAnyFileToDownload).first().click() // Native click
-            //await myPage.clickAndWaitSuccessfulApi(locatorAnyFileToDownload, "Resume [Link]", dataSet.endpoint, dataSet.expectedStatusCode); // Our custom click coming from BasePage.ts (POM)
+            //await page.locator(locatorAnyFileToDownload).first().click() // Native click
+            await myPage.clickAndWaitCustomApi("GET", locatorAnyFileToDownload, "Resume [Link]", dataSet.endpoint, 5000, 5000, dataSet.expectedStatusCode); // Our custom click coming from BasePage.ts (POM)
         });
     }
 
-    const testData2: Record<string, number> = {
+    const localTestData2: Record<string, number> = {
         "Test case 1 correct status code": 200,
         "Test case 2 wrong status code SHOULD FAIL": 304
     };
 
-    for (const [key, value] of Object.entries(testData2)) {
+    for (const [key, value] of Object.entries(localTestData2)) {
         test(`Good practice ${key}`, async ({ page }) => {
             const myPage: SwagProductsPage = new SwagProductsPage(page);
 
@@ -64,7 +64,7 @@ test.describe('Dummy test suite', () => {
         });
     }
 
-    for (const [key, value] of Object.entries(testData2)) {
+    for (const [key, value] of Object.entries(localTestData2)) {
         test(`Bad practice ${key}`, async ({ page }) => {
             await page.goto('https://the-internet.herokuapp.com/download');
             await page.locator(locatorAnyFileToDownload).click() // Native click

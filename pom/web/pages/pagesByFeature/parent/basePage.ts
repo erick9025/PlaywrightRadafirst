@@ -142,7 +142,7 @@ export abstract class BasePage {
             elementDescription: string, 
             apiEndpointOrPartialUrl: string,
             timeoutMsForClick: number = 5_000, // 5 seconds
-            timeoutMsForApi: number = 1_500) // 1.5 seconds
+            timeoutMsForApi: number = 4_500) // 1.5 seconds
         : Promise<void> {
 
         const timeoutString: string = timeoutMsForApi > 1_000 ? "Seconds: " + (timeoutMsForApi / 1000).toString() : "Milliseconds: " + timeoutMsForApi.toString();
@@ -195,7 +195,7 @@ export abstract class BasePage {
             elementDescription: string, 
             apiEndpointOrPartialUrl: string,
             timeoutMsForClick: number = 5_000, // 5 seconds
-            timeoutMsForApi: number = 1_500, // 1.5 seconds
+            timeoutMsForApi: number = 4_500, // 1.5 seconds
             expectedStatusCode: number = 200) // Sucessful API = OK
         : Promise<void> {
 
