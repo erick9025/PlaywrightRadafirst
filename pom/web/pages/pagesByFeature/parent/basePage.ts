@@ -2,6 +2,10 @@ import { Page, Locator, expect } from '@playwright/test';
 import { TestUtilities } from "../../../../../utils/testUtilities";
 import { Asserts } from "../../../../../utils/asserts";
 
+type SingleWaitResult =
+    | { ok: true; url: string; durationMs: number }
+    | { ok: false; error: string; durationMs: number };
+
 export abstract class BasePage {
 
     protected page: Page;    
@@ -131,37 +135,58 @@ export abstract class BasePage {
         }
 
         return index + 1;
-    }
+    }    
 
     public async clickAndWaitSuccessfulApi(
             elementLocator: string, 
             elementDescription: string, 
             apiEndpointOrPartialUrl: string,
-            expectedStatusCode: number = 200
-    ): Promise<void> {
-        const timeoutMsForClick: number = 5_000; // 5 seconds
-        const timeoutMsForApi: number = 15_000; // 15 seconds (ToDo reduce)
+            timeoutMsForClick: number = 5_000, // 5 seconds
+            timeoutMsForApi: number = 1_500) // 1.5 seconds
+        : Promise<void> {
+
         const timeoutString: string = timeoutMsForApi > 1_000 ? "Seconds: " + (timeoutMsForApi / 1000).toString() : "Miliseconds:" + (timeoutMsForApi).toString();
-
         this.logToConsole(`Will click '${elementDescription}' and wait (for a max of ${timeoutString}) for its triggered API call with partial URL '${apiEndpointOrPartialUrl}'`);
-
         const startTime: number = Date.now(); // Record start time
-        
-        const [response] = await Promise.all([
-            //Parallel step 1
-            this.page.waitForResponse(
-            resp => resp.url().includes(apiEndpointOrPartialUrl) && resp.status() === expectedStatusCode, // ALWAYS Sucessful API = OK
+
+        // Prepare waiter that resolves to result object
+        const waiter: Promise<SingleWaitResult> = this.page
+            .waitForResponse(
+                resp => resp.request().url().includes(apiEndpointOrPartialUrl) && resp.status() === 200, // ALWAYS Successful API = OK
                 { timeout: timeoutMsForApi }
-            ),
-            //Parallel step 2
-            this.page.locator(elementLocator).click({ force: true, timeout: timeoutMsForClick })
+            )
+            .then((res) => ({
+                ok: true as const,
+                url: res.request().url(),
+                durationMs: Date.now() - startTime,
+            }))
+            .catch((err: any) => ({
+                ok: false as const,
+                error: err?.name === "TimeoutError" || /Timeout/i.test(String(err)) ? `Timeout after ${timeoutMsForApi}ms` : String(err),
+                durationMs: Date.now() - startTime,
+            }));
+
+        // Fire click and waiter in parallel
+        const [, waitResult]: [void, SingleWaitResult] = await Promise.all([
+            this.page.locator(elementLocator).click({ force: true, timeout: timeoutMsForClick }),
+            waiter,
         ]);
 
-        const endTime: number = Date.now(); // Record end time
-        const durationMs: number = endTime - startTime; // Calculate elapsed milliseconds
-        const durationString: string = durationMs > 1_000 ? (durationMs /1000).toString() + " seconds" : (durationMs).toString() + " ms";
+        const durationMs: number = waitResult.durationMs;
+        const durationString: string = durationMs > 1_000 ? (durationMs / 1000).toString() + " seconds" : (durationMs).toString() + " ms";
 
-        this.logToConsole(`Clicked on element: ${elementDescription} and waited for its triggered parallel API call with endpoint: ${apiEndpointOrPartialUrl} that took ${durationString} to run`);        
+        if (waitResult.ok) {
+            this.logToConsole(`Clicked on element: ${elementDescription} and waited for its triggered parallel API call with endpoint: ${apiEndpointOrPartialUrl} that took ${durationString} to run`);
+        } 
+        else {
+            const durationFailures = durationMs >= 1_000 ? `${(durationMs / 1000).toFixed(2)} s` : `${durationMs} ms`;
+            this.logToConsole(`✗ API '${apiEndpointOrPartialUrl}' failed: ${waitResult.error} (waited ${durationFailures})`);
+        }
+
+        if (!waitResult.ok) {
+            this.logToConsole(`Clicked '${elementDescription}' but the API call failed: ${waitResult.error}`);
+            Asserts.assertFail(`Validation failed for API endpoint '${apiEndpointOrPartialUrl}': ${waitResult.error}`);
+        }
     }
 
     protected async clickAndWaitCustomApi(

@@ -6,6 +6,8 @@ import testData from '../testData/herokuCombinations.json';
 
 test.describe('Dummy test suite', () => {
 
+    const locatorAnyFileToDownload: string = "(//a[starts-with(@href,'download')])[1]";
+
     // ......................... TESTING FILE UPLOAD & DOWNLOAD .........................
 
     test('upload jpg from Downloads folder', async ({ page }) => {
@@ -30,7 +32,7 @@ test.describe('Dummy test suite', () => {
 
         await page.goto('https://the-internet.herokuapp.com/download');
 
-        await page.locator("a[href$='Resume.docx']").first().click() // clicks first file
+        await page.locator(locatorAnyFileToDownload).first().click() // clicks first file
          // Just to see the page before it closes, not recommended for real tests
 
     })
@@ -42,10 +44,8 @@ test.describe('Dummy test suite', () => {
 
             await page.goto('https://the-internet.herokuapp.com/download');
 
-            //await page.locator("a[href$='Resume.docx']").first().click() // Native click
-            await myPage.clickAndWaitSuccessfulApi("a[href$='testing.pdf']", "Resume [Link]", dataSet.endpoint, dataSet.expectedStatusCode); // Our custom click coming from BasePage.ts (POM)
-
-             // Just to see the page before it closes, not recommended for real tests
+            await page.locator(locatorAnyFileToDownload).first().click() // Native click
+            //await myPage.clickAndWaitSuccessfulApi(locatorAnyFileToDownload, "Resume [Link]", dataSet.endpoint, dataSet.expectedStatusCode); // Our custom click coming from BasePage.ts (POM)
         });
     }
 
@@ -55,15 +55,22 @@ test.describe('Dummy test suite', () => {
     };
 
     for (const [key, value] of Object.entries(testData2)) {
-        test(`${key}`, async ({ page }) => {
+        test(`Good practice ${key}`, async ({ page }) => {
             const myPage: SwagProductsPage = new SwagProductsPage(page);
 
             await page.goto('https://the-internet.herokuapp.com/download');
 
-            //await page.locator("a[href$='Resume.docx']").first().click() // Native click
-            await myPage.clickAndWaitSuccessfulApi("a[href$='testing.pdf']", "Resume [Link]", "/download", value); // Our custom click coming from BasePage.ts (POM)
+            await myPage.clickAndWaitSuccessfulApi(locatorAnyFileToDownload, "Resume [Link]", "/download", value); // Our custom click coming from BasePage.ts (POM)
+        });
+    }
 
-             // Just to see the page before it closes, not recommended for real tests
+    for (const [key, value] of Object.entries(testData2)) {
+        test(`Bad practice ${key}`, async ({ page }) => {
+            const myPage: SwagProductsPage = new SwagProductsPage(page);
+
+            await page.goto('https://the-internet.herokuapp.com/download');
+
+            await page.locator(locatorAnyFileToDownload).first().click() // Native click
         });
     }
 
@@ -77,7 +84,7 @@ test.describe('Dummy test suite', () => {
         // Wait for download + trigger click
         const [download] = await Promise.all([
             page.waitForEvent('download'),
-            page.locator("a[href$='Resume.docx']").first().click() // clicks first file
+            page.locator(locatorAnyFileToDownload).first().click() // clicks first file
         ]);
 
         // Get suggested filename
