@@ -50,8 +50,8 @@ test.describe('Dummy test suite', () => {
     }
 
     const testData2: Record<string, number> = {
-        "Test case 1": 200,
-        "Test case 2": 304
+        "Test case 1 correct status code": 200,
+        "Test case 2 wrong status code SHOULD FAIL": 304
     };
 
     for (const [key, value] of Object.entries(testData2)) {
@@ -60,17 +60,14 @@ test.describe('Dummy test suite', () => {
 
             await page.goto('https://the-internet.herokuapp.com/download');
 
-            await myPage.clickAndWaitSuccessfulApi(locatorAnyFileToDownload, "Resume [Link]", "/download", value); // Our custom click coming from BasePage.ts (POM)
+            await myPage.clickAndWaitCustomApi("GET", locatorAnyFileToDownload, "Resume [Link]", "/download", 5_000, 1_500, value);
         });
     }
 
     for (const [key, value] of Object.entries(testData2)) {
         test(`Bad practice ${key}`, async ({ page }) => {
-            const myPage: SwagProductsPage = new SwagProductsPage(page);
-
             await page.goto('https://the-internet.herokuapp.com/download');
-
-            await page.locator(locatorAnyFileToDownload).first().click() // Native click
+            await page.locator(locatorAnyFileToDownload).click() // Native click
         });
     }
 

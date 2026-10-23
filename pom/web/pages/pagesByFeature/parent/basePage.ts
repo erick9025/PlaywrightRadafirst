@@ -145,7 +145,7 @@ export abstract class BasePage {
             timeoutMsForApi: number = 1_500) // 1.5 seconds
         : Promise<void> {
 
-        const timeoutString: string = timeoutMsForApi > 1_000 ? "Seconds: " + (timeoutMsForApi / 1000).toString() : "Miliseconds:" + (timeoutMsForApi).toString();
+        const timeoutString: string = timeoutMsForApi > 1_000 ? "Seconds: " + (timeoutMsForApi / 1000).toString() : "Milliseconds: " + timeoutMsForApi.toString();
         this.logToConsole(`Will click '${elementDescription}' and wait (for a max of ${timeoutString}) for its triggered API call with partial URL '${apiEndpointOrPartialUrl}'`);
         const startTime: number = Date.now(); // Record start time
 
@@ -176,7 +176,7 @@ export abstract class BasePage {
         const durationString: string = durationMs > 1_000 ? (durationMs / 1000).toString() + " seconds" : (durationMs).toString() + " ms";
 
         if (waitResult.ok) {
-            this.logToConsole(`Clicked on element: ${elementDescription} and waited for its triggered parallel API call with endpoint: ${apiEndpointOrPartialUrl} that took ${durationString} to run`);
+            this.logToConsole(`Clicked on element: ${elementDescription} and received its triggered API response with endpoint: ${apiEndpointOrPartialUrl} that took ${durationString} to run`);
         } 
         else {
             const durationFailures = durationMs >= 1_000 ? `${(durationMs / 1000).toFixed(2)} s` : `${durationMs} ms`;
@@ -189,7 +189,7 @@ export abstract class BasePage {
         }
     }
 
-    protected async clickAndWaitCustomApi(
+    public async clickAndWaitCustomApi(
             httpMethod: "GET" | "POST" | "PUT" | "DELETE",
             elementLocator: string, 
             elementDescription: string, 
@@ -199,19 +199,47 @@ export abstract class BasePage {
             expectedStatusCode: number = 200) // Sucessful API = OK
         : Promise<void> {
 
-        this.logToConsoleImportant(`Will click '${elementDescription}' and wait for its triggered API call with partial URL '${apiEndpointOrPartialUrl}'`);
-        
-        const [response] = await Promise.all([
-            //Parallel step 1
-            this.page.waitForResponse(
-            resp => resp.url().includes(apiEndpointOrPartialUrl) && resp.status() === expectedStatusCode && resp.request().method() === httpMethod,
+        const timeoutString: string = timeoutMsForApi > 1_000
+            ? `Seconds: ${(timeoutMsForApi / 1000).toString()}`
+            : `Milliseconds: ${timeoutMsForApi.toString()}`;
+        this.logToConsole(`Will click '${elementDescription}' and wait (for a max of ${timeoutString}) for its triggered ${httpMethod} API call with partial URL '${apiEndpointOrPartialUrl}' and response code ${expectedStatusCode}`);
+        const startTime: number = Date.now();
+
+        const waiter: Promise<SingleWaitResult> = this.page
+            .waitForResponse(
+                resp => resp.url().includes(apiEndpointOrPartialUrl)
+                    && resp.status() === expectedStatusCode
+                    && resp.request().method() === httpMethod,
                 { timeout: timeoutMsForApi }
-            ),
-            //Parallel step 2
-            this.page.locator(elementLocator).click({ timeout: timeoutMsForClick }) // Click directly with Playwright by using locator as object
+            )
+            .then(res => ({
+                ok: true as const,
+                url: res.url(),
+                durationMs: Date.now() - startTime,
+            }))
+            .catch((err: any) => ({
+                ok: false as const,
+                error: err?.name === "TimeoutError" || /Timeout/i.test(String(err))
+                    ? `Timeout after ${timeoutMsForApi}ms`
+                    : String(err),
+                durationMs: Date.now() - startTime,
+            }));
+
+        const [, waitResult]: [void, SingleWaitResult] = await Promise.all([
+            this.page.locator(elementLocator).click({ force: true, timeout: timeoutMsForClick }),
+            waiter,
         ]);
 
-        this.logToConsole(`Clicked on element: ${elementDescription} and waited for its triggered ${httpMethod} API call with endpoint: ${apiEndpointOrPartialUrl} and response code ${expectedStatusCode}`);
+        const durationString: string = waitResult.durationMs > 1_000
+            ? `${(waitResult.durationMs / 1000).toFixed(2)} seconds`
+            : `${waitResult.durationMs} ms`;
+
+        if (waitResult.ok) {
+            this.logToConsole(`Clicked on element: ${elementDescription} and waited for its triggered ${httpMethod} API call with endpoint: ${apiEndpointOrPartialUrl}, response code ${expectedStatusCode}, that took ${durationString} to run`);
+        } else {
+            this.logToConsole(`API '${httpMethod} ${apiEndpointOrPartialUrl}' with expected response code ${expectedStatusCode} was not observed successfully after clicking '${elementDescription}': ${waitResult.error} (waited ${durationString})`);
+            Asserts.assertFail(`Validation failed for ${httpMethod} API endpoint '${apiEndpointOrPartialUrl}' with expected status ${expectedStatusCode}: ${waitResult.error}`);
+        }
     }
 
         protected async clickAndWaitMultipleSuccessfulApis(
