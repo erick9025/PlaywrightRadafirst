@@ -8,9 +8,11 @@ test.describe('Dummy test suite', () => {
 
     const locatorAnyFileToDownload: string = "(//a[starts-with(@href,'download')])[1]";
 
-    // ......................... TESTING FILE UPLOAD & DOWNLOAD .........................
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////// UPLOAD /////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    test('upload jpg from Downloads folder', async ({ page }) => {
+    test('upload jpg from Downloads folder with UI check', async ({ page }) => {
 
         // Build path to Downloads folder (cross-platform)
         const downloadsPath = path.join(os.homedir(), 'Downloads', 'testUPLOAD.png');
@@ -27,6 +29,73 @@ test.describe('Dummy test suite', () => {
         // Assertion
         await expect(page.locator('#uploaded-files')).toHaveText('testUPLOAD.png');
     });
+
+    test('upload jpg from Downloads folder with EVENT check', async ({ page }) => {
+
+        // Build path to Downloads folder (cross-platform)
+        const downloadsPath = path.join(os.homedir(), 'Downloads', 'testUPLOAD.png');
+
+        await page.goto('https://the-internet.herokuapp.com/upload');
+         // Just to see the page before it interacts, not recommended for real tests
+
+        // Upload file
+        await page.setInputFiles('input[type="file"]', downloadsPath);
+
+        // Wait for the form submission to navigate, then submit
+        await Promise.all([
+            page.waitForEvent('framenavigated'),
+            page.locator('#file-submit').click()
+        ]);
+
+        // Assertion
+        await expect(page.locator('#uploaded-files')).toHaveText('testUPLOAD.png');
+    });
+
+    test('upload jpg from Downloads folder with API endpoint check', async ({ page }) => {
+
+        // Build path to Downloads folder (cross-platform)
+        const downloadsPath = path.join(os.homedir(), 'Downloads', 'testUPLOAD.png');
+
+        await page.goto('https://the-internet.herokuapp.com/upload');
+         // Just to see the page before it interacts, not recommended for real tests
+
+        // Upload file
+        await page.setInputFiles('input[type="file"]', downloadsPath);
+
+        const myPage: SwagProductsPage = new SwagProductsPage(page);
+
+        myPage.clickAndWaitCustomApi("POST", '#file-submit', "Upload [Button]", "/upload", 5_000, 1_500, 200)
+
+        // Assertion
+        await expect(page.locator('#uploaded-files')).toHaveText('testUPLOAD.png');
+    });
+
+    test('upload jpg from Downloads folder with BOTH APPROACHES', async ({ page }) => {
+
+        // Build path to Downloads folder (cross-platform)
+        const downloadsPath = path.join(os.homedir(), 'Downloads', 'testUPLOAD.png');
+
+        await page.goto('https://the-internet.herokuapp.com/upload');
+         // Just to see the page before it interacts, not recommended for real tests
+
+        // Upload file
+        await page.setInputFiles('input[type="file"]', downloadsPath);
+
+        const myPage: SwagProductsPage = new SwagProductsPage(page);
+
+        // Wait for the form submission to navigate, then submit
+        await Promise.all([
+            page.waitForEvent('framenavigated'),
+            myPage.clickAndWaitCustomApi("POST", '#file-submit', "Upload [Button]", "/upload", 5_000, 1_500, 200)
+        ]);
+
+        // Assertion
+        await expect(page.locator('#uploaded-files')).toHaveText('testUPLOAD.png');
+    });
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////// DOWNLOAD ///////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     test('download a file single', async ({ page }) => {
 
