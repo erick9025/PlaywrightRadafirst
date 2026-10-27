@@ -5,8 +5,18 @@
         "expectedStatusCode" : 200
     },
     {
-        "tcName" : "Download a with pro click from POM 304 - wrong status code SHOULD FAIL",
+        "tcName" : "Download a with pro click from POM 201 - wrong status code SHOULD FAIL",
         "endpoint" : "/download",
+        "expectedStatusCode" : 201
+    },
+    {
+        "tcName" : "Download a with pro click from POM 202 - wrong status code SHOULD FAIL",
+        "endpoint" : "https://the-internet.herokuapp.com/download",
+        "expectedStatusCode" : 202
+    },
+    {
+        "tcName" : "Download a with pro click from POM 304 - wrong status code SHOULD FAIL",
+        "endpoint" : "https://the-internet.herokuapp.com/download",
         "expectedStatusCode" : 304
     }
 ]
