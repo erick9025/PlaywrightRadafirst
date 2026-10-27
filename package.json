@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "erick": "npx playwright test oct26.test.ts --retries=0 --headed",
     "version:node": "node -v",
     "version:npm": "npm -v",
     "version:pw": "npx playwright --version",
@@ -12,7 +13,6 @@
     "install-latest:pw": "npm install -D @playwright/test@latest",
     "install-latest:pwDrivers": "npx playwright install",
     "regen": "npx playwright show-report",
-    "erick": "echo Erick Jimenez",
     "test": "echo \"Error: no test specified\" && exit 1",
     "NOTREADYtestMapsServiceWithAllure": "npm run clean:allure && npx playwright test mapsServiceTest.spec.ts",
     "testLoadedProfile": "npx playwright test sep23.test.ts --headed --retries=0 --workers=2",
