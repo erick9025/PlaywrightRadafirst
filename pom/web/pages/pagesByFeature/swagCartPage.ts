@@ -1,6 +1,7 @@
 import { Page } from '@playwright/test';
 import { SwagParentPage } from "./parent/swagParentPage";
 import { ExecutionParameters } from "../../../../utils/executionParameters";
+import { Asserts } from "../../../../utils/asserts";
 
 /*
 On POM, the application will be splitted into multiples pages (one per screen/functionality/feature)
@@ -48,6 +49,17 @@ export class SwagCartPage extends SwagParentPage {
         this.logToConsole("Total added so far: " + ExecutionParameters.expectedTotal);
 
         await this.verifyElementIsVisible("button.checkout_button", "Checkout button");
+
+        const displayedPrices = await this.page.locator(".cart_item .inventory_item_price").allTextContents();
+        const cartTotal = displayedPrices.reduce((total, price) => {
+            const numericPrice = Number(price.replace(/[^\d.]/g, ""));
+            return total + numericPrice;
+        }, 0);
+        Asserts.assertEquals(
+            Number(cartTotal.toFixed(2)),
+            Number(ExecutionParameters.expectedTotal.toFixed(2)),
+            "Cart item prices must match the total accumulated while adding products"
+        );
     
         this.mainMethodEnd("verifyCartTotalIsCorrect");
         return this;

@@ -1,9 +1,16 @@
+import { expect } from '@playwright/test';
 import { test } from '../testHooks/baseTestSauceLabs';
 import { ProductSortingOptions } from '../../utils/productSortingOptions';
 import { TestUtilities } from '../../utils/testUtilities';
+import { ExecutionParameters } from '../../utils/executionParameters';
 
 test.describe('Tests for Swag pages REGULAR/MULTI THREAD', () => {
     test.use({ createContextBeforeEachTest: true }); // DEFAULT VALUE
+    test.setTimeout(30_000);
+
+    test.beforeEach(() => {
+        ExecutionParameters.expectedTotal = 0;
+    });
 
     test("Swag Add products and go to cart with hooks 2", async ({ PagesSauceLabs }) => {  
         
@@ -36,8 +43,15 @@ test.describe('Tests for Swag pages REGULAR/MULTI THREAD', () => {
     const testData = TestUtilities.getTestData("tests/testData/excelSwag.xlsx");
 
     testData.forEach((data: any) => {
-        test(`Swag Login multiple users ${data.username}`, async ({ PagesSauceLabs }) => {
+        test(`Swag Login multiple users ${data.username}`, async ({ PagesSauceLabs, page }) => {
             await PagesSauceLabs.SwagLoginPage.login(data.username, data.password);
+
+            if (data.username === 'locked_out_user') {
+                await expect(page.locator('[data-test="error"]'))
+                    .toHaveText('Epic sadface: Sorry, this user has been locked out.');
+            } else {
+                await expect(page).toHaveURL(/inventory\.html$/);
+            }
         });
     });
 });
