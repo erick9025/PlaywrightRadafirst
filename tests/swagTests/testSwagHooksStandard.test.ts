@@ -1,6 +1,5 @@
 import { test } from '../testHooks/baseTestSauceLabs';
 import { ProductSortingOptions } from '../../utils/productSortingOptions';
-import { SwagLoginPage } from '../../pom/web/pages/pagesByFeature/swagLoginPage';
 import { TestUtilities } from '../../utils/testUtilities';
 
 test.describe('Tests for Swag pages REGULAR/MULTI THREAD', () => {
@@ -20,7 +19,7 @@ test.describe('Tests for Swag pages REGULAR/MULTI THREAD', () => {
         await PagesSauceLabs.SwagLoginPage.takeScreenshotWithTimestamp("Erick_3");
     });
 
-    test("Swag Add products and go to cart with hooks 3", async ({ PagesSauceLabs, page }) => {  
+    test("Swag Add products and go to cart with hooks 3", async ({ PagesSauceLabs }) => {  
         
         await PagesSauceLabs.SwagLoginPage.login();
         await PagesSauceLabs.SwagProductsPage.addProductToCart("Sauce Labs Backpack");
@@ -30,13 +29,6 @@ test.describe('Tests for Swag pages REGULAR/MULTI THREAD', () => {
         await PagesSauceLabs.SwagCartPage.goToCart();        
         await PagesSauceLabs.SwagCartPage.verifyCartTotalIsCorrect();
 
-        await PagesSauceLabs.initSecondaryPageBasedOnPage(page, SwagLoginPage)
-        await PagesSauceLabs.SwagLoginPage2.login();
-
-        await PagesSauceLabs.SwagCartPage.verifyCartTotalIsCorrect();
-        await PagesSauceLabs.SwagCartPage.verifyCartTotalIsCorrect();
-        await PagesSauceLabs.SwagCartPage.verifyCartTotalIsCorrect();
-        await PagesSauceLabs.SwagCartPage.verifyCartTotalIsCorrect();
     });
 
     //............................... DDT EXCEL ...............................
