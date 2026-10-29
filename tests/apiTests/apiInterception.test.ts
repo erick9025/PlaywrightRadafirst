@@ -3,7 +3,10 @@ import { expect, test } from '@playwright/test';
 const appUrl = 'https://interception.test/app';
 const apiUrl = 'https://interception.test/api/profile';
 
-// 
+// This test serves a tiny fictitious profile page with no styling: it initially
+// displays “Loading” and fetches /api/profile. On success, it renders the
+// profile as “name (role)”; an HTTP error shows its status, while a failed
+// request or invalid JSON shows “Request failed: network error”.
 const appHtml = `<!doctype html>
 <html lang="en">
   <body>
